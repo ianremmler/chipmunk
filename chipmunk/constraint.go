@@ -22,20 +22,126 @@ OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-/*
-#cgo CFLAGS: -I/usr/include/chipmunk
-#cgo LDFLAGS: -lchipmunk -lm
-
-#include <chipmunk.h>
-*/
+// #include <chipmunk.h>
 import "C"
 
-type Constraint struct {
-  c *C.cpConstraint
+type constraintBase struct {
+  ct *C.cpConstraint
+}
+
+type Constraint interface {
+  ContainedInSpace(Space) bool
+  c() *C.cpConstraint
+}
+
+func (c constraintBase) Destroy() {
+  C.cpConstraintDestroy(c.ct)
+}
+
+func (c constraintBase) c() *C.cpConstraint {
+  return c.ct
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-func (c Constraint) ContainedInSpace(s Space) bool {
-  return cpBool(C.cpSpaceContainsConstraint(s.s, c.c))
+func (c constraintBase) A() Body {
+  return cpBody(C.cpConstraintGetA(c.ct))
+}
+
+func (c constraintBase) B() Body {
+  return cpBody(C.cpConstraintGetB(c.ct))
+}
+
+func (c constraintBase) Space() Space {
+  return cpSpace(C.cpConstraintGetSpace(c.ct))
+}
+
+func (c constraintBase) MaxForce() float64 {
+  return float64(C.cpConstraintGetMaxForce(c.ct))
+}
+
+func (c constraintBase) ErrorBias() float64 {
+  return float64(C.cpConstraintGetErrorBias(c.ct))
+}
+
+func (c constraintBase) MaxBias() float64 {
+  return float64(C.cpConstraintGetMaxBias(c.ct))
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+func (c constraintBase) SetMaxForce(f float64) {
+  C.cpConstraintSetMaxForce(c.ct, C.cpFloat(f))
+}
+
+func (c constraintBase) SetErrorBias(b float64) {
+  C.cpConstraintSetErrorBias(c.ct, C.cpFloat(b))
+}
+
+func (c constraintBase) SetMaxBias(b float64) {
+  C.cpConstraintSetMaxBias(c.ct, C.cpFloat(b))
+}
+
+
+/////////////////////////////////////////////////////////////////////////////
+
+func (c constraintBase) ContainedInSpace(s Space) bool {
+  return cpBool(C.cpSpaceContainsConstraint(s.s, c.ct))
+}
+
+func (c constraintBase) ActivateBodies() {
+  c.A().Activate()
+  c.B().Activate()
+}
+
+func (c constraintBase) Impulse() float64 {
+  return float64(C.cpConstraintGetImpulse(c.ct))
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+var (
+  pinJointClass           = C.cpPinJointGetClass()
+  slideJointClass         = C.cpSlideJointGetClass()
+  pivotJointClass         = C.cpPivotJointGetClass()
+  grooveJointClass        = C.cpGrooveJointGetClass()
+  dampedSpringClass       = C.cpDampedSpringGetClass()
+  dampedRotarySpringClass = C.cpDampedRotarySpringGetClass()
+  rotaryLimitJointClass   = C.cpRotaryLimitJointGetClass()
+  ratchetJointClass       = C.cpRatchetJointGetClass()
+  gearJointClass          = C.cpGearJointGetClass()
+  simpleMotorClass        = C.cpSimpleMotorGetClass()
+)
+
+func cpConstraint(ct *C.cpConstraint) Constraint {
+  if nil == ct {
+    return nil
+  }
+
+  c := constraintBase{ ct }
+
+  switch c.ct.klass_private {
+  case pinJointClass:
+    return PinJoint{ c }
+  case slideJointClass:
+    return SlideJoint{ c }
+  case pivotJointClass:
+    return PivotJoint{ c }
+  case grooveJointClass:
+    return GrooveJoint{ c }
+  case dampedSpringClass:
+    return DampedSpring{ c }
+  case dampedRotarySpringClass:
+    return DampedRotarySpring{ c }
+  case rotaryLimitJointClass:
+    return RotaryLimitJoint{ c }
+  case ratchetJointClass:
+    return RatchetJoint{ c }
+  case gearJointClass:
+    return GearJoint{ c }
+  case simpleMotorClass:
+    return SimpleMotor{ c }
+  }
+
+  panic("unknown constraint class in cpConstraint")
 }

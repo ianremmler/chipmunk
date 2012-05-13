@@ -23,9 +23,6 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 /*
-#cgo CFLAGS: -I/usr/include/chipmunk
-#cgo LDFLAGS: -lchipmunk -lm
-
 #include <chipmunk.h>
 
 static cpShapeType shape_type(cpShape *s) {

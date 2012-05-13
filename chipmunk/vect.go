@@ -22,12 +22,7 @@ OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-/*
-#cgo CFLAGS: -I/usr/include/chipmunk
-#cgo LDFLAGS: -lchipmunk -lm
-
-#include <chipmunk.h>
-*/
+// #include <chipmunk.h>
 import "C"
 
 import (

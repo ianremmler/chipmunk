@@ -22,21 +22,7 @@ OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-/*
-#cgo CFLAGS: -I/usr/include/chipmunk
-#cgo LDFLAGS: -lchipmunk -lm
-
-#include <chipmunk.h>
-#include <stdio.h>
-
-void check_it(int num, const cpVect *verts) {
-  int i;
- printf("%p\n", verts);
-  for (i = 0; i < num; i++) {
-    printf("%f %f\n", verts[i].x, verts[i].y);
-  }
-}
-*/
+// #include <chipmunk.h>
 import "C"
 
 import (

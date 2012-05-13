@@ -23,9 +23,6 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 /*
-#cgo CFLAGS: -I/usr/include/chipmunk
-#cgo LDFLAGS: -lchipmunk -lm
-
 #include <chipmunk.h>
 
 extern void pointQuery(cpShape *s, void *p);
@@ -76,6 +73,10 @@ func NewSpace() Space {
 func (s Space) Destroy() {
   C.cpSpaceDestroy(s.s)
   s.s = nil
+}
+
+func cpSpace(s *C.cpSpace) Space {
+  return Space{ s }
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -242,7 +243,7 @@ func (s Space) AddBody(b Body) Body {
 
 // AddConstraint adds a constraint to the simulation.
 func (s Space) AddConstraint(c Constraint) Constraint {
-  return Constraint{ c : C.cpSpaceAddConstraint(s.s, c.c) }
+  return cpConstraint(C.cpSpaceAddConstraint(s.s, c.c()))
 }
 
 // RemoveShape removes a collision shape from the simulation.
@@ -262,7 +263,7 @@ func (s Space) RemoveBody(b Body) {
 
 // RemoveConstraint removes a constraint from the simulation.
 func (s Space) RemoveConstraint(c Constraint) {
-  C.cpSpaceRemoveConstraint(s.s, c.c)
+  C.cpSpaceRemoveConstraint(s.s, c.c())
 }
 
 /////////////////////////////////////////////////////////////////////////////

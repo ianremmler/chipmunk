@@ -23,11 +23,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 /*
-#cgo CFLAGS: -I/usr/include/chipmunk
-#cgo LDFLAGS: -lchipmunk -lm
-
 #include <chipmunk.h>
-#include <stdio.h>
 
 extern void bodyIterator(cpBody *body, void *d, void *p);
 
@@ -184,7 +180,9 @@ func (b Body) KineticEnergy() float64 {
 
 // Activate wakes up a sleeping or idle body.
 func (b Body) Activate() {
-  C.cpBodyActivate(b.b)
+  if nil != b.b {
+    C.cpBodyActivate(b.b)
+  }
 }
 
 // ActivateStatic wakes up any sleeping or idle bodies touching a static body.
@@ -235,7 +233,7 @@ func bodyIterator(b *C.cpBody, d unsafe.Pointer, p unsafe.Pointer) {
     f.(ShapeIterator)(body, cpShape((*C.cpShape)(d)))
 
   case ConstraintIterator:
-    f.(ConstraintIterator)(body, Constraint{ c : (*C.cpConstraint)(d) })
+    f.(ConstraintIterator)(body, cpConstraint((*C.cpConstraint)(d)))
 
   case ArbiterIterator:
     f.(ArbiterIterator)(body, Arbiter{ a : (*C.cpArbiter)(d) })
