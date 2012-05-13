@@ -1,4 +1,5 @@
 package chipmunk
+
 /*
 Copyright (c) 2012 Serge Zirukin
 
@@ -109,14 +110,14 @@ func (s shapeBase) ContainedInSpace(space Space) bool {
 func (s shapeBase) NearestPointQuery(p Vect) (float64, NearestPointQueryInfo) {
   var out C.cpNearestPointQueryInfo
   d := float64(C.cpShapeNearestPointQuery(s.s, p.c(), &out))
-  return d, NearestPointQueryInfo{ Shape : cpShape(out.shape), P : cpVect(out.p), D : float64(out.d) }
+  return d, NearestPointQueryInfo{Shape: cpShape(out.shape), P: cpVect(out.p), D: float64(out.d)}
 }
 
 // SegmentQuery performs a segment query against a shape.
 func (s shapeBase) SegmentQuery(a, b Vect) (bool, SegmentQueryInfo) {
   var out C.cpSegmentQueryInfo
   d := cpBool(C.cpShapeSegmentQuery(s.s, a.c(), b.c(), &out))
-  return d, SegmentQueryInfo{ Shape : cpShape(out.shape), T : float64(out.t), N : cpVect(out.n) }
+  return d, SegmentQueryInfo{Shape: cpShape(out.shape), T: float64(out.t), N: cpVect(out.n)}
 }
 
 // PointQuery returns true if a point lies within a shape.
@@ -178,7 +179,7 @@ func (s shapeBase) Layers() Layers {
 
 // Body returns the rigid body this collision shape is attached to.
 func (s shapeBase) Body() Body {
-  return Body{ b : C.cpShapeGetBody(s.s) }
+  return Body{b: C.cpShapeGetBody(s.s)}
 }
 
 func (s shapeBase) UserData() interface{} {
@@ -251,7 +252,7 @@ type CircleShape struct {
 // CircleShapeNew creates a new circle shape.
 func CircleShapeNew(body Body, radius float64, offset Vect) Shape {
   s := C.cpCircleShapeNew(body.b, C.cpFloat(radius), offset.c())
-  return CircleShape{ shapeBase{ s } }
+  return CircleShape{shapeBase{s}}
 }
 
 func (s CircleShape) Offset() Vect {
@@ -276,7 +277,7 @@ type SegmentShape struct {
 // SegmentShapeNew creates a new segment shape
 func SegmentShapeNew(body Body, a, b Vect, radius float64) Shape {
   s := C.cpSegmentShapeNew(body.b, a.c(), b.c(), C.cpFloat(radius))
-  return SegmentShape{ shapeBase{ s } }
+  return SegmentShape{shapeBase{s}}
 }
 
 func (s SegmentShape) SetNeighbors(prev, next Vect) {
@@ -320,13 +321,13 @@ func cpShape(s *C.cpShape) Shape {
 
   switch shapeType(C.shape_type(s)) {
   case circleShapeType:
-    return CircleShape{ shapeBase{ s } }
+    return CircleShape{shapeBase{s}}
 
   case segmentShapeType:
-    return SegmentShape{ shapeBase{ s } }
+    return SegmentShape{shapeBase{s}}
 
   case polyShapeType:
-    return PolyShape{ shapeBase{ s } }
+    return PolyShape{shapeBase{s}}
   }
 
   panic("unknown type of shape in cpShape")

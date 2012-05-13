@@ -1,4 +1,5 @@
 package chipmunk
+
 /*
 Copyright (c) 2012 Serge Zirukin
 
@@ -66,7 +67,7 @@ type ContainedInSpace interface {
 
 // NewSpace creates a new space.
 func NewSpace() Space {
-  return Space{ s : C.cpSpaceNew() }
+  return Space{s: C.cpSpaceNew()}
 }
 
 // Destroy removes a space.
@@ -76,7 +77,7 @@ func (s Space) Destroy() {
 }
 
 func cpSpace(s *C.cpSpace) Space {
-  return Space{ s }
+  return Space{s}
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -246,7 +247,7 @@ func (s Space) AddStaticShape(sh Shape) Shape {
 
 // AddBody adds a rigid body to the simulation.
 func (s Space) AddBody(b Body) Body {
-  return Body{ b : C.cpSpaceAddBody(s.s, b.b) }
+  return Body{b: C.cpSpaceAddBody(s.s, b.b)}
 }
 
 // AddConstraint adds a constraint to the simulation.

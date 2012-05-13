@@ -1,4 +1,5 @@
 package chipmunk
+
 /*
 Copyright (c) 2012 Serge Zirukin
 
@@ -30,7 +31,7 @@ type SlideJoint struct {
 }
 
 func SlideJointNew(a, b Body, anchr1, anchr2 Vect, min, max float64) SlideJoint {
-  return SlideJoint{ constraintBase{ C.cpSlideJointNew(a.c(), b.c(), anchr1.c(), anchr2.c(), C.cpFloat(min), C.cpFloat(max)) } }
+  return SlideJoint{constraintBase{C.cpSlideJointNew(a.c(), b.c(), anchr1.c(), anchr2.c(), C.cpFloat(min), C.cpFloat(max))}}
 }
 
 /////////////////////////////////////////////////////////////////////////////

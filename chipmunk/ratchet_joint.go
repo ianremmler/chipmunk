@@ -1,4 +1,5 @@
 package chipmunk
+
 /*
 Copyright (c) 2012 Serge Zirukin
 
@@ -36,7 +37,7 @@ func RatchetJointNew(a, b Body, phase, ratchet float64) RatchetJoint {
         a.c(),
         b.c(),
         C.cpFloat(phase),
-        C.cpFloat(ratchet)) } }
+        C.cpFloat(ratchet))}}
 }
 
 /////////////////////////////////////////////////////////////////////////////

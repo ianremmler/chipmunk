@@ -1,4 +1,5 @@
 package chipmunk
+
 /*
 Copyright (c) 2012 Serge Zirukin
 
@@ -36,7 +37,7 @@ type BB struct {
 
 // BBNew create a 2D bounding box.
 func BBNew(l, b, r, t float64) BB {
-  return BB{ l, b, r, t }
+  return BB{l, b, r, t}
 }
 
 func cpBB(bb C.cpBB) BB {
@@ -48,12 +49,12 @@ func (b BB) c() C.cpBB {
     C.cpFloat(b.l),
     C.cpFloat(b.b),
     C.cpFloat(b.r),
-    C.cpFloat(b.t) }
+    C.cpFloat(b.t)}
 }
 
 // BBNewForCircle constructs a BB for a circle with the given position and radius.
 func BBNewForCircle(p Vect, r float64) BB {
-  return BBNew(p.X - r, p.Y - r, p.X + r, p.Y + r)
+  return BBNew(p.X-r, p.Y-r, p.X+r, p.Y+r)
 }
 
 // Intersects returns true if two bounding boxes intersect.
@@ -77,7 +78,7 @@ func (a BB) Merge(b BB) BB {
     math.Min(a.l, b.l),
     math.Min(a.b, b.b),
     math.Max(a.r, b.r),
-    math.Max(a.t, b.t) }
+    math.Max(a.t, b.t)}
 }
 
 // Expand returns a bounding box that holds both bounding box and a vector.
@@ -86,7 +87,7 @@ func (b BB) Expand(v Vect) BB {
     math.Min(b.l, v.X),
     math.Min(b.b, v.Y),
     math.Max(b.r, v.X),
-    math.Max(b.t, v.Y) }
+    math.Max(b.t, v.Y)}
 }
 
 // Area returns the area of the bounding box.
@@ -105,8 +106,8 @@ func (bb BB) SegmentQuery(a, b Vect) float64 {
   pinf := math.Inf(1)
   ninf := math.Inf(-1)
 
-  idx := 1.0 / (b.X - a.X);
-  idy := 1.0 / (b.Y - a.Y);
+  idx := 1.0 / (b.X - a.X)
+  idy := 1.0 / (b.Y - a.Y)
   tx1 := ninf
   tx2 := pinf
   ty1 := ninf
@@ -152,13 +153,13 @@ func (bb BB) IntersectsSegment(a, b Vect) bool {
 
 // ClampVect clamps a vector to a bounding box.
 func (bb BB) ClampVect(v Vect) Vect {
-  return Vect{ X : math.Min(math.Max(bb.l, v.X), bb.r), Y : math.Min(math.Max(bb.b, v.Y), bb.t) }
+  return Vect{X: math.Min(math.Max(bb.l, v.X), bb.r), Y: math.Min(math.Max(bb.b, v.Y), bb.t)}
 }
 
 // WrapVect wraps a vector to a bounding box.
 func (bb BB) WrapVect(v Vect) Vect {
   ix := math.Abs(bb.r - bb.l)
-  modx := math.Mod(v.X - bb.l, ix)
+  modx := math.Mod(v.X-bb.l, ix)
   x := modx
 
   if modx <= 0.0 {
@@ -166,12 +167,12 @@ func (bb BB) WrapVect(v Vect) Vect {
   }
 
   iy := math.Abs(bb.t - bb.b)
-  mody := math.Mod(v.Y - bb.b, iy)
+  mody := math.Mod(v.Y-bb.b, iy)
   y := mody
 
   if mody <= 0.0 {
     y += iy
   }
 
-  return Vect{ X : x + bb.l, Y : y + bb.b }
+  return Vect{X: x + bb.l, Y: y + bb.b}
 }

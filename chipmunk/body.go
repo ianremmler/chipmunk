@@ -1,4 +1,5 @@
 package chipmunk
+
 /*
 Copyright (c) 2012 Serge Zirukin
 
@@ -53,11 +54,11 @@ type Body struct {
 
 // NewBody creates a new body.
 func NewBody(m, i float64) Body {
-  return Body{ b : C.cpBodyNew(C.cpFloat(m), C.cpFloat(i)) }
+  return Body{b: C.cpBodyNew(C.cpFloat(m), C.cpFloat(i))}
 }
 
 func NewBodyStatic() Body {
-  return Body{ b : C.cpBodyNewStatic() }
+  return Body{b: C.cpBodyNewStatic()}
 }
 
 // Destroy removes a space.
@@ -234,7 +235,7 @@ type ArbiterIterator func(b Body, a Arbiter)
 //export bodyIterator
 func bodyIterator(b *C.cpBody, d unsafe.Pointer, p unsafe.Pointer) {
   f := *(*interface{})(p)
-  body := Body{ b }
+  body := Body{b}
 
   switch f.(type) {
   case ShapeIterator:
@@ -244,7 +245,7 @@ func bodyIterator(b *C.cpBody, d unsafe.Pointer, p unsafe.Pointer) {
     f.(ConstraintIterator)(body, cpConstraint((*C.cpConstraint)(d)))
 
   case ArbiterIterator:
-    f.(ArbiterIterator)(body, Arbiter{ a : (*C.cpArbiter)(d) })
+    f.(ArbiterIterator)(body, Arbiter{a: (*C.cpArbiter)(d)})
 
   default:
     panic("invalid type of iterator in body_iterator")
@@ -276,5 +277,5 @@ func (b Body) c() *C.cpBody {
 }
 
 func cpBody(b *C.cpBody) Body {
-  return Body{ b }
+  return Body{b}
 }

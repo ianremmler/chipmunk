@@ -1,4 +1,5 @@
 package chipmunk
+
 /*
 Copyright (c) 2012 Serge Zirukin
 
@@ -39,7 +40,7 @@ func DampedSpringNew(a, b Body, anchr1, anchr2 Vect, restLength, stiffness, damp
         anchr2.c(),
         C.cpFloat(restLength),
         C.cpFloat(stiffness),
-        C.cpFloat(damping)) } }
+        C.cpFloat(damping))}}
 }
 
 /////////////////////////////////////////////////////////////////////////////

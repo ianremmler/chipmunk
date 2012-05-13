@@ -1,4 +1,5 @@
 package chipmunk
+
 /*
 Copyright (c) 2012 Serge Zirukin
 
@@ -36,7 +37,7 @@ func GearJointNew(a, b Body, phase, ratio float64) GearJoint {
         a.c(),
         b.c(),
         C.cpFloat(phase),
-        C.cpFloat(ratio)) } }
+        C.cpFloat(ratio))}}
 }
 
 /////////////////////////////////////////////////////////////////////////////

@@ -1,4 +1,5 @@
 package chipmunk
+
 /*
 Copyright (c) 2012 Serge Zirukin
 
@@ -37,7 +38,7 @@ func DampedRotarySpringNew(a, b Body, restAngle, stiffness, damping float64) Dam
         b.c(),
         C.cpFloat(restAngle),
         C.cpFloat(stiffness),
-        C.cpFloat(damping)) } }
+        C.cpFloat(damping))}}
 }
 
 /////////////////////////////////////////////////////////////////////////////

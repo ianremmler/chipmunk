@@ -1,4 +1,5 @@
 package chipmunk
+
 /*
 Copyright (c) 2012 Serge Zirukin
 
@@ -30,7 +31,7 @@ type RotaryLimitJoint struct {
 }
 
 func RotaryLimitJointNew(a, b Body, min, max float64) RotaryLimitJoint {
-  return RotaryLimitJoint{ constraintBase{ C.cpRotaryLimitJointNew(a.c(), b.c(), C.cpFloat(min), C.cpFloat(max)) } }
+  return RotaryLimitJoint{constraintBase{C.cpRotaryLimitJointNew(a.c(), b.c(), C.cpFloat(min), C.cpFloat(max))}}
 }
 
 /////////////////////////////////////////////////////////////////////////////

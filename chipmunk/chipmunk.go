@@ -1,5 +1,6 @@
 // Package chipmunk is an interface to Chipmunk Physics library
 package chipmunk
+
 /*
 Copyright (c) 2012 Serge Zirukin
 

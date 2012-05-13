@@ -1,4 +1,5 @@
 package chipmunk
+
 /*
 Copyright (c) 2012 Serge Zirukin
 
@@ -139,29 +140,29 @@ func cpConstraint(ct *C.cpConstraint) Constraint {
     return nil
   }
 
-  c := constraintBase{ ct }
+  c := constraintBase{ct}
 
   switch c.ct.klass_private {
   case pinJointClass:
-    return PinJoint{ c }
+    return PinJoint{c}
   case slideJointClass:
-    return SlideJoint{ c }
+    return SlideJoint{c}
   case pivotJointClass:
-    return PivotJoint{ c }
+    return PivotJoint{c}
   case grooveJointClass:
-    return GrooveJoint{ c }
+    return GrooveJoint{c}
   case dampedSpringClass:
-    return DampedSpring{ c }
+    return DampedSpring{c}
   case dampedRotarySpringClass:
-    return DampedRotarySpring{ c }
+    return DampedRotarySpring{c}
   case rotaryLimitJointClass:
-    return RotaryLimitJoint{ c }
+    return RotaryLimitJoint{c}
   case ratchetJointClass:
-    return RatchetJoint{ c }
+    return RatchetJoint{c}
   case gearJointClass:
-    return GearJoint{ c }
+    return GearJoint{c}
   case simpleMotorClass:
-    return SimpleMotor{ c }
+    return SimpleMotor{c}
   }
 
   panic("unknown constraint class in cpConstraint")

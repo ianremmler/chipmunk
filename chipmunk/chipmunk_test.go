@@ -1,4 +1,5 @@
 package chipmunk
+
 /*
 Copyright (c) 2012 Serge Zirukin
 
@@ -42,7 +43,7 @@ func Test_UserData(t *testing.T) {
 func Test_Body(t *testing.T) {
   s := NewSpace()
   b := NewBody(1.0, 1.0)
-  c := CircleShapeNew(b, 8.0, Vect{ 0.0, 0.0 })
+  c := CircleShapeNew(b, 8.0, Vect{0.0, 0.0})
 
   s.AddBody(b)
   s.AddShape(c)
@@ -63,7 +64,7 @@ func Test_Body(t *testing.T) {
 
   found = false
 
-  s.PointQuery(Vect{ 0.0, 0.0 }, Layers(0xf), Group(0), PointQuery(func(shape Shape) {
+  s.PointQuery(Vect{0.0, 0.0}, Layers(0xf), Group(0), PointQuery(func(shape Shape) {
     found = (shape == c)
   }))
 
@@ -73,7 +74,7 @@ func Test_Body(t *testing.T) {
 
   found = true
 
-  s.PointQuery(Vect{ 0.0, 0.0 }, Layers(0), Group(0), PointQuery(func(shape Shape) {
+  s.PointQuery(Vect{0.0, 0.0}, Layers(0), Group(0), PointQuery(func(shape Shape) {
     found = (shape == c)
   }))
 
@@ -82,13 +83,13 @@ func Test_Body(t *testing.T) {
   }
 
   s.RemoveShape(c)
-  first := s.PointQueryFirst(Vect{ 0.0, 0.0 }, Layers(0xf), Group(0))
+  first := s.PointQueryFirst(Vect{0.0, 0.0}, Layers(0xf), Group(0))
 
   if nil != first {
     t.Error(first, "found using space.PointQueryFirst although it was removed")
   }
 
-  x := PolyShapeNew(b, []Vect{ Vect{ 1.0, 3.0 }, Vect{ 6.0, -5.0 } }, Vect{ 1.0, 2.0 })
+  x := PolyShapeNew(b, []Vect{Vect{1.0, 3.0}, Vect{6.0, -5.0}}, Vect{1.0, 2.0})
   t.Log(x)
 
   c.Destroy()

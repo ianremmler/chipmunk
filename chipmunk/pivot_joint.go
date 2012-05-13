@@ -1,4 +1,5 @@
 package chipmunk
+
 /*
 Copyright (c) 2012 Serge Zirukin
 
@@ -30,11 +31,11 @@ type PivotJoint struct {
 }
 
 func PivotJointNew(a, b Body, pivot Vect) PivotJoint {
-  return PivotJoint{ constraintBase{ C.cpPivotJointNew(a.c(), b.c(), pivot.c()) } }
+  return PivotJoint{constraintBase{C.cpPivotJointNew(a.c(), b.c(), pivot.c())}}
 }
 
 func PivotJointNew2(a, b Body, anchr1, anchr2 Vect) PivotJoint {
-  return PivotJoint{ constraintBase{ C.cpPivotJointNew2(a.c(), b.c(), anchr1.c(), anchr2.c()) } }
+  return PivotJoint{constraintBase{C.cpPivotJointNew2(a.c(), b.c(), anchr1.c(), anchr2.c())}}
 }
 
 /////////////////////////////////////////////////////////////////////////////

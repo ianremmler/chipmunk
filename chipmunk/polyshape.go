@@ -1,4 +1,5 @@
 package chipmunk
+
 /*
 Copyright (c) 2012 Serge Zirukin
 
@@ -37,17 +38,17 @@ type PolyShape struct {
 // PolyShapeNew creates a new polygon shape.
 func PolyShapeNew(b Body, verts []Vect, offset Vect) Shape {
   v := (*C.cpVect)(unsafe.Pointer(&verts[0]))
-  return PolyShape{ shapeBase{ s : C.cpPolyShapeNew(b.c(), C.int(len(verts)), v, offset.c()) } }
+  return PolyShape{shapeBase{s: C.cpPolyShapeNew(b.c(), C.int(len(verts)), v, offset.c())}}
 }
 
 // BoxShapeNew creates a new box shape.
 func BoxShapeNew(b Body, width, height float64) Shape {
-  return PolyShape{ shapeBase{ s : C.cpBoxShapeNew(b.c(), C.cpFloat(width), C.cpFloat(height)) } }
+  return PolyShape{shapeBase{s: C.cpBoxShapeNew(b.c(), C.cpFloat(width), C.cpFloat(height))}}
 }
 
 // BoxShapeNew2 creates a new box shape.
 func BoxShapeNew2(b Body, box BB) Shape {
-  return PolyShape{ shapeBase{ s : C.cpBoxShapeNew2(b.c(), box.c()) } }
+  return PolyShape{shapeBase{s: C.cpBoxShapeNew2(b.c(), box.c())}}
 }
 
 func (s PolyShape) String() string {

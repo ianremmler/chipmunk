@@ -1,4 +1,5 @@
 package chipmunk
+
 /*
 Copyright (c) 2012 Serge Zirukin
 
@@ -35,7 +36,7 @@ func SimpleMotorNew(a, b Body, rate float64) SimpleMotor {
       C.cpSimpleMotorNew(
         a.c(),
         b.c(),
-        C.cpFloat(rate)) } }
+        C.cpFloat(rate))}}
 }
 
 /////////////////////////////////////////////////////////////////////////////

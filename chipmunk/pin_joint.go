@@ -1,4 +1,5 @@
 package chipmunk
+
 /*
 Copyright (c) 2012 Serge Zirukin
 
@@ -30,7 +31,7 @@ type PinJoint struct {
 }
 
 func PinJointNew(a, b Body, anchr1, anchr2 Vect) PinJoint {
-  return PinJoint{ constraintBase{ C.cpPinJointNew(a.c(), b.c(), anchr1.c(), anchr2.c()) } }
+  return PinJoint{constraintBase{C.cpPinJointNew(a.c(), b.c(), anchr1.c(), anchr2.c())}}
 }
 
 /////////////////////////////////////////////////////////////////////////////
