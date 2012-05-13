@@ -106,7 +106,8 @@ func (s shapeBase) ContainedInSpace(space Space) bool {
 }
 
 // NearestPointQuery finds the closest point on the surface of shape to a specific point.
-// The first returned value is the distance between the points. A negative distance means the point is inside the shape.
+// The first returned value is the distance between the points.
+// A negative distance means the point is inside the shape.
 func (s shapeBase) NearestPointQuery(p Vect) (float64, NearestPointQueryInfo) {
   var out C.cpNearestPointQueryInfo
   d := float64(C.cpShapeNearestPointQuery(s.s, p.c(), &out))
@@ -182,6 +183,7 @@ func (s shapeBase) Body() Body {
   return Body{b: C.cpShapeGetBody(s.s)}
 }
 
+// UserData returns user defined data.
 func (s shapeBase) UserData() interface{} {
   return cpData(C.cpShapeGetUserData(s.s))
 }
@@ -228,6 +230,9 @@ func (s shapeBase) SetBody(b Body) {
   C.cpShapeSetBody(s.s, b.b)
 }
 
+// SetUserData sets user definable data pointer.
+// Generally this points to your the game object so you can access it
+// when given a Shape reference in a callback.
 func (s shapeBase) SetUserData(data interface{}) {
   C.cpShapeSetUserData(s.s, dataToC(data))
 }

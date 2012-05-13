@@ -83,6 +83,7 @@ func (c constraintBase) MaxBias() float64 {
   return float64(C.cpConstraintGetMaxBias(c.ct))
 }
 
+// UserData returns user defined data.
 func (c constraintBase) UserData() interface{} {
   return cpData(C.cpConstraintGetUserData(c.ct))
 }
@@ -101,6 +102,9 @@ func (c constraintBase) SetMaxBias(b float64) {
   C.cpConstraintSetMaxBias(c.ct, C.cpFloat(b))
 }
 
+// SetUserData sets user definable data pointer.
+// Generally this points to your the game object so you can access it
+// when given a Constraint reference in a callback.
 func (c constraintBase) SetUserData(data interface{}) {
   C.cpConstraintSetUserData(c.ct, dataToC(data))
 }

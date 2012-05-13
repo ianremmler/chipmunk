@@ -34,7 +34,8 @@ static void space_point_query(cpSpace *s, cpVect point, cpLayers layers, cpGroup
 
 extern void nearestPointQuery(cpShape *s, cpFloat distance, cpVect point, void *p);
 
-static void space_nearest_point_query(cpSpace *space, cpVect point, cpFloat maxDistance, cpLayers layers, cpGroup group, void *f) {
+static void space_nearest_point_query(cpSpace *space, cpVect point, cpFloat maxDistance,
+                                      cpLayers layers, cpGroup group, void *f) {
   cpSpaceNearestPointQuery(space, point, maxDistance, layers, group, nearestPointQuery, f);
 }
 
@@ -127,6 +128,7 @@ func (s Space) EnableContactGraph() bool {
   return 0 != int(C.cpSpaceGetEnableContactGraph(s.s))
 }
 
+// UserData returns user defined data.
 func (s Space) UserData() interface{} {
   return cpData(C.cpSpaceGetUserData(s.s))
 }
@@ -185,12 +187,16 @@ func (s Space) SetCollisionPersistence(p uint) {
   C.cpSpaceSetCollisionPersistence(s.s, C.cpTimestamp(p))
 }
 
-// SetEnableContactGraph enables a rebuild of the contact graph during each step. Must be enabled to use the EachArbiter() method of Body.
+// SetEnableContactGraph enables a rebuild of the contact graph during each step.
+// Must be enabled to use the EachArbiter() method of Body.
 // Disabled by default for a small performance boost. Enabled implicitly when the sleeping feature is enabled.
 func (s Space) SetEnableContactGraph(cg bool) {
   C.cpSpaceSetEnableContactGraph(s.s, boolToC(cg))
 }
 
+// SetUserData sets user definable data pointer.
+// Generally this points to your game's controller or game state
+// so you can access it when given a Space reference in a callback.
 func (s Space) SetUserData(data interface{}) {
   C.cpSpaceSetUserData(s.s, dataToC(data))
 }

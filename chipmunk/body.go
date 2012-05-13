@@ -129,10 +129,14 @@ func (b Body) AngularVelocityLimit() float64 {
   return float64(C.cpBodyGetAngVelLimit(b.b))
 }
 
+// UserData returns user defined data.
 func (b Body) UserData() interface{} {
   return cpData(C.cpBodyGetUserData(b.b))
 }
 
+// SetUserData sets user definable data pointer.
+// Generally this points to your the game object so you can access it
+// when given a Body reference in a callback.
 func (b Body) SetUserData(data interface{}) {
   C.cpBodySetUserData(b.b, dataToC(data))
 }
@@ -252,7 +256,8 @@ func bodyIterator(b *C.cpBody, d unsafe.Pointer, p unsafe.Pointer) {
   }
 }
 
-// ForEach calls a callback function func once for each shape/constraint attached to a body and added to the space or each arbiter that is currently active on the body.
+// ForEach calls a callback function func once for each shape/constraint
+// attached to a body and added to the space or each arbiter that is currently active on the body.
 // What exactly should this function iterate over is decided by the callback type.
 func (b Body) ForEach(f interface{}) {
   p := unsafe.Pointer(&f)
