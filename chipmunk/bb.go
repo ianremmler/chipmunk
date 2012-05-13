@@ -79,19 +79,19 @@ func (b BB) ContainsVect(v Vect) bool {
 // Merge returns a bounding box that holds both bounding boxes.
 func (a BB) Merge(b BB) BB {
   return BB{
-		math.Min(a.l, b.l),
-		math.Min(a.b, b.b),
-		math.Max(a.r, b.r),
-		math.Max(a.t, b.t) }
+    math.Min(a.l, b.l),
+    math.Min(a.b, b.b),
+    math.Max(a.r, b.r),
+    math.Max(a.t, b.t) }
 }
 
 // Expand returns a bounding box that holds both bounding box and a vector.
 func (b BB) Expand(v Vect) BB {
   return BB{
-		math.Min(b.l, v.X),
-		math.Min(b.b, v.Y),
-		math.Max(b.r, v.X),
-		math.Max(b.t, v.Y) }
+    math.Min(b.l, v.X),
+    math.Min(b.b, v.Y),
+    math.Max(b.r, v.X),
+    math.Max(b.t, v.Y) }
 }
 
 // Area returns the area of the bounding box.
@@ -110,8 +110,8 @@ func (bb BB) SegmentQuery(a, b Vect) float64 {
   pinf := math.Inf(1)
   ninf := math.Inf(-1)
 
-	idx := 1.0 / (b.X - a.X);
-	idy := 1.0 / (b.Y - a.Y);
+  idx := 1.0 / (b.X - a.X);
+  idy := 1.0 / (b.Y - a.Y);
   tx1 := ninf
   tx2 := pinf
   ty1 := ninf
@@ -133,21 +133,21 @@ func (bb BB) SegmentQuery(a, b Vect) float64 {
     ty2 = (bb.t - a.Y) * idy
   }
 
-	txmin := math.Min(tx1, tx2)
-	txmax := math.Max(tx1, tx2)
-	tymin := math.Min(ty1, ty2)
-	tymax := math.Max(ty1, ty2)
+  txmin := math.Min(tx1, tx2)
+  txmax := math.Max(tx1, tx2)
+  tymin := math.Min(ty1, ty2)
+  tymax := math.Max(ty1, ty2)
 
-	if tymin <= txmax && txmin <= tymax {
-		min := math.Max(txmin, tymin)
-		max := math.Min(txmax, tymax)
+  if tymin <= txmax && txmin <= tymax {
+    min := math.Max(txmin, tymin)
+    max := math.Min(txmax, tymax)
 
-		if 0.0 <= max && min <= 1.0 {
+    if 0.0 <= max && min <= 1.0 {
       return math.Max(min, 0.0)
-	  }
+    }
   }
 
-	return pinf
+  return pinf
 }
 
 // IntersectsSegment returns true if the bounding box intersects the line segment defined using two points.
