@@ -133,6 +133,20 @@ func (s Space) UserData() interface{} {
   return cpData(C.cpSpaceGetUserData(s.s))
 }
 
+// StaticBody returns a dedicated static body for the space.
+// You don't have to use it, but because it's memory is managed automatically with the space
+// it's very convenient.
+// You can set its user data pointer to something helpful if you want for callbacks.
+func (s Space) StaticBody() Body {
+  return cpBody(C.cpSpaceGetStaticBody(s.s))
+}
+
+// CurrentTimeStep returns the current (if you are in a callback from SpaceStep())
+// or most recent (outside of a SpaceStep() call) timestep.
+func (s Space) CurrentTimeStep() float64 {
+  return float64(C.cpSpaceGetCurrentTimeStep(s.s))
+}
+
 /////////////////////////////////////////////////////////////////////////////
 
 // SetIterations sets the number of iterations to use in the impulse solver to solve contacts.
