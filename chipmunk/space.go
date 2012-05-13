@@ -126,6 +126,10 @@ func (s Space) EnableContactGraph() bool {
   return 0 != int(C.cpSpaceGetEnableContactGraph(s.s))
 }
 
+func (s Space) UserData() interface{} {
+  return cpData(C.cpSpaceGetUserData(s.s))
+}
+
 /////////////////////////////////////////////////////////////////////////////
 
 // SetIterations sets the number of iterations to use in the impulse solver to solve contacts.
@@ -184,6 +188,10 @@ func (s Space) SetCollisionPersistence(p uint) {
 // Disabled by default for a small performance boost. Enabled implicitly when the sleeping feature is enabled.
 func (s Space) SetEnableContactGraph(cg bool) {
   C.cpSpaceSetEnableContactGraph(s.s, boolToC(cg))
+}
+
+func (s Space) SetUserData(data interface{}) {
+  C.cpSpaceSetUserData(s.s, dataToC(data))
 }
 
 /////////////////////////////////////////////////////////////////////////////

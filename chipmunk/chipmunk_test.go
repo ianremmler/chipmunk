@@ -26,6 +26,19 @@ import (
   "testing"
 )
 
+func Test_UserData(t *testing.T) {
+  s := NewSpace()
+  x := "w00t"
+  s.SetUserData(x)
+  p := s.UserData()
+
+  if p.(string) != "w00t" {
+    t.Error("wrong user data")
+  }
+
+  s.Destroy()
+}
+
 func Test_Body(t *testing.T) {
   s := NewSpace()
   b := NewBody(1.0, 1.0)

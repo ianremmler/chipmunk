@@ -31,7 +31,21 @@ type constraintBase struct {
 
 type Constraint interface {
   ContainedInSpace(Space) bool
+  Destroy()
   c() *C.cpConstraint
+  A() Body
+  B() Body
+  Space() Space
+  MaxForce() float64
+  ErrorBias() float64
+  MaxBias() float64
+  UserData() interface{}
+  SetMaxForce(float64)
+  SetErrorBias(float64)
+  SetMaxBias(float64)
+  SetUserData(interface{})
+  ActivateBodies()
+  Impulse() float64
 }
 
 func (c constraintBase) Destroy() {
@@ -68,6 +82,10 @@ func (c constraintBase) MaxBias() float64 {
   return float64(C.cpConstraintGetMaxBias(c.ct))
 }
 
+func (c constraintBase) UserData() interface{} {
+  return cpData(C.cpConstraintGetUserData(c.ct))
+}
+
 /////////////////////////////////////////////////////////////////////////////
 
 func (c constraintBase) SetMaxForce(f float64) {
@@ -82,6 +100,9 @@ func (c constraintBase) SetMaxBias(b float64) {
   C.cpConstraintSetMaxBias(c.ct, C.cpFloat(b))
 }
 
+func (c constraintBase) SetUserData(data interface{}) {
+  C.cpConstraintSetUserData(c.ct, dataToC(data))
+}
 
 /////////////////////////////////////////////////////////////////////////////
 

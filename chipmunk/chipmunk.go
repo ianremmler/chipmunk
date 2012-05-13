@@ -67,6 +67,15 @@ func cpBool(b C.cpBool) bool {
   return int(b) != 0
 }
 
+func cpData(p C.cpDataPointer) interface{} {
+  data := *(*interface{})(p)
+  return data
+}
+
+func dataToC(data interface{}) C.cpDataPointer {
+  return C.cpDataPointer(unsafe.Pointer(&data))
+}
+
 func MomentForCircle(m, r1, r2 float64, offset Vect) float64 {
   return float64(C.cpMomentForCircle(C.cpFloat(m), C.cpFloat(r1), C.cpFloat(r2), offset.c()))
 }

@@ -181,6 +181,10 @@ func (s shapeBase) Body() Body {
   return Body{ b : C.cpShapeGetBody(s.s) }
 }
 
+func (s shapeBase) UserData() interface{} {
+  return cpData(C.cpShapeGetUserData(s.s))
+}
+
 /////////////////////////////////////////////////////////////////////////////
 
 // SetSensor sets if the shape is "sensor" one, i.e. does not produce collisions, but still calls collision callbacks.
@@ -221,6 +225,10 @@ func (s shapeBase) SetLayers(l Layers) {
 // SetBody sets the rigid body this collision shape is attached to.
 func (s shapeBase) SetBody(b Body) {
   C.cpShapeSetBody(s.s, b.b)
+}
+
+func (s shapeBase) SetUserData(data interface{}) {
+  C.cpShapeSetUserData(s.s, dataToC(data))
 }
 
 /////////////////////////////////////////////////////////////////////////////

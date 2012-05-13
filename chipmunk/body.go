@@ -128,6 +128,14 @@ func (b Body) AngularVelocityLimit() float64 {
   return float64(C.cpBodyGetAngVelLimit(b.b))
 }
 
+func (b Body) UserData() interface{} {
+  return cpData(C.cpBodyGetUserData(b.b))
+}
+
+func (b Body) SetUserData(data interface{}) {
+  C.cpBodySetUserData(b.b, dataToC(data))
+}
+
 /////////////////////////////////////////////////////////////////////////////
 
 func (b Body) UpdateVelocity(gravity Vect, damping float64, dt float64) {
