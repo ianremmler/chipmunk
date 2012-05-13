@@ -42,11 +42,11 @@ func (s SegmentShape) SetNeighbors(prev, next Vect) {
 }
 
 func (s SegmentShape) A() Vect {
-  return cpVect(C.cpSegmentShapeGetB(s.s))
+  return cpVect(C.cpSegmentShapeGetA(s.s))
 }
 
 func (s SegmentShape) B() Vect {
-  return cpVect(C.cpSegmentShapeGetA(s.s))
+  return cpVect(C.cpSegmentShapeGetB(s.s))
 }
 
 func (s SegmentShape) Normal() Vect {
