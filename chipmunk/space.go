@@ -365,3 +365,8 @@ func bbQuery(s *C.cpShape, p unsafe.Pointer) {
 func (s Space) BBQuery(bb BB, layers Layers, group Group, f BBQuery) {
   C.space_bb_query(s.s, bb.c(), layers.c(), group.c(), unsafe.Pointer(&f))
 }
+
+// ActivateShapesTouchingShape activates body (calls Activate()) of any shape that overlaps the given shape.
+func (s Space) ActivateShapesTouchingShape(sh Shape) {
+  C.cpSpaceActivateShapesTouchingShape(s.s, sh.c())
+}
