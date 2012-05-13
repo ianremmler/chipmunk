@@ -249,68 +249,6 @@ func ResetShapeIdCounter() {
 
 /////////////////////////////////////////////////////////////////////////////
 
-// CircleShape is a circle shape type.
-type CircleShape struct {
-  shapeBase
-}
-
-// CircleShapeNew creates a new circle shape.
-func CircleShapeNew(body Body, radius float64, offset Vect) Shape {
-  s := C.cpCircleShapeNew(body.b, C.cpFloat(radius), offset.c())
-  return CircleShape{shapeBase{s}}
-}
-
-func (s CircleShape) Offset() Vect {
-  return cpVect(C.cpCircleShapeGetOffset(s.s))
-}
-
-func (s CircleShape) Radius() float64 {
-  return float64(C.cpCircleShapeGetRadius(s.s))
-}
-
-func (s CircleShape) String() string {
-  return "circle shape"
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
-// SegmentShape is a segment shape type.
-type SegmentShape struct {
-  shapeBase
-}
-
-// SegmentShapeNew creates a new segment shape
-func SegmentShapeNew(body Body, a, b Vect, radius float64) Shape {
-  s := C.cpSegmentShapeNew(body.b, a.c(), b.c(), C.cpFloat(radius))
-  return SegmentShape{shapeBase{s}}
-}
-
-func (s SegmentShape) SetNeighbors(prev, next Vect) {
-  C.cpSegmentShapeSetNeighbors(s.s, prev.c(), next.c())
-}
-
-func (s SegmentShape) A() Vect {
-  return cpVect(C.cpSegmentShapeGetB(s.s))
-}
-
-func (s SegmentShape) B() Vect {
-  return cpVect(C.cpSegmentShapeGetA(s.s))
-}
-
-func (s SegmentShape) Normal() Vect {
-  return cpVect(C.cpSegmentShapeGetNormal(s.s))
-}
-
-func (s SegmentShape) Radius() float64 {
-  return float64(C.cpSegmentShapeGetRadius(s.s))
-}
-
-func (s SegmentShape) String() string {
-  return "segment shape"
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
 type shapeType int
 
 const (
