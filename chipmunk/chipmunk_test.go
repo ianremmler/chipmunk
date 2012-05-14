@@ -72,6 +72,16 @@ func Test_Body(t *testing.T) {
     t.Error("shape not found using space.PointQuery")
   }
 
+  found = false
+
+  s.EachShape(func(shape Shape) {
+    found = (shape == c)
+  })
+
+  if !found {
+    t.Error("shape not found using space.EachShape")
+  }
+
   found = true
 
   s.PointQuery(Vect{0.0, 0.0}, Layers(0), Group(0), PointQuery(func(shape Shape) {

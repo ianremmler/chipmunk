@@ -50,6 +50,24 @@ extern void bbQuery(cpShape *s, void *p);
 static void space_bb_query(cpSpace *space, cpBB bb, cpLayers layers, cpGroup group, void *f) {
   cpSpaceBBQuery(space, bb, layers, group, bbQuery, f);
 }
+
+extern void eachShape(cpShape *s, void *p);
+
+static void space_each_shape(cpSpace *space, void *f) {
+  cpSpaceEachShape(space, eachShape, f);
+}
+
+extern void eachConstraint(cpConstraint *c, void *p);
+
+static void space_each_constraint(cpSpace *space, void *f) {
+  cpSpaceEachConstraint(space, eachConstraint, f);
+}
+
+extern void eachBody(cpBody *b, void *p);
+
+static void space_each_body(cpSpace *space, void *f) {
+  cpSpaceEachBody(space, eachBody, f);
+}
 */
 import "C"
 
@@ -369,4 +387,42 @@ func (s Space) BBQuery(bb BB, layers Layers, group Group, f BBQuery) {
 // ActivateShapesTouchingShape activates body (calls Activate()) of any shape that overlaps the given shape.
 func (s Space) ActivateShapesTouchingShape(sh Shape) {
   C.cpSpaceActivateShapesTouchingShape(s.s, sh.c())
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+//export eachShape
+func eachShape(sh *C.cpShape, p unsafe.Pointer) {
+  f := *(*func(Shape))(p)
+  f(cpShape(sh))
+}
+
+//export eachConstraint
+func eachConstraint(c *C.cpConstraint, p unsafe.Pointer) {
+  f := *(*func(Constraint))(p)
+  f(cpConstraint(c))
+}
+
+//export eachBody
+func eachBody(b *C.cpBody, p unsafe.Pointer) {
+  f := *(*func(Body))(p)
+  f(cpBody(b))
+}
+
+// EachShape calls a callback function on each shape in the space.
+func (s Space) EachShape(iter func(Shape)) {
+  p := unsafe.Pointer(&iter)
+  C.space_each_shape(s.s, p)
+}
+
+// EachConstraint calls a callback function on each constraint in the space.
+func (s Space) EachConstraint(iter func(Constraint)) {
+  p := unsafe.Pointer(&iter)
+  C.space_each_constraint(s.s, p)
+}
+
+// EachBody calls a callback function on each body in the space.
+func (s Space) EachBody(iter func(Body)) {
+  p := unsafe.Pointer(&iter)
+  C.space_each_body(s.s, p)
 }
