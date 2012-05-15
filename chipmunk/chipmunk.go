@@ -36,6 +36,9 @@ import (
   "unsafe"
 )
 
+// Timestamp is type used for various timestamps.
+type Timestamp uint
+
 type CollisionType C.cpCollisionType
 
 type Group C.cpGroup

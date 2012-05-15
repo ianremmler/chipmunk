@@ -142,8 +142,8 @@ func (s Space) CollisionBias() float64 {
 }
 
 // CollisionPersistence returns the number of frames that contact information should persist.
-func (s Space) CollisionPersistence() uint {
-  return uint(C.cpSpaceGetCollisionPersistence(s.s))
+func (s Space) CollisionPersistence() Timestamp {
+  return Timestamp(C.cpSpaceGetCollisionPersistence(s.s))
 }
 
 // EnableContactGraph returns true if rebuild of the contact graph during each step is enabled.
@@ -220,7 +220,7 @@ func (s Space) SetCollisionBias(b float64) {
 
 // SetCollisionPersistence sets the number of frames that contact information should persist.
 // Defaults to 3. There is probably never a reason to change this value.
-func (s Space) SetCollisionPersistence(p uint) {
+func (s Space) SetCollisionPersistence(p Timestamp) {
   C.cpSpaceSetCollisionPersistence(s.s, C.cpTimestamp(p))
 }
 
