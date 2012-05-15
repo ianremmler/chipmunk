@@ -48,6 +48,13 @@ type Group C.cpGroup
 // Layers is a type used for Shape.Layers.
 type Layers uint
 
+const (
+  // NoGroup is a value for Shape.Group signifying that a shape is in no group.
+  NoGroup = Group(0)
+  // AllLayers is a value for Shape.Layers signifying that a shape is in every layer.
+  AllLayers = Layers(0)
+)
+
 func (c CollisionType) c() C.cpCollisionType {
   return C.cpCollisionType(c)
 }
