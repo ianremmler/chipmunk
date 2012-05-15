@@ -97,7 +97,8 @@ func (v1 Vect) Lerp(v2 Vect, t float64) Vect {
   return v1
 }
 
-// LerpConst does a spherical linear interpolation between two vectors by no more than specific angle (radians).
+// LerpConst does a spherical linear interpolation between two vectors
+// by no more than specific angle (radians).
 func (v1 Vect) LerpConst(v2 Vect, a float64) Vect {
   angle := math.Acos(v1.Dot(v2))
   return v1.Lerp(v2, math.Min(a, angle)/angle)

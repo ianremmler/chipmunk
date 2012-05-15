@@ -41,7 +41,12 @@ static void space_nearest_point_query(cpSpace *space, cpVect point, cpFloat maxD
 
 extern void segmentQuery(cpShape *s, cpFloat t, cpVect n, void *p);
 
-static void space_segment_query(cpSpace *space, cpVect start, cpVect end, cpLayers layers, cpGroup group, void *f) {
+static void space_segment_query(cpSpace *space,
+                                cpVect   start,
+                                cpVect   end,
+                                cpLayers layers,
+                                cpGroup  group,
+                                void    *f) {
   cpSpaceSegmentQuery(space, start, end, layers, group, segmentQuery, f);
 }
 
@@ -51,22 +56,22 @@ static void space_bb_query(cpSpace *space, cpBB bb, cpLayers layers, cpGroup gro
   cpSpaceBBQuery(space, bb, layers, group, bbQuery, f);
 }
 
-extern void eachShape(cpShape *s, void *p);
+extern void eachShape_space(cpShape *s, void *p);
 
 static void space_each_shape(cpSpace *space, void *f) {
-  cpSpaceEachShape(space, eachShape, f);
+  cpSpaceEachShape(space, eachShape_space, f);
 }
 
-extern void eachConstraint(cpConstraint *c, void *p);
+extern void eachConstraint_space(cpConstraint *c, void *p);
 
 static void space_each_constraint(cpSpace *space, void *f) {
-  cpSpaceEachConstraint(space, eachConstraint, f);
+  cpSpaceEachConstraint(space, eachConstraint_space, f);
 }
 
-extern void eachBody(cpBody *b, void *p);
+extern void eachBody_space(cpBody *b, void *p);
 
 static void space_each_body(cpSpace *space, void *f) {
-  cpSpaceEachBody(space, eachBody, f);
+  cpSpaceEachBody(space, eachBody_space, f);
 }
 */
 import "C"
@@ -221,7 +226,8 @@ func (s Space) SetCollisionPersistence(p uint) {
 
 // SetEnableContactGraph enables a rebuild of the contact graph during each step.
 // Must be enabled to use the EachArbiter() method of Body.
-// Disabled by default for a small performance boost. Enabled implicitly when the sleeping feature is enabled.
+// Disabled by default for a small performance boost.
+// Enabled implicitly when the sleeping feature is enabled.
 func (s Space) SetEnableContactGraph(cg bool) {
   C.cpSpaceSetEnableContactGraph(s.s, boolToC(cg))
 }
@@ -350,8 +356,19 @@ func nearestPointQuery(s *C.cpShape, distance C.cpFloat, point C.cpVect, p unsaf
 }
 
 // NearestPointQuery queries the space at a point and calls a callback function for each shape found.
-func (s Space) NearestPointQuery(point Vect, maxDistance float64, layers Layers, group Group, f NearestPointQuery) {
-  C.space_nearest_point_query(s.s, point.c(), C.cpFloat(maxDistance), layers.c(), group.c(), unsafe.Pointer(&f))
+func (s Space) NearestPointQuery(
+  point Vect,
+  maxDistance float64,
+  layers Layers,
+  group Group,
+  f NearestPointQuery) {
+  C.space_nearest_point_query(
+    s.s,
+    point.c(),
+    C.cpFloat(maxDistance),
+    layers.c(),
+    group.c(),
+    unsafe.Pointer(&f))
 }
 
 // SegmentQuery is a query callback function type.
@@ -378,33 +395,35 @@ func bbQuery(s *C.cpShape, p unsafe.Pointer) {
   f(cpShape(s))
 }
 
-// BBQuery performs a fast rectangle query on the space calling a callback function for each shape found.
+// BBQuery performs a fast rectangle query on the space calling a callback
+// function for each shape found.
 // Only the shape's bounding boxes are checked for overlap, not their full shape.
 func (s Space) BBQuery(bb BB, layers Layers, group Group, f BBQuery) {
   C.space_bb_query(s.s, bb.c(), layers.c(), group.c(), unsafe.Pointer(&f))
 }
 
-// ActivateShapesTouchingShape activates body (calls Activate()) of any shape that overlaps the given shape.
+// ActivateShapesTouchingShape activates body (calls Activate()) of any shape
+// that overlaps the given shape.
 func (s Space) ActivateShapesTouchingShape(sh Shape) {
   C.cpSpaceActivateShapesTouchingShape(s.s, sh.c())
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-//export eachShape
-func eachShape(sh *C.cpShape, p unsafe.Pointer) {
+//export eachShape_space
+func eachShape_space(sh *C.cpShape, p unsafe.Pointer) {
   f := *(*func(Shape))(p)
   f(cpShape(sh))
 }
 
-//export eachConstraint
-func eachConstraint(c *C.cpConstraint, p unsafe.Pointer) {
+//export eachConstraint_space
+func eachConstraint_space(c *C.cpConstraint, p unsafe.Pointer) {
   f := *(*func(Constraint))(p)
   f(cpConstraint(c))
 }
 
-//export eachBody
-func eachBody(b *C.cpBody, p unsafe.Pointer) {
+//export eachBody_space
+func eachBody_space(b *C.cpBody, p unsafe.Pointer) {
   f := *(*func(Body))(p)
   f(cpBody(b))
 }

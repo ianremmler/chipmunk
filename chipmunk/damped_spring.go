@@ -30,7 +30,10 @@ type DampedSpring struct {
   constraintBase
 }
 
-func DampedSpringNew(a, b Body, anchr1, anchr2 Vect, restLength, stiffness, damping float64) DampedSpring {
+func DampedSpringNew(
+  a, b Body,
+  anchr1, anchr2 Vect,
+  restLength, stiffness, damping float64) DampedSpring {
   return DampedSpring{
     constraintBase{
       C.cpDampedSpringNew(

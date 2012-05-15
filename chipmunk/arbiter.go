@@ -39,6 +39,10 @@ type CollisionPreSolv func(arb Arbiter, space Space) bool
 type CollisionPostSolve func(arb Arbiter, space Space)
 type CollisionSeparate func(arb Arbiter, space Space)
 
+func cpArbiter(a *C.cpArbiter) Arbiter {
+  return Arbiter{a}
+}
+
 func (a Arbiter) Elasticity() float64 {
   return float64(C.cpArbiterGetElasticity(a.a))
 }

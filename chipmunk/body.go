@@ -26,20 +26,23 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 /*
 #include <chipmunk.h>
 
-extern void bodyIterator(cpBody *body, void *d, void *p);
+extern void eachShape_body(cpBody *b, cpShape *s, void *p);
 
-static void body_each_shape(cpBody *body, void *p) {
-  cpBodyEachShape(body, (void *)bodyIterator, p);
+static void body_each_shape(cpBody *body, void *f) {
+  cpBodyEachShape(body, eachShape_body, f);
 }
 
-static void body_each_constraint(cpBody *body, void *p) {
-  cpBodyEachConstraint(body, (void *)bodyIterator, p);
+extern void eachConstraint_body(cpBody *b, cpConstraint *c, void *p);
+
+static void body_each_constraint(cpBody *body, void *f) {
+  cpBodyEachConstraint(body, eachConstraint_body, f);
 }
 
-static void body_each_arbiter(cpBody *body, void *p) {
-  cpBodyEachArbiter(body, (void *)bodyIterator, p);
-}
+extern void eachArbiter_body(cpBody *b, cpArbiter *a, void *p);
 
+static void body_each_arbiter(cpBody *body, void *f) {
+  cpBodyEachArbiter(body, eachArbiter_body, f);
+}
 */
 import "C"
 
@@ -47,7 +50,7 @@ import (
   "unsafe"
 )
 
-// Space is a basic unit of simulation in Chipmunk.
+// Body is a rigid body struct.
 type Body struct {
   b *C.cpBody
 }
@@ -61,10 +64,18 @@ func NewBodyStatic() Body {
   return Body{b: C.cpBodyNewStatic()}
 }
 
-// Destroy removes a space.
+// Destroy removes a body.
 func (b Body) Destroy() {
   C.cpBodyDestroy(b.b)
   b.b = nil
+}
+
+func (b Body) c() *C.cpBody {
+  return b.b
+}
+
+func cpBody(b *C.cpBody) Body {
+  return Body{b}
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -103,7 +114,8 @@ func (b Body) Angle() float64 {
   return float64(C.cpBodyGetAngle(b.b))
 }
 
-// AngularVelocity returns the angular velocity of the body around it's center of gravity in radians/second.
+// AngularVelocity returns the angular velocity of the body around it's center
+// of gravity in radians/second.
 func (b Body) AngularVelocity() float64 {
   return float64(C.cpBodyGetAngVel(b.b))
 }
@@ -230,57 +242,35 @@ func (b Body) IsRogue() bool {
 
 /////////////////////////////////////////////////////////////////////////////
 
-type ShapeIterator func(b Body, s Shape)
-
-type ConstraintIterator func(b Body, c Constraint)
-
-type ArbiterIterator func(b Body, a Arbiter)
-
-//export bodyIterator
-func bodyIterator(b *C.cpBody, d unsafe.Pointer, p unsafe.Pointer) {
-  f := *(*interface{})(p)
-  body := Body{b}
-
-  switch f.(type) {
-  case ShapeIterator:
-    f.(ShapeIterator)(body, cpShape((*C.cpShape)(d)))
-
-  case ConstraintIterator:
-    f.(ConstraintIterator)(body, cpConstraint((*C.cpConstraint)(d)))
-
-  case ArbiterIterator:
-    f.(ArbiterIterator)(body, Arbiter{a: (*C.cpArbiter)(d)})
-
-  default:
-    panic("invalid type of iterator in body_iterator")
-  }
+//export eachShape_body
+func eachShape_body(b *C.cpBody, sh *C.cpShape, p unsafe.Pointer) {
+  f := *(*func(Body, Shape))(p)
+  f(cpBody(b), cpShape(sh))
 }
 
-// ForEach calls a callback function func once for each shape/constraint
-// attached to a body and added to the space or each arbiter that is currently active on the body.
-// What exactly should this function iterate over is decided by the callback type.
-func (b Body) ForEach(f interface{}) {
-  p := unsafe.Pointer(&f)
-
-  switch f.(type) {
-  case ShapeIterator:
-    C.body_each_shape(b.b, p)
-
-  case ConstraintIterator:
-    C.body_each_constraint(b.b, p)
-
-  case ArbiterIterator:
-    C.body_each_arbiter(b.b, p)
-
-  default:
-    panic("invalid type of iterator in ForEach")
-  }
+//export eachConstraint_body
+func eachConstraint_body(b *C.cpBody, c *C.cpConstraint, p unsafe.Pointer) {
+  f := *(*func(Body, Constraint))(p)
+  f(cpBody(b), cpConstraint(c))
 }
 
-func (b Body) c() *C.cpBody {
-  return b.b
+//export eachArbiter_body
+func eachArbiter_body(b *C.cpBody, a *C.cpArbiter, p unsafe.Pointer) {
+  f := *(*func(Body, Arbiter))(p)
+  f(cpBody(b), cpArbiter(a))
 }
 
-func cpBody(b *C.cpBody) Body {
-  return Body{b}
+func (b Body) EachShape(iter func(Body, Shape)) {
+  p := unsafe.Pointer(&iter)
+  C.body_each_shape(b.b, p)
+}
+
+func (b Body) EachConstraint(iter func(Body, Constraint)) {
+  p := unsafe.Pointer(&iter)
+  C.body_each_constraint(b.b, p)
+}
+
+func (b Body) EachArbiter(iter func(Body, Shape)) {
+  p := unsafe.Pointer(&iter)
+  C.body_each_arbiter(b.b, p)
 }

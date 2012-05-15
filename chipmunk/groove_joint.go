@@ -31,7 +31,9 @@ type GrooveJoint struct {
 }
 
 func GrooveJointNew(a, b Body, groove_a, groove_b, anchr2 Vect) GrooveJoint {
-  return GrooveJoint{constraintBase{C.cpGrooveJointNew(a.c(), b.c(), groove_a.c(), groove_b.c(), anchr2.c())}}
+  return GrooveJoint{
+    constraintBase{
+      C.cpGrooveJointNew(a.c(), b.c(), groove_a.c(), groove_b.c(), anchr2.c())}}
 }
 
 /////////////////////////////////////////////////////////////////////////////

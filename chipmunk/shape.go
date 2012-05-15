@@ -173,7 +173,8 @@ func (s shapeBase) Group() Group {
   return Group(C.cpShapeGetGroup(s.s))
 }
 
-// Layers returns layers bitmask of the shape. Shapes collide only if bitwise of their layers is non-zero.
+// Layers returns layers bitmask of the shape. Shapes collide only if bitwise
+// of their layers is non-zero.
 func (s shapeBase) Layers() Layers {
   return Layers(C.cpShapeGetLayers(s.s))
 }
@@ -190,7 +191,8 @@ func (s shapeBase) UserData() interface{} {
 
 /////////////////////////////////////////////////////////////////////////////
 
-// SetSensor sets if the shape is "sensor" one, i.e. does not produce collisions, but still calls collision callbacks.
+// SetSensor sets if the shape is "sensor" one, i.e. does not produce collisions,
+// but still calls collision callbacks.
 func (s shapeBase) SetSensor(b bool) {
   C.cpShapeSetSensor(s.s, boolToC(b))
 }
@@ -220,7 +222,8 @@ func (s shapeBase) SetGroup(g Group) {
   C.cpShapeSetGroup(s.s, g.c())
 }
 
-// SetLayers sets layers bitmask of the shape. Shapes collide only if bitwise of their layers is non-zero.
+// SetLayers sets layers bitmask of the shape. Shapes collide only if bitwise
+// of their layers is non-zero.
 func (s shapeBase) SetLayers(l Layers) {
   C.cpShapeSetLayers(s.s, l.c())
 }

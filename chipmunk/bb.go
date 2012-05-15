@@ -146,7 +146,8 @@ func (bb BB) SegmentQuery(a, b Vect) float64 {
   return pinf
 }
 
-// IntersectsSegment returns true if the bounding box intersects the line segment defined using two points.
+// IntersectsSegment returns true if the bounding box intersects the line
+// segment defined using two points.
 func (bb BB) IntersectsSegment(a, b Vect) bool {
   return !math.IsInf(bb.SegmentQuery(a, b), 1)
 }
