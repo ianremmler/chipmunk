@@ -39,10 +39,13 @@ import (
 // Timestamp is type used for various timestamps.
 type Timestamp uint
 
+// CollisionType is a type used for Space.CollisionType.
 type CollisionType C.cpCollisionType
 
+// Group is a type used for Shape.Group.
 type Group C.cpGroup
 
+// Layers is a type used for Shape.Layers.
 type Layers uint
 
 func (c CollisionType) c() C.cpCollisionType {
