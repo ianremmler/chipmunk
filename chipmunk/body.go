@@ -80,6 +80,7 @@ func cpBody(b *C.cpBody) Body {
 
 /////////////////////////////////////////////////////////////////////////////
 
+// ContainedInSpace returns true if the body is in the space.
 func (b Body) ContainedInSpace(s Space) bool {
   return cpBool(C.cpSpaceContainsBody(s.s, b.b))
 }
@@ -155,14 +156,17 @@ func (b Body) SetUserData(data interface{}) {
 
 /////////////////////////////////////////////////////////////////////////////
 
+// UpdateVelocity is a default function that is called to integrate the body's velocity.
 func (b Body) UpdateVelocity(gravity Vect, damping float64, dt float64) {
   C.cpBodyUpdateVelocity(b.b, gravity.c(), C.cpFloat(damping), C.cpFloat(dt))
 }
 
+// UpdatePosition is a default function that is called to integrate the body's position.
 func (b Body) UpdatePosition(dt float64) {
   C.cpBodyUpdatePosition(b.b, C.cpFloat(dt))
 }
 
+// LocalToWorld converts body relative/local coordinates to absolute/world coordinates.
 func (b Body) LocalToWorld(v Vect) Vect {
   return cpVect(C.cpBodyWorld2Local(b.b, v.c()))
 }
@@ -260,16 +264,22 @@ func eachArbiter_body(b *C.cpBody, a *C.cpArbiter, p unsafe.Pointer) {
   f(cpBody(b), cpArbiter(a))
 }
 
+// EachShape calls a callback function once for each shape attached to the body
+// and added to the space.
 func (b Body) EachShape(iter func(Body, Shape)) {
   p := unsafe.Pointer(&iter)
   C.body_each_shape(b.b, p)
 }
 
+// EachConstraint calls a callback function once for each constraint attached
+// to the body and added to the space.
 func (b Body) EachConstraint(iter func(Body, Constraint)) {
   p := unsafe.Pointer(&iter)
   C.body_each_constraint(b.b, p)
 }
 
+// EachArbiter calls a callback function once for each arbiter which is currently
+// active on the body.
 func (b Body) EachArbiter(iter func(Body, Shape)) {
   p := unsafe.Pointer(&iter)
   C.body_each_arbiter(b.b, p)
