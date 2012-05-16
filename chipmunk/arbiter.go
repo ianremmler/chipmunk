@@ -30,6 +30,7 @@ import (
   "unsafe"
 )
 
+// Arbiter is a type of colliding pair of shapes.
 type Arbiter struct {
   a *C.cpArbiter
 }
@@ -43,66 +44,106 @@ func cpArbiter(a *C.cpArbiter) Arbiter {
   return Arbiter{a}
 }
 
+// Elasticity returns a calculated value to use for the elasticity coefficient.
+// Override in a pre-solve collision handler for custom behavior.
 func (a Arbiter) Elasticity() float64 {
   return float64(C.cpArbiterGetElasticity(a.a))
 }
 
+// Friction returns a calculated value to use for the friction coefficient.
+// Override in a pre-solve collision handler for custom behavior.
 func (a Arbiter) Friction() float64 {
   return float64(C.cpArbiterGetFriction(a.a))
 }
 
+// SurfaceVelocity returns a calculated value to use for applying surface velocities.
+// Override in a pre-solve collision handler for custom behavior.
 func (a Arbiter) SurfaceVelocity() Vect {
   return cpVect(C.cpArbiterGetSurfaceVelocity(a.a))
 }
 
+// SetElasticity sets elasticity coefficient.
 func (a Arbiter) SetElasticity(e float64) {
   C.cpArbiterSetElasticity(a.a, C.cpFloat(e))
 }
 
+// SetFriction sets friction coefficient.
 func (a Arbiter) SetFriction(f float64) {
   C.cpArbiterSetFriction(a.a, C.cpFloat(f))
 }
 
+// SetFriction sets calculated value to use for applying surface velocities.
 func (a Arbiter) SetSurfaceVelocity(v Vect) {
   C.cpArbiterSetSurfaceVelocity(a.a, v.c())
 }
 
+// TotalImpulse returns the total impulse that was applied by this arbiter.
+// This function should only be called from a post-solve, post-step or
+// body.EachArbiter callback.
+func (a Arbiter) TotalImpulse() Vect {
+  return cpVect(C.cpArbiterTotalImpulse(a.a))
+}
+
+// TotalImpulseWithFriction returns the total impulse including the friction that
+// was applied by this arbiter. This function should only be called from a post-solve,
+// post-step or body.EachArbiter callback.
+func (a Arbiter) TotalImpulseWithFriction() Vect {
+  return cpVect(C.cpArbiterTotalImpulseWithFriction(a.a))
+}
+
+// TotalKE returns the amount of energy lost in a collision including static,
+// but not dynamic friction. This function should only be called from a post-solve,
+// post-step or body.EachArbiter callback.
 func (a Arbiter) TotalKE() float64 {
   return float64(C.cpArbiterTotalKE(a.a))
 }
 
+// Ignore causes a collision pair to be ignored as if you returned false from a begin callback.
+// If called from a pre-step callback, you will still need to return false
+// if you want it to be ignored in the current step.
 func (a Arbiter) Ignore() {
   C.cpArbiterIgnore(a.a)
 }
 
+// Shapes returns the colliding shapes involved for this arbiter.
+// The order of their cpSpace.collision_type values will match the order set when the collision
+// handler was registered.
 func (arb Arbiter) Shapes() (Shape, Shape) {
   var a, b *C.cpShape
   C.cpArbiterGetShapes(arb.a, (**C.cpShape)(unsafe.Pointer(&a)), (**C.cpShape)(unsafe.Pointer(&b)))
   return cpShape(a), cpShape(b)
 }
 
+// Bodies returns the colliding bodies involved for this arbiter.
+// The order of the cpSpace.collision_type the bodies are associated with values will match
+// the order set when the collision handler was registered.
 func (arb Arbiter) Bodies() (Body, Body) {
   var a, b *C.cpBody
   C.cpArbiterGetBodies(arb.a, (**C.cpBody)(unsafe.Pointer(&a)), (**C.cpBody)(unsafe.Pointer(&b)))
   return cpBody(a), cpBody(b)
 }
 
+// IsFirstContact returns true if this is the first step a pair of objects started colliding.
 func (a Arbiter) IsFirstContact() bool {
   return cpBool(C.cpArbiterIsFirstContact(a.a))
 }
 
+// Count returns the number of contact points for this arbiter.
 func (a Arbiter) Count() int {
   return int(C.cpArbiterGetCount(a.a))
 }
 
+// Normal returns the normal of specific contact point.
 func (a Arbiter) Normal(i int) Vect {
   return cpVect(C.cpArbiterGetNormal(a.a, C.int(i)))
 }
 
+// Point returns the position of specific contact point.
 func (a Arbiter) Point(i int) Vect {
   return cpVect(C.cpArbiterGetPoint(a.a, C.int(i)))
 }
 
+/// Depth returns the depth of specific contact point.
 func (a Arbiter) Depth(i int) float64 {
   return float64(C.cpArbiterGetDepth(a.a, C.int(i)))
 }
