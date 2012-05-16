@@ -67,7 +67,6 @@ func NewBodyStatic() Body {
 // Destroy removes a body.
 func (b Body) Destroy() {
   C.cpBodyDestroy(b.b)
-  b.b = nil
 }
 
 func (b Body) c() *C.cpBody {
@@ -82,7 +81,12 @@ func cpBody(b *C.cpBody) Body {
 
 // ContainedInSpace returns true if the body is in the space.
 func (b Body) ContainedInSpace(s Space) bool {
-  return cpBool(C.cpSpaceContainsBody(s.s, b.b))
+  return cpBool(C.cpSpaceContainsBody(s.c(), b.b))
+}
+
+// Space returns space the body was added to or nil if the body doesn't belong to any space.
+func (b Body) Space() Space {
+  return cpSpace(C.cpBodyGetSpace(b.b))
 }
 
 // Mass returns the mass of the body.

@@ -102,7 +102,12 @@ func (s shapeBase) c() *C.cpShape {
 
 // ContainedInSpace returns true if the space contains the shape.
 func (s shapeBase) ContainedInSpace(space Space) bool {
-  return cpBool(C.cpSpaceContainsShape(space.s, s.s))
+  return cpBool(C.cpSpaceContainsShape(space.c(), s.s))
+}
+
+// Space returns space the body was added to or nil if the body doesn't belong to any space.
+func (s shapeBase) Space() Space {
+  return cpSpace(C.cpShapeGetSpace(s.s))
 }
 
 // NearestPointQuery finds the closest point on the surface of shape to a specific point.

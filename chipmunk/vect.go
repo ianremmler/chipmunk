@@ -51,22 +51,27 @@ func Origin() Vect {
   return VectNew(0.0, 0.0)
 }
 
+// String converts a vector to a human-readable string.
 func (v Vect) String() string {
   return fmt.Sprintf("(%f, %f)", v.X, v.Y)
 }
 
+// Add adds one vector to another.
 func (a Vect) Add(b Vect) Vect {
   return VectNew(a.X+b.X, a.Y+b.Y)
 }
 
+// Sub subtracts one vector from another.
 func (a Vect) Sub(b Vect) Vect {
   return VectNew(a.X-b.X, a.Y-b.Y)
 }
 
+// Mul multiples vector by a value thus scaling it.
 func (v Vect) Mul(x float64) Vect {
   return VectNew(v.X*x, v.Y*x)
 }
 
+// Div divides vector by a value thus shrinking it.
 func (v Vect) Div(x float64) Vect {
   return VectNew(v.X/x, v.Y/x)
 }
@@ -81,6 +86,7 @@ func (v Vect) Length() float64 {
   return math.Sqrt(v.Dot(v))
 }
 
+// Neg negates vector.
 func (v Vect) Neg() Vect {
   return VectNew(-v.X, -v.Y)
 }

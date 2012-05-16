@@ -112,7 +112,7 @@ func (c constraintBase) SetUserData(data interface{}) {
 /////////////////////////////////////////////////////////////////////////////
 
 func (c constraintBase) ContainedInSpace(s Space) bool {
-  return cpBool(C.cpSpaceContainsConstraint(s.s, c.ct))
+  return cpBool(C.cpSpaceContainsConstraint(s.c(), c.ct))
 }
 
 func (c constraintBase) ActivateBodies() {
