@@ -31,7 +31,7 @@ type RatchetJoint struct {
   constraintBase
 }
 
-// RatcheJointNew creates a new ratchet joint.
+// RatchetJointNew creates a new ratchet joint.
 func RatchetJointNew(a, b Body, phase, ratchet float64) RatchetJoint {
   return RatchetJoint{
     constraintBase{

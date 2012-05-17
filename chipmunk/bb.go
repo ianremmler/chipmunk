@@ -35,7 +35,7 @@ type BB struct {
   l, b, r, t float64
 }
 
-// BBNew create a 2D bounding box.
+// BBNew creates a 2D bounding box.
 func BBNew(l, b, r, t float64) BB {
   return BB{l, b, r, t}
 }

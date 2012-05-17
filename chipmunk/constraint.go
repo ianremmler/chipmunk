@@ -82,7 +82,7 @@ func (c constraintBase) MaxForce() float64 {
   return float64(C.cpConstraintGetMaxForce(c.ct))
 }
 
-// MaxBias returns the rate at which joint error is corrected.
+// ErrorBias returns the rate at which joint error is corrected.
 func (c constraintBase) ErrorBias() float64 {
   return float64(C.cpConstraintGetErrorBias(c.ct))
 }
@@ -106,7 +106,7 @@ func (c constraintBase) SetMaxForce(f float64) {
   C.cpConstraintSetMaxForce(c.ct, C.cpFloat(f))
 }
 
-// MaxBias sets the rate at which joint error is corrected.
+// SetErrorBias sets the rate at which joint error is corrected.
 // Defaults to math.Pow(1.0 - 0.1, 60.0) meaning that it will correct 10% of the error
 // every 1/60th of a second.
 func (c constraintBase) SetErrorBias(b float64) {

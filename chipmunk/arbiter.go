@@ -67,7 +67,7 @@ func (a Arbiter) SetFriction(f float64) {
   C.cpArbiterSetFriction(a.a, C.cpFloat(f))
 }
 
-// SetFriction sets calculated value to use for applying surface velocities.
+// SetSurfaceVelocity sets calculated value to use for applying surface velocities.
 func (a Arbiter) SetSurfaceVelocity(v Vect) {
   C.cpArbiterSetSurfaceVelocity(a.a, v.c())
 }
