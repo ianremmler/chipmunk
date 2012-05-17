@@ -51,6 +51,7 @@ func BoxShapeNew2(b Body, box BB) Shape {
   return PolyShape{shapeBase{s: C.cpBoxShapeNew2(b.c(), box.c())}}
 }
 
+// String converts a polygon shape to a human-readable string.
 func (s PolyShape) String() string {
   return "poly shape"
 }

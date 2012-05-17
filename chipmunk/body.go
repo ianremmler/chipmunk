@@ -60,6 +60,7 @@ func NewBody(m, i float64) Body {
   return Body{b: C.cpBodyNew(C.cpFloat(m), C.cpFloat(i))}
 }
 
+// NewBody creates a new static body.
 func NewBodyStatic() Body {
   return Body{b: C.cpBodyNewStatic()}
 }

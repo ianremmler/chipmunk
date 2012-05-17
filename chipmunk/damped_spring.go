@@ -26,10 +26,14 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // #include <chipmunk.h>
 import "C"
 
+// DampedSprint is a spring with a damper.
+// While a spring is not technically a constraint, the damper is.
+// The spring forces are simply a convenience.
 type DampedSpring struct {
   constraintBase
 }
 
+// DampedSprintNew creates a new damped spring.
 func DampedSpringNew(
   a, b Body,
   anchr1, anchr2 Vect,
@@ -48,44 +52,54 @@ func DampedSpringNew(
 
 /////////////////////////////////////////////////////////////////////////////
 
+// Anchr1 returns the anchor point on the first body.
 func (c DampedSpring) Anchr1() Vect {
   return cpVect(C.cpDampedSpringGetAnchr1(c.ct))
 }
 
+// Anchr2 returns the anchor point on the second body.
 func (c DampedSpring) Anchr2() Vect {
   return cpVect(C.cpDampedSpringGetAnchr2(c.ct))
 }
 
+// RestLength returns the length the spring wants to contract or expand to.
 func (c DampedSpring) RestLength() float64 {
   return float64(C.cpDampedSpringGetRestLength(c.ct))
 }
 
+// Stiffness returns the young's modulus of the spring.
 func (c DampedSpring) Stiffness() float64 {
   return float64(C.cpDampedSpringGetStiffness(c.ct))
 }
 
+// Damping returns the amount of viscous damping to apply.
 func (c DampedSpring) Damping() float64 {
   return float64(C.cpDampedSpringGetDamping(c.ct))
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
+// SetAnchr1 sets the anchor point on the first body.
 func (c DampedSpring) SetAnchr1(v Vect) {
   C.cpDampedSpringSetAnchr1(c.ct, v.c())
 }
 
+// SetAnchr2 sets the anchor point on the second body.
 func (c DampedSpring) SetAnchr2(v Vect) {
   C.cpDampedSpringSetAnchr2(c.ct, v.c())
 }
 
+// SetRestLength sets the length the spring wants to contract or expand to.
 func (c DampedSpring) SetRestLength(restLength float64) {
   C.cpDampedSpringSetRestLength(c.ct, C.cpFloat(restLength))
 }
 
+// SetStiffness sets the young's modulus of the spring.
 func (c DampedSpring) SetStiffness(stiffness float64) {
   C.cpDampedSpringSetStiffness(c.ct, C.cpFloat(stiffness))
 }
 
+// SetDamping sets the amount of viscous damping to apply.
 func (c DampedSpring) SetDamping(damping float64) {
   C.cpDampedSpringSetDamping(c.ct, C.cpFloat(damping))
 }

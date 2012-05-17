@@ -26,10 +26,13 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // #include <chipmunk.h>
 import "C"
 
+// SlideJoint holds the distance between points on two bodies between a minimum and a maximum.
+// Think of them as a telescoping PinJoint.
 type SlideJoint struct {
   constraintBase
 }
 
+// SlideJointNew creates a new slide joint.
 func SlideJointNew(a, b Body, anchr1, anchr2 Vect, min, max float64) SlideJoint {
   return SlideJoint{
     constraintBase{
@@ -38,36 +41,44 @@ func SlideJointNew(a, b Body, anchr1, anchr2 Vect, min, max float64) SlideJoint 
 
 /////////////////////////////////////////////////////////////////////////////
 
+// Anchr1 returns the anchor point on the first body.
 func (c SlideJoint) Anchr1() Vect {
   return cpVect(C.cpSlideJointGetAnchr1(c.ct))
 }
 
+// Anchr2 returns the anchor point on the second body.
 func (c SlideJoint) Anchr2() Vect {
   return cpVect(C.cpSlideJointGetAnchr2(c.ct))
 }
 
+// Min returns the minimum allowed distance between anchor points.
 func (c SlideJoint) Min() float64 {
   return float64(C.cpSlideJointGetMin(c.ct))
 }
 
+// Max returns the maximum allowed distance between anchor points.
 func (c SlideJoint) Max() float64 {
   return float64(C.cpSlideJointGetMax(c.ct))
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
+// SetAnchr1 sets the anchor point on the first body.
 func (c SlideJoint) SetAnchr1(v Vect) {
   C.cpSlideJointSetAnchr1(c.ct, v.c())
 }
 
+// SetAnchr2 sets the anchor point on the second body.
 func (c SlideJoint) SetAnchr2(v Vect) {
   C.cpSlideJointSetAnchr2(c.ct, v.c())
 }
 
+// SetMin sets the minimum allowed distance between anchor points.
 func (c SlideJoint) SetMin(m float64) {
   C.cpSlideJointSetMin(c.ct, C.cpFloat(m))
 }
 
+// SetMax sets the maximum allowed distance between anchor points.
 func (c SlideJoint) SetMax(m float64) {
   C.cpSlideJointSetMax(c.ct, C.cpFloat(m))
 }

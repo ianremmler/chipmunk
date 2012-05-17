@@ -101,7 +101,7 @@ func (a Arbiter) Ignore() {
 }
 
 // Shapes returns the colliding shapes involved for this arbiter.
-// The order of their cpSpace.collision_type values will match the order set when the collision
+// The order of their CollisionType values will match the order set when the collision
 // handler was registered.
 func (arb Arbiter) Shapes() (Shape, Shape) {
   var a, b *C.cpShape
@@ -110,7 +110,7 @@ func (arb Arbiter) Shapes() (Shape, Shape) {
 }
 
 // Bodies returns the colliding bodies involved for this arbiter.
-// The order of the cpSpace.collision_type the bodies are associated with values will match
+// The order of the CollisionType the bodies are associated with values will match
 // the order set when the collision handler was registered.
 func (arb Arbiter) Bodies() (Body, Body) {
   var a, b *C.cpBody
@@ -163,7 +163,7 @@ func (a Arbiter) Point(i int) Vect {
   return cpVect(C.cpArbiterGetPoint(a.a, C.int(i)))
 }
 
-/// Depth returns the depth of specific contact point.
+// Depth returns the depth of specific contact point.
 func (a Arbiter) Depth(i int) float64 {
   return float64(C.cpArbiterGetDepth(a.a, C.int(i)))
 }

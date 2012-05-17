@@ -26,10 +26,12 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // #include <chipmunk.h>
 import "C"
 
+// RatchetJoint creates rotary ratches similar to a socket wrench.
 type RatchetJoint struct {
   constraintBase
 }
 
+// RatcheJointNew creates a new ratchet joint.
 func RatchetJointNew(a, b Body, phase, ratchet float64) RatchetJoint {
   return RatchetJoint{
     constraintBase{
@@ -42,20 +44,35 @@ func RatchetJointNew(a, b Body, phase, ratchet float64) RatchetJoint {
 
 /////////////////////////////////////////////////////////////////////////////
 
+// Angle returns the current ratchet position in radians.
+func (c RatchetJoint) Angle() float64 {
+  return float64(C.cpRatchetJointGetAngle(c.ct))
+}
+
+// Phase returns the angular offset of the ratchet positions in radians.
 func (c RatchetJoint) Phase() float64 {
   return float64(C.cpRatchetJointGetPhase(c.ct))
 }
 
+// Ratchet returns the angle in radians of each ratchet position.
 func (c RatchetJoint) Ratchet() float64 {
   return float64(C.cpRatchetJointGetRatchet(c.ct))
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
+// SetAngle sets the ratchet position in radians.
+func (c RatchetJoint) SetAngle(m float64) {
+  C.cpRatchetJointSetAngle(c.ct, C.cpFloat(m))
+}
+
+// SetPhase sets the angular offset of the ratchet positions in radians.
 func (c RatchetJoint) SetPhase(m float64) {
   C.cpRatchetJointSetPhase(c.ct, C.cpFloat(m))
 }
 
+// SetRatchet sets the angle in radians of each ratchet position.
+// Negative values cause the ratchet to operate in the opposite direction.
 func (c RatchetJoint) SetRatchet(m float64) {
   C.cpRatchetJointSetRatchet(c.ct, C.cpFloat(m))
 }

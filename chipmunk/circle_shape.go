@@ -37,14 +37,17 @@ func CircleShapeNew(body Body, radius float64, offset Vect) Shape {
   return CircleShape{shapeBase{s}}
 }
 
+// Offset returns the offset from the center of gravity.
 func (s CircleShape) Offset() Vect {
   return cpVect(C.cpCircleShapeGetOffset(s.s))
 }
 
+// Radius returns the radius of the circle.
 func (s CircleShape) Radius() float64 {
   return float64(C.cpCircleShapeGetRadius(s.s))
 }
 
+// String converts a circle shape to a human-readable string.
 func (s CircleShape) String() string {
   return "circle shape"
 }

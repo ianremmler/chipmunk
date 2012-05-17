@@ -30,6 +30,7 @@ type constraintBase struct {
   ct *C.cpConstraint
 }
 
+// Constraint is a type of object which is used to connect two bodies together.
 type Constraint interface {
   ContainedInSpace(Space) bool
   Destroy()
@@ -49,6 +50,7 @@ type Constraint interface {
   Impulse() float64
 }
 
+// Destroy destroys the constraint.
 func (c constraintBase) Destroy() {
   C.cpConstraintDestroy(c.ct)
 }
@@ -59,26 +61,33 @@ func (c constraintBase) c() *C.cpConstraint {
 
 /////////////////////////////////////////////////////////////////////////////
 
+// A returns the first body the constraint controls.
 func (c constraintBase) A() Body {
   return cpBody(C.cpConstraintGetA(c.ct))
 }
 
+// B returns the second body the constraint controls.
 func (c constraintBase) B() Body {
   return cpBody(C.cpConstraintGetB(c.ct))
 }
 
+// Space returns space the constraint was added to or nil if the constraint
+// doesn't belong to any space.
 func (c constraintBase) Space() Space {
   return cpSpace(C.cpConstraintGetSpace(c.ct))
 }
 
+// MaxForce returns the maximum force this constraint is allowed to use.
 func (c constraintBase) MaxForce() float64 {
   return float64(C.cpConstraintGetMaxForce(c.ct))
 }
 
+// MaxBias returns the rate at which joint error is corrected.
 func (c constraintBase) ErrorBias() float64 {
   return float64(C.cpConstraintGetErrorBias(c.ct))
 }
 
+// MaxBias returns the maximum rate (speed) that a joint can be corrected at.
 func (c constraintBase) MaxBias() float64 {
   return float64(C.cpConstraintGetMaxBias(c.ct))
 }
@@ -90,14 +99,21 @@ func (c constraintBase) UserData() interface{} {
 
 /////////////////////////////////////////////////////////////////////////////
 
+// SetMaxForce sets the maximum force this constraint is allowed to use (defalts to infinity).
+// This allows joints to be pulled apart if too much force is applied to them.
+// It also allows you to use constraints as force or friction generators for controlling bodies.
 func (c constraintBase) SetMaxForce(f float64) {
   C.cpConstraintSetMaxForce(c.ct, C.cpFloat(f))
 }
 
+// MaxBias sets the rate at which joint error is corrected.
+// Defaults to math.Pow(1.0 - 0.1, 60.0) meaning that it will correct 10% of the error
+// every 1/60th of a second.
 func (c constraintBase) SetErrorBias(b float64) {
   C.cpConstraintSetErrorBias(c.ct, C.cpFloat(b))
 }
 
+// SetMaxBias sets the maximum rate (speed) that a joint can be corrected at (defaults to infinity).
 func (c constraintBase) SetMaxBias(b float64) {
   C.cpConstraintSetMaxBias(c.ct, C.cpFloat(b))
 }
@@ -111,15 +127,18 @@ func (c constraintBase) SetUserData(data interface{}) {
 
 /////////////////////////////////////////////////////////////////////////////
 
+// ContainedInSpace returns true if the constraint is in the space.
 func (c constraintBase) ContainedInSpace(s Space) bool {
   return cpBool(C.cpSpaceContainsConstraint(s.c(), c.ct))
 }
 
+// ActivateBodies calls Activate() on bodies the constraint controls.
 func (c constraintBase) ActivateBodies() {
   c.A().Activate()
   c.B().Activate()
 }
 
+// Impulse returns the last impulse applied by this constraint.
 func (c constraintBase) Impulse() float64 {
   return float64(C.cpConstraintGetImpulse(c.ct))
 }
