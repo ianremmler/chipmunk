@@ -27,14 +27,14 @@ import (
   "testing"
 )
 
-func Test_BodyNewDestroy(t *testing.T) {
+func Test_BodyNewFree(t *testing.T) {
   b := NewBody(1.0, 1.0)
 
   if b.c() == nil {
     t.Fatal("nil body")
   }
 
-  b.Destroy()
+  b.Free()
 }
 
 func Test_BodyInSpace(t *testing.T) {
@@ -57,6 +57,6 @@ func Test_BodyInSpace(t *testing.T) {
     t.Fatal("not nil space after Remove")
   }
 
-  b.Destroy()
-  s.Destroy()
+  b.Free()
+  s.Free()
 }

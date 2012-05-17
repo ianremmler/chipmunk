@@ -65,9 +65,9 @@ func NewBodyStatic() Body {
   return Body{b: C.cpBodyNewStatic()}
 }
 
-// Destroy removes a body.
-func (b Body) Destroy() {
-  C.cpBodyDestroy(b.b)
+// Free removes a body.
+func (b Body) Free() {
+  C.cpBodyFree(b.b)
 }
 
 func (b Body) c() *C.cpBody {

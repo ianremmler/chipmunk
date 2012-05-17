@@ -59,7 +59,7 @@ type SegmentQueryInfo struct {
 
 // Shape is an opaque collision shape struct.
 type Shape interface {
-  Destroy()
+  Free()
   String() string
   c() *C.cpShape
   ContainedInSpace(Space) bool
@@ -87,10 +87,9 @@ type Shape interface {
   SetBody(Body)
 }
 
-// Destroy removes a shape.
-func (s shapeBase) Destroy() {
-  C.cpShapeDestroy(s.s)
-  s.s = nil
+// Free removes a shape.
+func (s shapeBase) Free() {
+  C.cpShapeFree(s.s)
 }
 
 // c returns C shape pointer.

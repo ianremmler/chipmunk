@@ -86,7 +86,7 @@ type spaceBase struct {
 }
 
 type Space interface {
-  Destroy()
+  Free()
   c() *C.cpSpace
   Iterations() int
   Gravity() Vect
@@ -146,10 +146,9 @@ func NewSpace() Space {
   return spaceBase{C.cpSpaceNew()}
 }
 
-// Destroy removes a space.
-func (s spaceBase) Destroy() {
-  C.cpSpaceDestroy(s.s)
-  s.s = nil
+// Free removes a space.
+func (s spaceBase) Free() {
+  C.cpSpaceFree(s.s)
 }
 
 func (s spaceBase) c() *C.cpSpace {

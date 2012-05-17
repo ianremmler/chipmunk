@@ -27,14 +27,14 @@ import (
   "testing"
 )
 
-func Test_SpaceNewDestroy(t *testing.T) {
+func Test_SpaceNewFree(t *testing.T) {
   s := NewSpace()
 
   if s == nil {
     t.Fatal("nil space")
   }
 
-  s.Destroy()
+  s.Free()
 }
 
 func Test_SpaceUserData(t *testing.T) {
@@ -44,7 +44,7 @@ func Test_SpaceUserData(t *testing.T) {
 
   testEq(t, (s.UserData()).(string), "w00t")
 
-  s.Destroy()
+  s.Free()
 }
 
 func Test_SpaceContains(t *testing.T) {
@@ -82,10 +82,10 @@ func Test_SpaceContains(t *testing.T) {
   testEq(t, s.Contains(c), false)
   testEq(t, s.Contains(p), false)
 
-  b.Destroy()
-  b2.Destroy()
-  c.Destroy()
-  p.Destroy()
+  b.Free()
+  b2.Free()
+  c.Free()
+  p.Free()
 
-  s.Destroy()
+  s.Free()
 }

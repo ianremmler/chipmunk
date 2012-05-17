@@ -33,7 +33,7 @@ type constraintBase struct {
 // Constraint is a type of object which is used to connect two bodies together.
 type Constraint interface {
   ContainedInSpace(Space) bool
-  Destroy()
+  Free()
   c() *C.cpConstraint
   A() Body
   B() Body
@@ -50,9 +50,9 @@ type Constraint interface {
   Impulse() float64
 }
 
-// Destroy destroys the constraint.
-func (c constraintBase) Destroy() {
-  C.cpConstraintDestroy(c.ct)
+// Free frees the constraint.
+func (c constraintBase) Free() {
+  C.cpConstraintFree(c.ct)
 }
 
 func (c constraintBase) c() *C.cpConstraint {
