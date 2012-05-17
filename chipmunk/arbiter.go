@@ -35,11 +35,6 @@ type Arbiter struct {
   a *C.cpArbiter
 }
 
-type CollisionBegin func(arb Arbiter, space Space) bool
-type CollisionPreSolv func(arb Arbiter, space Space) bool
-type CollisionPostSolve func(arb Arbiter, space Space)
-type CollisionSeparate func(arb Arbiter, space Space)
-
 func cpArbiter(a *C.cpArbiter) Arbiter {
   return Arbiter{a}
 }
@@ -121,6 +116,31 @@ func (arb Arbiter) Bodies() (Body, Body) {
   var a, b *C.cpBody
   C.cpArbiterGetBodies(arb.a, (**C.cpBody)(unsafe.Pointer(&a)), (**C.cpBody)(unsafe.Pointer(&b)))
   return cpBody(a), cpBody(b)
+}
+
+// ContactPoint is a contact point type of collision.
+type ContactPoint struct {
+  // Point is position normal of the contact point.
+  Point Vect
+  // Normal is the normal of the contact point.
+  Normat Vect
+  // Dist is the depth of the contact point.
+  Dist float64
+}
+
+// ContactPoints returns a contact set from an arbiter.
+func (a Arbiter) ContactPoints() []ContactPoint {
+  set := C.cpArbiterGetContactPointSet(a.a)
+  c := make([]ContactPoint, int(set.count))
+
+  for i := range c {
+    c[i] = ContactPoint{
+      cpVect(set.points[i].point),
+      cpVect(set.points[i].normal),
+      float64(set.points[i].dist)}
+  }
+
+  return c
 }
 
 // IsFirstContact returns true if this is the first step a pair of objects started colliding.
