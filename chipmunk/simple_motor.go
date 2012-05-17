@@ -41,12 +41,12 @@ func SimpleMotorNew(a, b Body, rate float64) SimpleMotor {
 
 /////////////////////////////////////////////////////////////////////////////
 
-func (j SimpleMotor) Rate() float64 {
-  return float64(C.cpSimpleMotorGetRate(j.ct))
+func (c SimpleMotor) Rate() float64 {
+  return float64(C.cpSimpleMotorGetRate(c.ct))
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-func (j SimpleMotor) SetRate(m float64) {
-  C.cpSimpleMotorSetRate(j.ct, C.cpFloat(m))
+func (c SimpleMotor) SetRate(m float64) {
+  C.cpSimpleMotorSetRate(c.ct, C.cpFloat(m))
 }

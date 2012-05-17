@@ -43,28 +43,28 @@ func DampedRotarySpringNew(a, b Body, restAngle, stiffness, damping float64) Dam
 
 /////////////////////////////////////////////////////////////////////////////
 
-func (j DampedRotarySpring) RestAngle() float64 {
-  return float64(C.cpDampedRotarySpringGetRestAngle(j.ct))
+func (c DampedRotarySpring) RestAngle() float64 {
+  return float64(C.cpDampedRotarySpringGetRestAngle(c.ct))
 }
 
-func (j DampedRotarySpring) Stiffness() float64 {
-  return float64(C.cpDampedRotarySpringGetStiffness(j.ct))
+func (c DampedRotarySpring) Stiffness() float64 {
+  return float64(C.cpDampedRotarySpringGetStiffness(c.ct))
 }
 
-func (j DampedRotarySpring) Damping() float64 {
-  return float64(C.cpDampedRotarySpringGetDamping(j.ct))
+func (c DampedRotarySpring) Damping() float64 {
+  return float64(C.cpDampedRotarySpringGetDamping(c.ct))
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-func (j DampedRotarySpring) SetRestAngle(restAngle float64) {
-  C.cpDampedRotarySpringSetRestAngle(j.ct, C.cpFloat(restAngle))
+func (c DampedRotarySpring) SetRestAngle(restAngle float64) {
+  C.cpDampedRotarySpringSetRestAngle(c.ct, C.cpFloat(restAngle))
 }
 
-func (j DampedRotarySpring) SetStiffness(stiffness float64) {
-  C.cpDampedRotarySpringSetStiffness(j.ct, C.cpFloat(stiffness))
+func (c DampedRotarySpring) SetStiffness(stiffness float64) {
+  C.cpDampedRotarySpringSetStiffness(c.ct, C.cpFloat(stiffness))
 }
 
-func (j DampedRotarySpring) SetDamping(damping float64) {
-  C.cpDampedRotarySpringSetDamping(j.ct, C.cpFloat(damping))
+func (c DampedRotarySpring) SetDamping(damping float64) {
+  C.cpDampedRotarySpringSetDamping(c.ct, C.cpFloat(damping))
 }

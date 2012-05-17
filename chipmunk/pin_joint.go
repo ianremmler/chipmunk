@@ -36,28 +36,28 @@ func PinJointNew(a, b Body, anchr1, anchr2 Vect) PinJoint {
 
 /////////////////////////////////////////////////////////////////////////////
 
-func (j PinJoint) Anchr1() Vect {
-  return cpVect(C.cpPinJointGetAnchr1(j.ct))
+func (c PinJoint) Anchr1() Vect {
+  return cpVect(C.cpPinJointGetAnchr1(c.ct))
 }
 
-func (j PinJoint) Anchr2() Vect {
-  return cpVect(C.cpPinJointGetAnchr2(j.ct))
+func (c PinJoint) Anchr2() Vect {
+  return cpVect(C.cpPinJointGetAnchr2(c.ct))
 }
 
-func (j PinJoint) Dist() float64 {
-  return float64(C.cpPinJointGetDist(j.ct))
+func (c PinJoint) Dist() float64 {
+  return float64(C.cpPinJointGetDist(c.ct))
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-func (j PinJoint) SetAnchr1(v Vect) {
-  C.cpPinJointSetAnchr1(j.ct, v.c())
+func (c PinJoint) SetAnchr1(v Vect) {
+  C.cpPinJointSetAnchr1(c.ct, v.c())
 }
 
-func (j PinJoint) SetAnchr2(v Vect) {
-  C.cpPinJointSetAnchr2(j.ct, v.c())
+func (c PinJoint) SetAnchr2(v Vect) {
+  C.cpPinJointSetAnchr2(c.ct, v.c())
 }
 
-func (j PinJoint) SetDist(d float64) {
-  C.cpPinJointSetDist(j.ct, C.cpFloat(d))
+func (c PinJoint) SetDist(d float64) {
+  C.cpPinJointSetDist(c.ct, C.cpFloat(d))
 }

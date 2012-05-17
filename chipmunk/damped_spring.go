@@ -48,44 +48,44 @@ func DampedSpringNew(
 
 /////////////////////////////////////////////////////////////////////////////
 
-func (j DampedSpring) Anchr1() Vect {
-  return cpVect(C.cpDampedSpringGetAnchr1(j.ct))
+func (c DampedSpring) Anchr1() Vect {
+  return cpVect(C.cpDampedSpringGetAnchr1(c.ct))
 }
 
-func (j DampedSpring) Anchr2() Vect {
-  return cpVect(C.cpDampedSpringGetAnchr2(j.ct))
+func (c DampedSpring) Anchr2() Vect {
+  return cpVect(C.cpDampedSpringGetAnchr2(c.ct))
 }
 
-func (j DampedSpring) RestLength() float64 {
-  return float64(C.cpDampedSpringGetRestLength(j.ct))
+func (c DampedSpring) RestLength() float64 {
+  return float64(C.cpDampedSpringGetRestLength(c.ct))
 }
 
-func (j DampedSpring) Stiffness() float64 {
-  return float64(C.cpDampedSpringGetStiffness(j.ct))
+func (c DampedSpring) Stiffness() float64 {
+  return float64(C.cpDampedSpringGetStiffness(c.ct))
 }
 
-func (j DampedSpring) Damping() float64 {
-  return float64(C.cpDampedSpringGetDamping(j.ct))
+func (c DampedSpring) Damping() float64 {
+  return float64(C.cpDampedSpringGetDamping(c.ct))
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-func (j DampedSpring) SetAnchr1(v Vect) {
-  C.cpDampedSpringSetAnchr1(j.ct, v.c())
+func (c DampedSpring) SetAnchr1(v Vect) {
+  C.cpDampedSpringSetAnchr1(c.ct, v.c())
 }
 
-func (j DampedSpring) SetAnchr2(v Vect) {
-  C.cpDampedSpringSetAnchr2(j.ct, v.c())
+func (c DampedSpring) SetAnchr2(v Vect) {
+  C.cpDampedSpringSetAnchr2(c.ct, v.c())
 }
 
-func (j DampedSpring) SetRestLength(restLength float64) {
-  C.cpDampedSpringSetRestLength(j.ct, C.cpFloat(restLength))
+func (c DampedSpring) SetRestLength(restLength float64) {
+  C.cpDampedSpringSetRestLength(c.ct, C.cpFloat(restLength))
 }
 
-func (j DampedSpring) SetStiffness(stiffness float64) {
-  C.cpDampedSpringSetStiffness(j.ct, C.cpFloat(stiffness))
+func (c DampedSpring) SetStiffness(stiffness float64) {
+  C.cpDampedSpringSetStiffness(c.ct, C.cpFloat(stiffness))
 }
 
-func (j DampedSpring) SetDamping(damping float64) {
-  C.cpDampedSpringSetDamping(j.ct, C.cpFloat(damping))
+func (c DampedSpring) SetDamping(damping float64) {
+  C.cpDampedSpringSetDamping(c.ct, C.cpFloat(damping))
 }

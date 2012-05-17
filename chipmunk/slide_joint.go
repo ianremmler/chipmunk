@@ -38,36 +38,36 @@ func SlideJointNew(a, b Body, anchr1, anchr2 Vect, min, max float64) SlideJoint 
 
 /////////////////////////////////////////////////////////////////////////////
 
-func (j SlideJoint) Anchr1() Vect {
-  return cpVect(C.cpSlideJointGetAnchr1(j.ct))
+func (c SlideJoint) Anchr1() Vect {
+  return cpVect(C.cpSlideJointGetAnchr1(c.ct))
 }
 
-func (j SlideJoint) Anchr2() Vect {
-  return cpVect(C.cpSlideJointGetAnchr2(j.ct))
+func (c SlideJoint) Anchr2() Vect {
+  return cpVect(C.cpSlideJointGetAnchr2(c.ct))
 }
 
-func (j SlideJoint) Min() float64 {
-  return float64(C.cpSlideJointGetMin(j.ct))
+func (c SlideJoint) Min() float64 {
+  return float64(C.cpSlideJointGetMin(c.ct))
 }
 
-func (j SlideJoint) Max() float64 {
-  return float64(C.cpSlideJointGetMax(j.ct))
+func (c SlideJoint) Max() float64 {
+  return float64(C.cpSlideJointGetMax(c.ct))
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-func (j SlideJoint) SetAnchr1(v Vect) {
-  C.cpSlideJointSetAnchr1(j.ct, v.c())
+func (c SlideJoint) SetAnchr1(v Vect) {
+  C.cpSlideJointSetAnchr1(c.ct, v.c())
 }
 
-func (j SlideJoint) SetAnchr2(v Vect) {
-  C.cpSlideJointSetAnchr2(j.ct, v.c())
+func (c SlideJoint) SetAnchr2(v Vect) {
+  C.cpSlideJointSetAnchr2(c.ct, v.c())
 }
 
-func (j SlideJoint) SetMin(m float64) {
-  C.cpSlideJointSetMin(j.ct, C.cpFloat(m))
+func (c SlideJoint) SetMin(m float64) {
+  C.cpSlideJointSetMin(c.ct, C.cpFloat(m))
 }
 
-func (j SlideJoint) SetMax(m float64) {
-  C.cpSlideJointSetMax(j.ct, C.cpFloat(m))
+func (c SlideJoint) SetMax(m float64) {
+  C.cpSlideJointSetMax(c.ct, C.cpFloat(m))
 }

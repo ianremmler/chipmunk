@@ -38,28 +38,28 @@ func GrooveJointNew(a, b Body, groove_a, groove_b, anchr2 Vect) GrooveJoint {
 
 /////////////////////////////////////////////////////////////////////////////
 
-func (j GrooveJoint) GrooveA() Vect {
-  return cpVect(C.cpGrooveJointGetGrooveA(j.ct))
+func (c GrooveJoint) GrooveA() Vect {
+  return cpVect(C.cpGrooveJointGetGrooveA(c.ct))
 }
 
-func (j GrooveJoint) GrooveB() Vect {
-  return cpVect(C.cpGrooveJointGetGrooveB(j.ct))
+func (c GrooveJoint) GrooveB() Vect {
+  return cpVect(C.cpGrooveJointGetGrooveB(c.ct))
 }
 
-func (j GrooveJoint) Anchr2() Vect {
-  return cpVect(C.cpGrooveJointGetAnchr2(j.ct))
+func (c GrooveJoint) Anchr2() Vect {
+  return cpVect(C.cpGrooveJointGetAnchr2(c.ct))
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-func (j GrooveJoint) SetGrooveA(v Vect) {
-  C.cpGrooveJointSetGrooveA(j.ct, v.c())
+func (c GrooveJoint) SetGrooveA(v Vect) {
+  C.cpGrooveJointSetGrooveA(c.ct, v.c())
 }
 
-func (j GrooveJoint) SetGrooveB(v Vect) {
-  C.cpGrooveJointSetGrooveB(j.ct, v.c())
+func (c GrooveJoint) SetGrooveB(v Vect) {
+  C.cpGrooveJointSetGrooveB(c.ct, v.c())
 }
 
-func (j GrooveJoint) SetAnchr2(v Vect) {
-  C.cpGrooveJointSetAnchr2(j.ct, v.c())
+func (c GrooveJoint) SetAnchr2(v Vect) {
+  C.cpGrooveJointSetAnchr2(c.ct, v.c())
 }

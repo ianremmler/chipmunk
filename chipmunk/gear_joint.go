@@ -42,20 +42,20 @@ func GearJointNew(a, b Body, phase, ratio float64) GearJoint {
 
 /////////////////////////////////////////////////////////////////////////////
 
-func (j GearJoint) Phase() float64 {
-  return float64(C.cpGearJointGetPhase(j.ct))
+func (c GearJoint) Phase() float64 {
+  return float64(C.cpGearJointGetPhase(c.ct))
 }
 
-func (j GearJoint) Ratio() float64 {
-  return float64(C.cpGearJointGetRatio(j.ct))
+func (c GearJoint) Ratio() float64 {
+  return float64(C.cpGearJointGetRatio(c.ct))
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-func (j GearJoint) SetPhase(m float64) {
-  C.cpGearJointSetPhase(j.ct, C.cpFloat(m))
+func (c GearJoint) SetPhase(m float64) {
+  C.cpGearJointSetPhase(c.ct, C.cpFloat(m))
 }
 
-func (j GearJoint) SetRatio(m float64) {
-  C.cpGearJointSetRatio(j.ct, C.cpFloat(m))
+func (c GearJoint) SetRatio(m float64) {
+  C.cpGearJointSetRatio(c.ct, C.cpFloat(m))
 }

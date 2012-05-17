@@ -40,20 +40,20 @@ func PivotJointNew2(a, b Body, anchr1, anchr2 Vect) PivotJoint {
 
 /////////////////////////////////////////////////////////////////////////////
 
-func (j PivotJoint) Anchr1() Vect {
-  return cpVect(C.cpPivotJointGetAnchr1(j.ct))
+func (c PivotJoint) Anchr1() Vect {
+  return cpVect(C.cpPivotJointGetAnchr1(c.ct))
 }
 
-func (j PivotJoint) Anchr2() Vect {
-  return cpVect(C.cpPivotJointGetAnchr2(j.ct))
+func (c PivotJoint) Anchr2() Vect {
+  return cpVect(C.cpPivotJointGetAnchr2(c.ct))
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-func (j PivotJoint) SetAnchr1(v Vect) {
-  C.cpPivotJointSetAnchr1(j.ct, v.c())
+func (c PivotJoint) SetAnchr1(v Vect) {
+  C.cpPivotJointSetAnchr1(c.ct, v.c())
 }
 
-func (j PivotJoint) SetAnchr2(v Vect) {
-  C.cpPivotJointSetAnchr2(j.ct, v.c())
+func (c PivotJoint) SetAnchr2(v Vect) {
+  C.cpPivotJointSetAnchr2(c.ct, v.c())
 }

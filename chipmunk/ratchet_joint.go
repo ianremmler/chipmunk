@@ -42,20 +42,20 @@ func RatchetJointNew(a, b Body, phase, ratchet float64) RatchetJoint {
 
 /////////////////////////////////////////////////////////////////////////////
 
-func (j RatchetJoint) Phase() float64 {
-  return float64(C.cpRatchetJointGetPhase(j.ct))
+func (c RatchetJoint) Phase() float64 {
+  return float64(C.cpRatchetJointGetPhase(c.ct))
 }
 
-func (j RatchetJoint) Ratchet() float64 {
-  return float64(C.cpRatchetJointGetRatchet(j.ct))
+func (c RatchetJoint) Ratchet() float64 {
+  return float64(C.cpRatchetJointGetRatchet(c.ct))
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-func (j RatchetJoint) SetPhase(m float64) {
-  C.cpRatchetJointSetPhase(j.ct, C.cpFloat(m))
+func (c RatchetJoint) SetPhase(m float64) {
+  C.cpRatchetJointSetPhase(c.ct, C.cpFloat(m))
 }
 
-func (j RatchetJoint) SetRatchet(m float64) {
-  C.cpRatchetJointSetRatchet(j.ct, C.cpFloat(m))
+func (c RatchetJoint) SetRatchet(m float64) {
+  C.cpRatchetJointSetRatchet(c.ct, C.cpFloat(m))
 }

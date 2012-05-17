@@ -38,20 +38,20 @@ func RotaryLimitJointNew(a, b Body, min, max float64) RotaryLimitJoint {
 
 /////////////////////////////////////////////////////////////////////////////
 
-func (j RotaryLimitJoint) Min() float64 {
-  return float64(C.cpRotaryLimitJointGetMin(j.ct))
+func (c RotaryLimitJoint) Min() float64 {
+  return float64(C.cpRotaryLimitJointGetMin(c.ct))
 }
 
-func (j RotaryLimitJoint) Max() float64 {
-  return float64(C.cpRotaryLimitJointGetMax(j.ct))
+func (c RotaryLimitJoint) Max() float64 {
+  return float64(C.cpRotaryLimitJointGetMax(c.ct))
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-func (j RotaryLimitJoint) SetMin(m float64) {
-  C.cpRotaryLimitJointSetMin(j.ct, C.cpFloat(m))
+func (c RotaryLimitJoint) SetMin(m float64) {
+  C.cpRotaryLimitJointSetMin(c.ct, C.cpFloat(m))
 }
 
-func (j RotaryLimitJoint) SetMax(m float64) {
-  C.cpRotaryLimitJointSetMax(j.ct, C.cpFloat(m))
+func (c RotaryLimitJoint) SetMax(m float64) {
+  C.cpRotaryLimitJointSetMax(c.ct, C.cpFloat(m))
 }
