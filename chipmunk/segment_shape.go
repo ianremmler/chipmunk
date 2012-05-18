@@ -24,6 +24,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 // #include <chipmunk.h>
+// #include <chipmunk_unsafe.h>
 import "C"
 
 // SegmentShape is a a beveled (rounded) segment shape.
@@ -32,7 +33,7 @@ type SegmentShape struct {
 }
 
 // SegmentShapeNew creates a new segment shape.
-func SegmentShapeNew(body Body, a, b Vect, radius float64) Shape {
+func SegmentShapeNew(body Body, a, b Vect, radius float64) SegmentShape {
   s := C.cpSegmentShapeNew(body.b, a.c(), b.c(), C.cpFloat(radius))
   return SegmentShape{shapeBase{s}}
 }
@@ -60,6 +61,18 @@ func (s SegmentShape) Normal() Vect {
 // Radius returns the beveling radius of the segment shape.
 func (s SegmentShape) Radius() float64 {
   return float64(C.cpSegmentShapeGetRadius(s.s))
+}
+
+// SetEndpoints sets the endpoints of a segment shape.
+// NOTE: this is unsafe function.
+func (s SegmentShape) SetEndpoints(a, b Vect) {
+  C.cpSegmentShapeSetEndpoints(s.s, a.c(), b.c())
+}
+
+// SetRadius sets the radius of a segment shape.
+// NOTE: this is unsafe function.
+func (s SegmentShape) SetRadius(radius float64) {
+  C.cpSegmentShapeSetRadius(s.s, C.cpFloat(radius))
 }
 
 // String converts a segment shape to a human-readable string.

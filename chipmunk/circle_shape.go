@@ -24,6 +24,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 // #include <chipmunk.h>
+// #include <chipmunk_unsafe.h>
 import "C"
 
 // CircleShape is a circle shape type.
@@ -32,7 +33,7 @@ type CircleShape struct {
 }
 
 // CircleShapeNew creates a new circle shape.
-func CircleShapeNew(body Body, radius float64, offset Vect) Shape {
+func CircleShapeNew(body Body, radius float64, offset Vect) CircleShape {
   s := C.cpCircleShapeNew(body.b, C.cpFloat(radius), offset.c())
   return CircleShape{shapeBase{s}}
 }
@@ -45,6 +46,18 @@ func (s CircleShape) Offset() Vect {
 // Radius returns the radius of the circle.
 func (s CircleShape) Radius() float64 {
   return float64(C.cpCircleShapeGetRadius(s.s))
+}
+
+// SetOffset sets the offset from the center of gravity.
+// NOTE: this is unsafe function.
+func (s CircleShape) SetOffset(offset Vect) {
+  C.cpCircleShapeSetOffset(s.s, offset.c())
+}
+
+// SetRadius sets the radius of the circle.
+// NOTE: this is unsafe function.
+func (s CircleShape) SetRadius(radius float64) {
+  C.cpCircleShapeSetRadius(s.s, C.cpFloat(radius))
 }
 
 // String converts a circle shape to a human-readable string.

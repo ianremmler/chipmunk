@@ -24,6 +24,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 // #include <chipmunk.h>
+// #include <chipmunk_unsafe.h>
 import "C"
 
 import (
@@ -36,7 +37,7 @@ type PolyShape struct {
 }
 
 // PolyShapeNew creates a new polygon shape.
-func PolyShapeNew(b Body, verts []Vect, offset Vect) Shape {
+func PolyShapeNew(b Body, verts []Vect, offset Vect) PolyShape {
   v := (*C.cpVect)(unsafe.Pointer(&verts[0]))
   return PolyShape{shapeBase{s: C.cpPolyShapeNew(b.c(), C.int(len(verts)), v, offset.c())}}
 }
@@ -70,6 +71,12 @@ func (s PolyShape) NumVerts() int {
 // Vert returns a specific vertex of a polygon shape.
 func (s PolyShape) Vert(idx int) Vect {
   return cpVect(C.cpPolyShapeGetVert(s.s, C.int(idx)))
+}
+
+// SetVerts sets the vertexes of a poly shape.
+func (s PolyShape) SetVerts(verts []Vect, offset Vect) {
+  v := (*C.cpVect)(unsafe.Pointer(&verts[0]))
+  C.cpPolyShapeSetVerts(s.s, C.int(len(verts)), v, offset.c())
 }
 
 // Local Variables:
