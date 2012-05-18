@@ -63,3 +63,9 @@ func (c RotaryLimitJoint) SetMin(m float64) {
 func (c RotaryLimitJoint) SetMax(m float64) {
   C.cpRotaryLimitJointSetMax(c.ct, C.cpFloat(m))
 }
+
+// Local Variables:
+// indent-tabs-mode: nil
+// tab-width: 2
+// End:
+// ex: set tabstop=2 shiftwidth=2 expandtab:

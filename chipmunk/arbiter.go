@@ -167,3 +167,9 @@ func (a Arbiter) Point(i int) Vect {
 func (a Arbiter) Depth(i int) float64 {
   return float64(C.cpArbiterGetDepth(a.a, C.int(i)))
 }
+
+// Local Variables:
+// indent-tabs-mode: nil
+// tab-width: 2
+// End:
+// ex: set tabstop=2 shiftwidth=2 expandtab:

@@ -177,3 +177,9 @@ func (bb BB) WrapVect(v Vect) Vect {
 
   return Vect{X: x + bb.l, Y: y + bb.b}
 }
+
+// Local Variables:
+// indent-tabs-mode: nil
+// tab-width: 2
+// End:
+// ex: set tabstop=2 shiftwidth=2 expandtab:

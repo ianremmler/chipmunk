@@ -76,3 +76,9 @@ func (c DampedRotarySpring) SetStiffness(stiffness float64) {
 func (c DampedRotarySpring) SetDamping(damping float64) {
   C.cpDampedRotarySpringSetDamping(c.ct, C.cpFloat(damping))
 }
+
+// Local Variables:
+// indent-tabs-mode: nil
+// tab-width: 2
+// End:
+// ex: set tabstop=2 shiftwidth=2 expandtab:

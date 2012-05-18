@@ -51,3 +51,9 @@ func (s CircleShape) Radius() float64 {
 func (s CircleShape) String() string {
   return "circle shape"
 }
+
+// Local Variables:
+// indent-tabs-mode: nil
+// tab-width: 2
+// End:
+// ex: set tabstop=2 shiftwidth=2 expandtab:

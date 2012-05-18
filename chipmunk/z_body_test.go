@@ -60,3 +60,9 @@ func Test_BodyInSpace(t *testing.T) {
   b.Free()
   s.Free()
 }
+
+// Local Variables:
+// indent-tabs-mode: nil
+// tab-width: 2
+// End:
+// ex: set tabstop=2 shiftwidth=2 expandtab:

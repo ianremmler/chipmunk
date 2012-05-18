@@ -64,3 +64,9 @@ func (c PivotJoint) SetAnchr1(v Vect) {
 func (c PivotJoint) SetAnchr2(v Vect) {
   C.cpPivotJointSetAnchr2(c.ct, v.c())
 }
+
+// Local Variables:
+// indent-tabs-mode: nil
+// tab-width: 2
+// End:
+// ex: set tabstop=2 shiftwidth=2 expandtab:

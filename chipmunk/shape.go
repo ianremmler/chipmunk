@@ -282,3 +282,9 @@ func cpShape(s *C.cpShape) Shape {
 
   panic("unknown type of shape in cpShape")
 }
+
+// Local Variables:
+// indent-tabs-mode: nil
+// tab-width: 2
+// End:
+// ex: set tabstop=2 shiftwidth=2 expandtab:

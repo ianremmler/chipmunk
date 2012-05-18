@@ -70,3 +70,9 @@ func (c PinJoint) SetAnchr2(v Vect) {
 func (c PinJoint) SetDist(d float64) {
   C.cpPinJointSetDist(c.ct, C.cpFloat(d))
 }
+
+// Local Variables:
+// indent-tabs-mode: nil
+// tab-width: 2
+// End:
+// ex: set tabstop=2 shiftwidth=2 expandtab:

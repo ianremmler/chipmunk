@@ -71,3 +71,9 @@ func (s PolyShape) NumVerts() int {
 func (s PolyShape) Vert(idx int) Vect {
   return cpVect(C.cpPolyShapeGetVert(s.s, C.int(idx)))
 }
+
+// Local Variables:
+// indent-tabs-mode: nil
+// tab-width: 2
+// End:
+// ex: set tabstop=2 shiftwidth=2 expandtab:

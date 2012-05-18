@@ -55,3 +55,9 @@ func (c SimpleMotor) Rate() float64 {
 func (c SimpleMotor) SetRate(m float64) {
   C.cpSimpleMotorSetRate(c.ct, C.cpFloat(m))
 }
+
+// Local Variables:
+// indent-tabs-mode: nil
+// tab-width: 2
+// End:
+// ex: set tabstop=2 shiftwidth=2 expandtab:

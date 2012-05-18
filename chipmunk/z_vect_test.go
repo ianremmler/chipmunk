@@ -88,3 +88,9 @@ func Test_VectNeg(t *testing.T) {
 // FIXME func Test_VectToAngle(t *testing.T) {
 // FIXME func Test_Vect_c(t *testing.T) {
 // FIXME func Test_Vect_cpVect(t *testing.T) {
+
+// Local Variables:
+// indent-tabs-mode: nil
+// tab-width: 2
+// End:
+// ex: set tabstop=2 shiftwidth=2 expandtab:

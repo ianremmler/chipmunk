@@ -74,3 +74,9 @@ func (c GrooveJoint) SetGrooveB(v Vect) {
 func (c GrooveJoint) SetAnchr2(v Vect) {
   C.cpGrooveJointSetAnchr2(c.ct, v.c())
 }
+
+// Local Variables:
+// indent-tabs-mode: nil
+// tab-width: 2
+// End:
+// ex: set tabstop=2 shiftwidth=2 expandtab:

@@ -190,3 +190,9 @@ func cpConstraint(ct *C.cpConstraint) Constraint {
 
   panic("unknown constraint class in cpConstraint")
 }
+
+// Local Variables:
+// indent-tabs-mode: nil
+// tab-width: 2
+// End:
+// ex: set tabstop=2 shiftwidth=2 expandtab:

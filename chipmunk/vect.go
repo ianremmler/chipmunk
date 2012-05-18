@@ -122,3 +122,9 @@ func (v Vect) c() C.cpVect {
 func cpVect(v C.cpVect) Vect {
   return VectNew(float64(v.x), float64(v.y))
 }
+
+// Local Variables:
+// indent-tabs-mode: nil
+// tab-width: 2
+// End:
+// ex: set tabstop=2 shiftwidth=2 expandtab:

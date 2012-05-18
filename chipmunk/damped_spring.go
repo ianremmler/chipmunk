@@ -103,3 +103,9 @@ func (c DampedSpring) SetStiffness(stiffness float64) {
 func (c DampedSpring) SetDamping(damping float64) {
   C.cpDampedSpringSetDamping(c.ct, C.cpFloat(damping))
 }
+
+// Local Variables:
+// indent-tabs-mode: nil
+// tab-width: 2
+// End:
+// ex: set tabstop=2 shiftwidth=2 expandtab:

@@ -69,3 +69,9 @@ func (c GearJoint) SetPhase(m float64) {
 func (c GearJoint) SetRatio(m float64) {
   C.cpGearJointSetRatio(c.ct, C.cpFloat(m))
 }
+
+// Local Variables:
+// indent-tabs-mode: nil
+// tab-width: 2
+// End:
+// ex: set tabstop=2 shiftwidth=2 expandtab:

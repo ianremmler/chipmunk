@@ -147,3 +147,9 @@ func MomentForBox(m, width, height float64) float64 {
 func MomentForBox2(m float64, box BB) float64 {
   return float64(C.cpMomentForBox2(C.cpFloat(m), box.c()))
 }
+
+// Local Variables:
+// indent-tabs-mode: nil
+// tab-width: 2
+// End:
+// ex: set tabstop=2 shiftwidth=2 expandtab:

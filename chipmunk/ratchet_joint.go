@@ -76,3 +76,9 @@ func (c RatchetJoint) SetPhase(m float64) {
 func (c RatchetJoint) SetRatchet(m float64) {
   C.cpRatchetJointSetRatchet(c.ct, C.cpFloat(m))
 }
+
+// Local Variables:
+// indent-tabs-mode: nil
+// tab-width: 2
+// End:
+// ex: set tabstop=2 shiftwidth=2 expandtab:

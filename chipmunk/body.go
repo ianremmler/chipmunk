@@ -289,3 +289,9 @@ func (b Body) EachArbiter(iter func(Body, Shape)) {
   p := unsafe.Pointer(&iter)
   C.body_each_arbiter(b.b, p)
 }
+
+// Local Variables:
+// indent-tabs-mode: nil
+// tab-width: 2
+// End:
+// ex: set tabstop=2 shiftwidth=2 expandtab:
