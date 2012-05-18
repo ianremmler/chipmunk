@@ -46,10 +46,10 @@ func cpBB(bb C.cpBB) BB {
 
 func (b BB) c() C.cpBB {
   return C.cpBB{
-    C.cpFloat(b.l),
-    C.cpFloat(b.b),
-    C.cpFloat(b.r),
-    C.cpFloat(b.t)}
+    l : C.cpFloat(b.l),
+    b : C.cpFloat(b.b),
+    r : C.cpFloat(b.r),
+    t : C.cpFloat(b.t)}
 }
 
 // BBNewForCircle constructs a BB for a circle with the given position and radius.
