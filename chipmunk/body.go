@@ -162,6 +162,11 @@ func (b Body) SetUserData(data interface{}) {
 
 /////////////////////////////////////////////////////////////////////////////
 
+// SetPosition sets the position of the body.
+func (b Body) SetPosition(v Vect) {
+  C.cpBodySetPos(b.b, v.c())
+}
+
 // UpdateVelocity is a default function that is called to integrate the body's velocity.
 func (b Body) UpdateVelocity(gravity Vect, damping float64, dt float64) {
   C.cpBodyUpdateVelocity(b.b, gravity.c(), C.cpFloat(damping), C.cpFloat(dt))
