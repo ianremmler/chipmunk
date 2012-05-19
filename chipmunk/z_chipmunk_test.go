@@ -35,3 +35,9 @@ func Test_ConvexHull(t *testing.T) {
   testEq(t, first, 0)
   testEq(t, VertsEqual(r, result), true)
 }
+
+// Local Variables:
+// indent-tabs-mode: nil
+// tab-width: 2
+// End:
+// ex: set tabstop=2 shiftwidth=2 expandtab:
