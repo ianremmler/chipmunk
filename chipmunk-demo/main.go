@@ -26,9 +26,9 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // This demo containts few code directly from Chipmunk Physics
 
 import (
-  "github.com/jteeuwen/glfw"
   "github.com/banthar/gl"
   . "github.com/ftrvxmtrx/gochipmunk/chipmunk"
+  "github.com/jteeuwen/glfw"
   "math"
   "math/rand"
   "time"
@@ -36,9 +36,9 @@ import (
 
 var (
   Running = true
-  Width = 640
-  Height = 480
-  space Space
+  Width   = 640
+  Height  = 480
+  space   Space
 )
 
 const (
@@ -65,19 +65,19 @@ func main() {
 
   for Running && glfw.WindowParam(glfw.Opened) == 1 {
     drawScene()
-    space.Step(1.0/20.0/3.0)
-    space.Step(1.0/20.0/3.0)
-    space.Step(1.0/20.0/3.0)
+    space.Step(1.0 / 20.0 / 3.0)
+    space.Step(1.0 / 20.0 / 3.0)
+    space.Step(1.0 / 20.0 / 3.0)
   }
 }
 
 func initScene() {
   s := SpaceNew()
   space = s
-	s.SetIterations(30)
-	s.SetGravity(VectNew(0.0, -100.0))
-	s.SetSleepTimeThreshold(0.5)
-	s.SetCollisionSlop(0.5)
+  s.SetIterations(30)
+  s.SetGravity(VectNew(0.0, -100.0))
+  s.SetSleepTimeThreshold(0.5)
+  s.SetCollisionSlop(0.5)
 
   static := s.StaticBody()
 
@@ -101,7 +101,8 @@ func initScene() {
       var body Body
 
       if rand.Float64() < 0.5 {
-        w, h := 15.0 + 15.0*rand.Float64(), 15.0 + 15.0*rand.Float64()
+        w := 15.0 + 15.0*rand.Float64()
+        h := 15.0 + 15.0*rand.Float64()
         body = s.AddBody(BodyNew(1.0, MomentForBox(1.0, w, h)))
         shape = s.AddShape(BoxShapeNew(body, w, h))
       } else {
@@ -110,8 +111,11 @@ func initScene() {
         shape = s.AddShape(CircleShapeNew(body, r, Origin()))
       }
 
-      r1, r2 := 8.0*(0.5 - rand.Float64()), 8.0*(0.5 - rand.Float64())
-      body.SetPosition(VectNew(r1 + float64(j)*32.0 - 250.0, r2 + 500.0 - float64(i)*32.0))
+      r1 := 8.0 * (0.5 - rand.Float64())
+      r2 := 8.0 * (0.5 - rand.Float64())
+      x := r1 + float64(j)*32.0 - 250.0
+      y := r2 + 500.0 - float64(i)*32.0
+      body.SetPosition(VectNew(x, y))
       shape.SetElasticity(0.5)
       shape.SetFriction(0.8)
     }
@@ -121,8 +125,8 @@ func initScene() {
 func drawScene() {
   gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 
-	gl.MatrixMode(gl.MODELVIEW);
-	gl.LoadIdentity()
+  gl.MatrixMode(gl.MODELVIEW)
+  gl.LoadIdentity()
   gl.Color3f(1, 1, 1)
   drawShapes(space)
 
@@ -206,15 +210,15 @@ func drawShapes(s Space) {
 }
 
 func initGL() {
-	gl.EnableClientState(gl.VERTEX_ARRAY)
+  gl.EnableClientState(gl.VERTEX_ARRAY)
   gl.ShadeModel(gl.SMOOTH)
   gl.ClearColor(0, 0, 0, 0)
   gl.ClearDepth(1)
   gl.DepthFunc(gl.LEQUAL)
   gl.Hint(gl.PERSPECTIVE_CORRECTION_HINT, gl.NICEST)
   gl.Enable(gl.DEPTH_TEST)
-	gl.Enable(gl.BLEND)
-	gl.BlendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
+  gl.Enable(gl.BLEND)
+  gl.BlendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
 }
 
 func onResize(w, h int) {
@@ -224,14 +228,14 @@ func onResize(w, h int) {
 
   gl.Viewport(0, 0, w, h)
 
-	scale := math.Min(float64(w)/640.0, float64(h)/480.0)
-	hw := float64(w)*(0.5/scale)
-	hh := float64(h)*(0.5/scale)
+  scale := math.Min(float64(w)/640.0, float64(h)/480.0)
+  hw := float64(w) * (0.5 / scale)
+  hh := float64(h) * (0.5 / scale)
 
-	gl.MatrixMode(gl.PROJECTION)
-	gl.LoadIdentity()
-	gl.Ortho(-hw, hw, -hh, hh, -1.0, 1.0)
-	gl.Translated(0.5, 0.5, 0.0)
+  gl.MatrixMode(gl.PROJECTION)
+  gl.LoadIdentity()
+  gl.Ortho(-hw, hw, -hh, hh, -1.0, 1.0)
+  gl.Translated(0.5, 0.5, 0.0)
 
   Width = w
   Height = h
