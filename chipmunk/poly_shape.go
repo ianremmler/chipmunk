@@ -88,7 +88,7 @@ func (s PolyShape) VertsWorld() []Vect {
   return verts
 }
 
-// VertsWorld returns vertex positions (world coordinates) as array of float64 values.
+// VertsWorldFloat64 returns vertex positions (world coordinates) as array of float64 values.
 func (s PolyShape) VertsWorldFloat64() []float64 {
   num := s.NumVerts() * 2
   var verts []float64
