@@ -178,6 +178,18 @@ func VertsEqual(a, b []Vect) bool {
   return true
 }
 
+// Chipmunk version.
+const (
+  VersionMajor   = int(C.CP_VERSION_MAJOR)
+  VersionMinor   = int(C.CP_VERSION_MINOR)
+  VersionRelease = int(C.CP_VERSION_RELEASE)
+)
+
+// Version returns Chipmunk version string.
+func Version() string {
+  return C.GoString(C.cpVersionString)
+}
+
 // Local Variables:
 // indent-tabs-mode: nil
 // tab-width: 2
