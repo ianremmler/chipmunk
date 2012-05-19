@@ -152,10 +152,12 @@ func (c constraintBase) UserData() interface{} {
   return cpData(C.cpConstraintGetUserData(c.ct))
 }
 
+// c converts Constraint to c.cpConstraint pointer.
 func (c constraintBase) c() *C.cpConstraint {
   return c.ct
 }
 
+// cpConstraint converts C.cpConstraint pointer to Constraint.
 func cpConstraint(ct *C.cpConstraint) Constraint {
   if nil == ct {
     return nil
