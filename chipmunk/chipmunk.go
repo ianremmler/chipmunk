@@ -148,6 +148,36 @@ func MomentForBox2(m float64, box BB) float64 {
   return float64(C.cpMomentForBox2(C.cpFloat(m), box.c()))
 }
 
+// ConvexHull calculates the convex hull of a given set of points.
+// Returns the points and index of the first vertex in the hull came from the input.
+// Tolerance is the allowed amount to shrink the hull when simplifying it.
+// A tolerance of 0.0 creates an exact hull.
+func ConvexHull(verts []Vect, tolerance float64) ([]Vect, int) {
+  result := make([]Vect, len(verts))
+  var first C.int
+  v := (*C.cpVect)(unsafe.Pointer(&verts[0]))
+  r := (*C.cpVect)(unsafe.Pointer(&result[0]))
+  num := int(C.cpConvexHull(C.int(len(verts)), v, r, &first, C.cpFloat(tolerance)))
+  final := make([]Vect, num, num)
+  copy(final, result[:num])
+  return final, int(first)
+}
+
+// VertsEqual returns a boolean reporting whether a == b.
+func VertsEqual(a, b []Vect) bool {
+  if len(a) != len(b) {
+    return false
+  }
+
+  for i, c := range a {
+    if c != b[i] {
+      return false
+    }
+  }
+
+  return true
+}
+
 // Local Variables:
 // indent-tabs-mode: nil
 // tab-width: 2
