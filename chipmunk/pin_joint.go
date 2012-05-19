@@ -26,18 +26,15 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // #include <chipmunk.h>
 import "C"
 
+////////////////////////////////////////////////////////////////////////////////
+
 // PinJoint holds a set distance between points on two bodies.
 // Think of them as connecting a solid pin or rod between the two anchor points.
 type PinJoint struct {
   constraintBase
 }
 
-// PinJointNew creates a new pin joint.
-func PinJointNew(a, b Body, anchr1, anchr2 Vect) PinJoint {
-  return PinJoint{constraintBase{C.cpPinJointNew(a.c(), b.c(), anchr1.c(), anchr2.c())}}
-}
-
-/////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 
 // Anchr1 returns the anchor point on the first body.
 func (c PinJoint) Anchr1() Vect {
@@ -54,7 +51,10 @@ func (c PinJoint) Dist() float64 {
   return float64(C.cpPinJointGetDist(c.ct))
 }
 
-/////////////////////////////////////////////////////////////////////////////
+// PinJointNew creates a new pin joint.
+func PinJointNew(a, b Body, anchr1, anchr2 Vect) PinJoint {
+  return PinJoint{constraintBase{C.cpPinJointNew(a.c(), b.c(), anchr1.c(), anchr2.c())}}
+}
 
 // SetAnchr1 sets the anchor point on the first body.
 func (c PinJoint) SetAnchr1(v Vect) {

@@ -26,10 +26,24 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // #include <chipmunk.h>
 import "C"
 
+////////////////////////////////////////////////////////////////////////////////
+
 // SimpleMotor makes two objects spin relative to each other.
 // They are most often used with the MaxForce property set to a finite value.
 type SimpleMotor struct {
   constraintBase
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+// Rate returns the relative rotation speed of the two bodies in radians per second.
+func (c SimpleMotor) Rate() float64 {
+  return float64(C.cpSimpleMotorGetRate(c.ct))
+}
+
+// SetRate sets the relative rotation speed of the two bodies in radians per second.
+func (c SimpleMotor) SetRate(m float64) {
+  C.cpSimpleMotorSetRate(c.ct, C.cpFloat(m))
 }
 
 // SimpleMotorNew creates a new simple motor.
@@ -40,20 +54,6 @@ func SimpleMotorNew(a, b Body, rate float64) SimpleMotor {
         a.c(),
         b.c(),
         C.cpFloat(rate))}}
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
-// Rate returns the relative rotation speed of the two bodies in radians per second.
-func (c SimpleMotor) Rate() float64 {
-  return float64(C.cpSimpleMotorGetRate(c.ct))
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
-// SetRate sets the relative rotation speed of the two bodies in radians per second.
-func (c SimpleMotor) SetRate(m float64) {
-  C.cpSimpleMotorSetRate(c.ct, C.cpFloat(m))
 }
 
 // Local Variables:

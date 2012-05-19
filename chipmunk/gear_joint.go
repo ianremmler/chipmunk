@@ -26,6 +26,8 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // #include <chipmunk.h>
 import "C"
 
+////////////////////////////////////////////////////////////////////////////////
+
 // GearJoint constrains the rotational speed of one body to another.
 // A ratio of 1.0 will lock the rotation of two bodies together, and negative ratios
 // will cause them to spin in opposite directions.
@@ -34,6 +36,8 @@ import "C"
 type GearJoint struct {
   constraintBase
 }
+
+////////////////////////////////////////////////////////////////////////////////
 
 // GearJointNew creates a new gear joint.
 func GearJointNew(a, b Body, phase, ratio float64) GearJoint {
@@ -46,8 +50,6 @@ func GearJointNew(a, b Body, phase, ratio float64) GearJoint {
         C.cpFloat(ratio))}}
 }
 
-/////////////////////////////////////////////////////////////////////////////
-
 // Phase returns the angular offset in radians.
 func (c GearJoint) Phase() float64 {
   return float64(C.cpGearJointGetPhase(c.ct))
@@ -57,8 +59,6 @@ func (c GearJoint) Phase() float64 {
 func (c GearJoint) Ratio() float64 {
   return float64(C.cpGearJointGetRatio(c.ct))
 }
-
-/////////////////////////////////////////////////////////////////////////////
 
 // SetPhase sets the angular offset in radians.
 func (c GearJoint) SetPhase(m float64) {

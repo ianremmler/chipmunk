@@ -31,13 +31,57 @@ import (
   "unsafe"
 )
 
+////////////////////////////////////////////////////////////////////////////////
+
 // Arbiter is a type of colliding pair of shapes.
 type Arbiter struct {
   a *C.cpArbiter
 }
 
-func cpArbiter(a *C.cpArbiter) Arbiter {
-  return Arbiter{a}
+// ContactPoint is a contact point type of collision.
+type ContactPoint struct {
+  // Point is position normal of the contact point.
+  Point Vect
+  // Normal is the normal of the contact point.
+  Normat Vect
+  // Dist is the depth of the contact point.
+  Dist float64
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+// Bodies returns the colliding bodies involved for this arbiter.
+// The order of the CollisionType the bodies are associated with values will match
+// the order set when the collision handler was registered.
+func (arb Arbiter) Bodies() (Body, Body) {
+  var a, b *C.cpBody
+  C.cpArbiterGetBodies(arb.a, (**C.cpBody)(unsafe.Pointer(&a)), (**C.cpBody)(unsafe.Pointer(&b)))
+  return cpBody(a), cpBody(b)
+}
+
+// ContactPoints returns a contact set from an arbiter.
+func (a Arbiter) ContactPoints() []ContactPoint {
+  set := C.cpArbiterGetContactPointSet(a.a)
+  c := make([]ContactPoint, int(set.count))
+
+  for i := range c {
+    c[i] = ContactPoint{
+      cpVect(set.points[i].point),
+      cpVect(set.points[i].normal),
+      float64(set.points[i].dist)}
+  }
+
+  return c
+}
+
+// Count returns the number of contact points for this arbiter.
+func (a Arbiter) Count() int {
+  return int(C.cpArbiterGetCount(a.a))
+}
+
+// Depth returns the depth of specific contact point.
+func (a Arbiter) Depth(i int) float64 {
+  return float64(C.cpArbiterGetDepth(a.a, C.int(i)))
 }
 
 // Elasticity returns a calculated value to use for the elasticity coefficient.
@@ -52,10 +96,26 @@ func (a Arbiter) Friction() float64 {
   return float64(C.cpArbiterGetFriction(a.a))
 }
 
-// SurfaceVelocity returns a calculated value to use for applying surface velocities.
-// Override in a pre-solve collision handler for custom behavior.
-func (a Arbiter) SurfaceVelocity() Vect {
-  return cpVect(C.cpArbiterGetSurfaceVelocity(a.a))
+// Ignore causes a collision pair to be ignored as if you returned false from a begin callback.
+// If called from a pre-step callback, you will still need to return false
+// if you want it to be ignored in the current step.
+func (a Arbiter) Ignore() {
+  C.cpArbiterIgnore(a.a)
+}
+
+// IsFirstContact returns true if this is the first step a pair of objects started colliding.
+func (a Arbiter) IsFirstContact() bool {
+  return cpBool(C.cpArbiterIsFirstContact(a.a))
+}
+
+// Normal returns the normal of specific contact point.
+func (a Arbiter) Normal(i int) Vect {
+  return cpVect(C.cpArbiterGetNormal(a.a, C.int(i)))
+}
+
+// Point returns the position of specific contact point.
+func (a Arbiter) Point(i int) Vect {
+  return cpVect(C.cpArbiterGetPoint(a.a, C.int(i)))
 }
 
 // SetElasticity sets elasticity coefficient.
@@ -71,6 +131,26 @@ func (a Arbiter) SetFriction(f float64) {
 // SetSurfaceVelocity sets calculated value to use for applying surface velocities.
 func (a Arbiter) SetSurfaceVelocity(v Vect) {
   C.cpArbiterSetSurfaceVelocity(a.a, v.c())
+}
+
+// Shapes returns the colliding shapes involved for this arbiter.
+// The order of their CollisionType values will match the order set when the collision
+// handler was registered.
+func (arb Arbiter) Shapes() (Shape, Shape) {
+  var a, b *C.cpShape
+  C.cpArbiterGetShapes(arb.a, (**C.cpShape)(unsafe.Pointer(&a)), (**C.cpShape)(unsafe.Pointer(&b)))
+  return cpShape(a), cpShape(b)
+}
+
+// String converts an arbiter to a human-readable string.
+func (a Arbiter) String() string {
+  return fmt.Sprintf("(Arbiter)%+v", a.a)
+}
+
+// SurfaceVelocity returns a calculated value to use for applying surface velocities.
+// Override in a pre-solve collision handler for custom behavior.
+func (a Arbiter) SurfaceVelocity() Vect {
+  return cpVect(C.cpArbiterGetSurfaceVelocity(a.a))
 }
 
 // TotalImpulse returns the total impulse that was applied by this arbiter.
@@ -94,84 +174,9 @@ func (a Arbiter) TotalKE() float64 {
   return float64(C.cpArbiterTotalKE(a.a))
 }
 
-// Ignore causes a collision pair to be ignored as if you returned false from a begin callback.
-// If called from a pre-step callback, you will still need to return false
-// if you want it to be ignored in the current step.
-func (a Arbiter) Ignore() {
-  C.cpArbiterIgnore(a.a)
-}
-
-// Shapes returns the colliding shapes involved for this arbiter.
-// The order of their CollisionType values will match the order set when the collision
-// handler was registered.
-func (arb Arbiter) Shapes() (Shape, Shape) {
-  var a, b *C.cpShape
-  C.cpArbiterGetShapes(arb.a, (**C.cpShape)(unsafe.Pointer(&a)), (**C.cpShape)(unsafe.Pointer(&b)))
-  return cpShape(a), cpShape(b)
-}
-
-// Bodies returns the colliding bodies involved for this arbiter.
-// The order of the CollisionType the bodies are associated with values will match
-// the order set when the collision handler was registered.
-func (arb Arbiter) Bodies() (Body, Body) {
-  var a, b *C.cpBody
-  C.cpArbiterGetBodies(arb.a, (**C.cpBody)(unsafe.Pointer(&a)), (**C.cpBody)(unsafe.Pointer(&b)))
-  return cpBody(a), cpBody(b)
-}
-
-// ContactPoint is a contact point type of collision.
-type ContactPoint struct {
-  // Point is position normal of the contact point.
-  Point Vect
-  // Normal is the normal of the contact point.
-  Normat Vect
-  // Dist is the depth of the contact point.
-  Dist float64
-}
-
-// ContactPoints returns a contact set from an arbiter.
-func (a Arbiter) ContactPoints() []ContactPoint {
-  set := C.cpArbiterGetContactPointSet(a.a)
-  c := make([]ContactPoint, int(set.count))
-
-  for i := range c {
-    c[i] = ContactPoint{
-      cpVect(set.points[i].point),
-      cpVect(set.points[i].normal),
-      float64(set.points[i].dist)}
-  }
-
-  return c
-}
-
-// IsFirstContact returns true if this is the first step a pair of objects started colliding.
-func (a Arbiter) IsFirstContact() bool {
-  return cpBool(C.cpArbiterIsFirstContact(a.a))
-}
-
-// Count returns the number of contact points for this arbiter.
-func (a Arbiter) Count() int {
-  return int(C.cpArbiterGetCount(a.a))
-}
-
-// Normal returns the normal of specific contact point.
-func (a Arbiter) Normal(i int) Vect {
-  return cpVect(C.cpArbiterGetNormal(a.a, C.int(i)))
-}
-
-// Point returns the position of specific contact point.
-func (a Arbiter) Point(i int) Vect {
-  return cpVect(C.cpArbiterGetPoint(a.a, C.int(i)))
-}
-
-// Depth returns the depth of specific contact point.
-func (a Arbiter) Depth(i int) float64 {
-  return float64(C.cpArbiterGetDepth(a.a, C.int(i)))
-}
-
-// String converts an arbiter to a human-readable string.
-func (a Arbiter) String() string {
-  return fmt.Sprintf("(Arbiter)%+v", a.a)
+// cpArbiter converts C.cpArbiter pointer to Arbiter.
+func cpArbiter(a *C.cpArbiter) Arbiter {
+  return Arbiter{a}
 }
 
 // Local Variables:

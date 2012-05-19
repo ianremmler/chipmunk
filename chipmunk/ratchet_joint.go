@@ -26,23 +26,14 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // #include <chipmunk.h>
 import "C"
 
+////////////////////////////////////////////////////////////////////////////////
+
 // RatchetJoint creates rotary ratches similar to a socket wrench.
 type RatchetJoint struct {
   constraintBase
 }
 
-// RatchetJointNew creates a new ratchet joint.
-func RatchetJointNew(a, b Body, phase, ratchet float64) RatchetJoint {
-  return RatchetJoint{
-    constraintBase{
-      C.cpRatchetJointNew(
-        a.c(),
-        b.c(),
-        C.cpFloat(phase),
-        C.cpFloat(ratchet))}}
-}
-
-/////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 
 // Angle returns the current ratchet position in radians.
 func (c RatchetJoint) Angle() float64 {
@@ -59,7 +50,16 @@ func (c RatchetJoint) Ratchet() float64 {
   return float64(C.cpRatchetJointGetRatchet(c.ct))
 }
 
-/////////////////////////////////////////////////////////////////////////////
+// RatchetJointNew creates a new ratchet joint.
+func RatchetJointNew(a, b Body, phase, ratchet float64) RatchetJoint {
+  return RatchetJoint{
+    constraintBase{
+      C.cpRatchetJointNew(
+        a.c(),
+        b.c(),
+        C.cpFloat(phase),
+        C.cpFloat(ratchet))}}
+}
 
 // SetAngle sets the ratchet position in radians.
 func (c RatchetJoint) SetAngle(m float64) {

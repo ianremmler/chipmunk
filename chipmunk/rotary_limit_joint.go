@@ -26,11 +26,25 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // #include <chipmunk.h>
 import "C"
 
+////////////////////////////////////////////////////////////////////////////////
+
 // RotaryLimitJoint constrains the angle between two bodies.
 // This joint is often used in conjuction with a separate PivotJoint in order to limit
 // the rotation around the pivot.
 type RotaryLimitJoint struct {
   constraintBase
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+// Max returns the maximum angular delta of the joint in radians.
+func (c RotaryLimitJoint) Max() float64 {
+  return float64(C.cpRotaryLimitJointGetMax(c.ct))
+}
+
+// Min returns the minimum angular delta of the joint in radians.
+func (c RotaryLimitJoint) Min() float64 {
+  return float64(C.cpRotaryLimitJointGetMin(c.ct))
 }
 
 // RotaryLimitJointNew creates a new rotary limit joint.
@@ -40,28 +54,14 @@ func RotaryLimitJointNew(a, b Body, min, max float64) RotaryLimitJoint {
       C.cpRotaryLimitJointNew(a.c(), b.c(), C.cpFloat(min), C.cpFloat(max))}}
 }
 
-/////////////////////////////////////////////////////////////////////////////
-
-// Min returns the minimum angular delta of the joint in radians.
-func (c RotaryLimitJoint) Min() float64 {
-  return float64(C.cpRotaryLimitJointGetMin(c.ct))
+// SetMax sets the maximum angular delta of the joint in radians.
+func (c RotaryLimitJoint) SetMax(m float64) {
+  C.cpRotaryLimitJointSetMax(c.ct, C.cpFloat(m))
 }
-
-// Max returns the maximum angular delta of the joint in radians.
-func (c RotaryLimitJoint) Max() float64 {
-  return float64(C.cpRotaryLimitJointGetMax(c.ct))
-}
-
-/////////////////////////////////////////////////////////////////////////////
 
 // SetMin sets the minimum angular delta of the joint in radians.
 func (c RotaryLimitJoint) SetMin(m float64) {
   C.cpRotaryLimitJointSetMin(c.ct, C.cpFloat(m))
-}
-
-// SetMax sets the maximum angular delta of the joint in radians.
-func (c RotaryLimitJoint) SetMax(m float64) {
-  C.cpRotaryLimitJointSetMax(c.ct, C.cpFloat(m))
 }
 
 // Local Variables:

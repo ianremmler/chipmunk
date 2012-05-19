@@ -33,16 +33,14 @@ import (
   "unsafe"
 )
 
+////////////////////////////////////////////////////////////////////////////////
+
 // PolyShape is a polygon shape type.
 type PolyShape struct {
   shapeBase
 }
 
-// PolyShapeNew creates a new polygon shape.
-func PolyShapeNew(b Body, verts []Vect, offset Vect) PolyShape {
-  v := (*C.cpVect)(unsafe.Pointer(&verts[0]))
-  return PolyShape{shapeBase{s: C.cpPolyShapeNew(b.c(), C.int(len(verts)), v, offset.c())}}
-}
+////////////////////////////////////////////////////////////////////////////////
 
 // BoxShapeNew creates a new box shape.
 func BoxShapeNew(b Body, width, height float64) Shape {
@@ -54,9 +52,15 @@ func BoxShapeNew2(b Body, box BB) Shape {
   return PolyShape{shapeBase{s: C.cpBoxShapeNew2(b.c(), box.c())}}
 }
 
-// String converts a polygon shape to a human-readable string.
-func (s PolyShape) String() string {
-  return fmt.Sprintf("(PolyShape)%+v", s.s)
+// NumVerts returns the number of vertices in a polygon shape.
+func (s PolyShape) NumVerts() int {
+  return int(C.cpPolyShapeGetNumVerts(s.s))
+}
+
+// PolyShapeNew creates a new polygon shape.
+func PolyShapeNew(b Body, verts []Vect, offset Vect) PolyShape {
+  v := (*C.cpVect)(unsafe.Pointer(&verts[0]))
+  return PolyShape{shapeBase{s: C.cpPolyShapeNew(b.c(), C.int(len(verts)), v, offset.c())}}
 }
 
 // PolyValidate returns true if a set of vertexes is convex and has a clockwise winding.
@@ -65,9 +69,15 @@ func PolyValidate(verts []Vect) bool {
   return cpBool(C.cpPolyValidate(v, C.int(len(verts))))
 }
 
-// NumVerts returns the number of vertices in a polygon shape.
-func (s PolyShape) NumVerts() int {
-  return int(C.cpPolyShapeGetNumVerts(s.s))
+// SetVerts sets the vertexes of a poly shape.
+func (s PolyShape) SetVerts(verts []Vect, offset Vect) {
+  v := (*C.cpVect)(unsafe.Pointer(&verts[0]))
+  C.cpPolyShapeSetVerts(s.s, C.int(len(verts)), v, offset.c())
+}
+
+// String converts a polygon shape to a human-readable string.
+func (s PolyShape) String() string {
+  return fmt.Sprintf("(PolyShape)%+v", s.s)
 }
 
 // VertLocal returns a specific vertex of a polygon shape (local coordinates).
@@ -99,12 +109,6 @@ func (s PolyShape) VertsWorldFloat64() []float64 {
   vertsH.Data = uintptr(unsafe.Pointer(((*C.cpPolyShape)(unsafe.Pointer(s.s)).tVerts)))
 
   return verts
-}
-
-// SetVerts sets the vertexes of a poly shape.
-func (s PolyShape) SetVerts(verts []Vect, offset Vect) {
-  v := (*C.cpVect)(unsafe.Pointer(&verts[0]))
-  C.cpPolyShapeSetVerts(s.s, C.int(len(verts)), v, offset.c())
 }
 
 // Local Variables:

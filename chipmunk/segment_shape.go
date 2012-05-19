@@ -31,21 +31,14 @@ import (
   "fmt"
 )
 
+////////////////////////////////////////////////////////////////////////////////
+
 // SegmentShape is a a beveled (rounded) segment shape.
 type SegmentShape struct {
   shapeBase
 }
 
-// SegmentShapeNew creates a new segment shape.
-func SegmentShapeNew(body Body, a, b Vect, radius float64) SegmentShape {
-  s := C.cpSegmentShapeNew(body.b, a.c(), b.c(), C.cpFloat(radius))
-  return SegmentShape{shapeBase{s}}
-}
-
-// SetNeighbors FIXME TODO OMG WTF
-func (s SegmentShape) SetNeighbors(prev, next Vect) {
-  C.cpSegmentShapeSetNeighbors(s.s, prev.c(), next.c())
-}
+////////////////////////////////////////////////////////////////////////////////
 
 // A returns the start of the segment shape.
 func (s SegmentShape) A() Vect {
@@ -67,10 +60,21 @@ func (s SegmentShape) Radius() float64 {
   return float64(C.cpSegmentShapeGetRadius(s.s))
 }
 
+// SegmentShapeNew creates a new segment shape.
+func SegmentShapeNew(body Body, a, b Vect, radius float64) SegmentShape {
+  s := C.cpSegmentShapeNew(body.b, a.c(), b.c(), C.cpFloat(radius))
+  return SegmentShape{shapeBase{s}}
+}
+
 // SetEndpoints sets the endpoints of a segment shape.
 // NOTE: this is unsafe function.
 func (s SegmentShape) SetEndpoints(a, b Vect) {
   C.cpSegmentShapeSetEndpoints(s.s, a.c(), b.c())
+}
+
+// SetNeighbors FIXME TODO OMG WTF
+func (s SegmentShape) SetNeighbors(prev, next Vect) {
+  C.cpSegmentShapeSetNeighbors(s.s, prev.c(), next.c())
 }
 
 // SetRadius sets the radius of a segment shape.

@@ -31,44 +31,18 @@ import (
   "math"
 )
 
+////////////////////////////////////////////////////////////////////////////////
+
 // Vect is a 2D vector type.
 type Vect struct {
   X, Y float64
 }
 
-// VectNew returns a new 2D vector.
-func VectNew(x, y float64) Vect {
-  return Vect{x, y}
-}
-
-// VectForAngle returns the unit length vector for the given angle (radians).
-func VectForAngle(a float64) Vect {
-  return VectNew(math.Cos(a), math.Sin(a))
-}
-
-// Origin returns zero vector.
-func Origin() Vect {
-  return VectNew(0.0, 0.0)
-}
-
-// String converts a vector to a human-readable string.
-func (v Vect) String() string {
-  return fmt.Sprintf("(Vect){%g, %g}", v.X, v.Y)
-}
+////////////////////////////////////////////////////////////////////////////////
 
 // Add adds one vector to another.
 func (a Vect) Add(b Vect) Vect {
   return VectNew(a.X+b.X, a.Y+b.Y)
-}
-
-// Sub subtracts one vector from another.
-func (a Vect) Sub(b Vect) Vect {
-  return VectNew(a.X-b.X, a.Y-b.Y)
-}
-
-// Mul multiples vector by a value thus scaling it.
-func (v Vect) Mul(x float64) Vect {
-  return VectNew(v.X*x, v.Y*x)
 }
 
 // Div divides vector by a value thus shrinking it.
@@ -84,11 +58,6 @@ func (v1 Vect) Dot(v2 Vect) float64 {
 // Length returns the length of vector.
 func (v Vect) Length() float64 {
   return math.Sqrt(v.Dot(v))
-}
-
-// Neg negates vector.
-func (v Vect) Neg() Vect {
-  return VectNew(-v.X, -v.Y)
 }
 
 // Lerp does a spherical linear interpolation between two vectors.
@@ -110,15 +79,52 @@ func (v1 Vect) LerpConst(v2 Vect, a float64) Vect {
   return v1.Lerp(v2, math.Min(a, angle)/angle)
 }
 
+// Mul multiples vector by a value thus scaling it.
+func (v Vect) Mul(x float64) Vect {
+  return VectNew(v.X*x, v.Y*x)
+}
+
+// Neg negates vector.
+func (v Vect) Neg() Vect {
+  return VectNew(-v.X, -v.Y)
+}
+
+// Origin returns zero vector.
+func Origin() Vect {
+  return VectNew(0.0, 0.0)
+}
+
+// String converts a vector to a human-readable string.
+func (v Vect) String() string {
+  return fmt.Sprintf("(Vect){%g, %g}", v.X, v.Y)
+}
+
+// Sub subtracts one vector from another.
+func (a Vect) Sub(b Vect) Vect {
+  return VectNew(a.X-b.X, a.Y-b.Y)
+}
+
 // ToAngle returns the angular direction vector is pointing in (radians).
 func (v Vect) ToAngle() float64 {
   return math.Atan2(v.Y, v.X)
 }
 
+// VectNew returns a new 2D vector.
+func VectNew(x, y float64) Vect {
+  return Vect{x, y}
+}
+
+// VectForAngle returns the unit length vector for the given angle (radians).
+func VectForAngle(a float64) Vect {
+  return VectNew(math.Cos(a), math.Sin(a))
+}
+
+// c converts Vect to C.cpVect.
 func (v Vect) c() C.cpVect {
   return C.cpVect{x: C.cpFloat(v.X), y: C.cpFloat(v.Y)}
 }
 
+// cpVect converts C.cpVect to Vect.
 func cpVect(v C.cpVect) Vect {
   return VectNew(float64(v.x), float64(v.y))
 }

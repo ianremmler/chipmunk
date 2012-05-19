@@ -26,22 +26,20 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // #include <chipmunk.h>
 import "C"
 
+////////////////////////////////////////////////////////////////////////////////
+
 // GrooveJoint holds a pivot point on one body to line along a line segment on
 // another like a pin in a groove.
 type GrooveJoint struct {
   constraintBase
 }
 
-// GrooveJointNew creates a new groove joint.
-// Make sure you have the bodies in the right place as the joint will snap
-// into shape as soon as you start simulating the space.
-func GrooveJointNew(a, b Body, groove_a, groove_b, anchr2 Vect) GrooveJoint {
-  return GrooveJoint{
-    constraintBase{
-      C.cpGrooveJointNew(a.c(), b.c(), groove_a.c(), groove_b.c(), anchr2.c())}}
-}
+////////////////////////////////////////////////////////////////////////////////
 
-/////////////////////////////////////////////////////////////////////////////
+// Anchr2 returns the anchor point on the second body that is held to the line segment on the first.
+func (c GrooveJoint) Anchr2() Vect {
+  return cpVect(C.cpGrooveJointGetAnchr2(c.ct))
+}
 
 // GrooveA returns the start of the line segment on the first body.
 func (c GrooveJoint) GrooveA() Vect {
@@ -53,12 +51,19 @@ func (c GrooveJoint) GrooveB() Vect {
   return cpVect(C.cpGrooveJointGetGrooveB(c.ct))
 }
 
-// Anchr2 returns the anchor point on the second body that is held to the line segment on the first.
-func (c GrooveJoint) Anchr2() Vect {
-  return cpVect(C.cpGrooveJointGetAnchr2(c.ct))
+// GrooveJointNew creates a new groove joint.
+// Make sure you have the bodies in the right place as the joint will snap
+// into shape as soon as you start simulating the space.
+func GrooveJointNew(a, b Body, groove_a, groove_b, anchr2 Vect) GrooveJoint {
+  return GrooveJoint{
+    constraintBase{
+      C.cpGrooveJointNew(a.c(), b.c(), groove_a.c(), groove_b.c(), anchr2.c())}}
 }
 
-/////////////////////////////////////////////////////////////////////////////
+// SetAnchr2 sets the anchor point on the second body that is held to the line segment on the first.
+func (c GrooveJoint) SetAnchr2(v Vect) {
+  C.cpGrooveJointSetAnchr2(c.ct, v.c())
+}
 
 // SetGrooveA sets the start of the line segment on the first body.
 func (c GrooveJoint) SetGrooveA(v Vect) {
@@ -68,11 +73,6 @@ func (c GrooveJoint) SetGrooveA(v Vect) {
 // SetGrooveB sets the end of the line segment on the first body.
 func (c GrooveJoint) SetGrooveB(v Vect) {
   C.cpGrooveJointSetGrooveB(c.ct, v.c())
-}
-
-// SetAnchr2 sets the anchor point on the second body that is held to the line segment on the first.
-func (c GrooveJoint) SetAnchr2(v Vect) {
-  C.cpGrooveJointSetAnchr2(c.ct, v.c())
 }
 
 // Local Variables:

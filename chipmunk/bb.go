@@ -31,9 +31,18 @@ import (
   "math"
 )
 
+////////////////////////////////////////////////////////////////////////////////
+
 // BB is an axis-aligned 2D bounding box type (left, bottom, right, top).
 type BB struct {
   l, b, r, t float64
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+// Area returns the area of the bounding box.
+func (b BB) Area() float64 {
+  return (b.r - b.l) * (b.t - b.b)
 }
 
 // BBNew creates a 2D bounding box.
@@ -41,26 +50,14 @@ func BBNew(l, b, r, t float64) BB {
   return BB{l, b, r, t}
 }
 
-func cpBB(bb C.cpBB) BB {
-  return BBNew(float64(bb.l), float64(bb.b), float64(bb.r), float64(bb.t))
-}
-
-func (b BB) c() C.cpBB {
-  return C.cpBB{
-    l: C.cpFloat(b.l),
-    b: C.cpFloat(b.b),
-    r: C.cpFloat(b.r),
-    t: C.cpFloat(b.t)}
-}
-
 // BBNewForCircle constructs a BB for a circle with the given position and radius.
 func BBNewForCircle(p Vect, r float64) BB {
   return BBNew(p.X-r, p.Y-r, p.X+r, p.Y+r)
 }
 
-// Intersects returns true if two bounding boxes intersect.
-func (a BB) Intersects(b BB) bool {
-  return a.l <= b.r && b.l <= a.r && a.b <= b.t && b.b <= a.t
+// ClampVect clamps a vector to a bounding box.
+func (bb BB) ClampVect(v Vect) Vect {
+  return Vect{X: math.Min(math.Max(bb.l, v.X), bb.r), Y: math.Min(math.Max(bb.b, v.Y), bb.t)}
 }
 
 // Contains returns true if other bounding box lies completely within.
@@ -73,15 +70,6 @@ func (b BB) ContainsVect(v Vect) bool {
   return b.l <= v.X && b.r >= v.X && b.b <= v.Y && b.t >= v.Y
 }
 
-// Merge returns a bounding box that holds both bounding boxes.
-func (a BB) Merge(b BB) BB {
-  return BB{
-    math.Min(a.l, b.l),
-    math.Min(a.b, b.b),
-    math.Max(a.r, b.r),
-    math.Max(a.t, b.t)}
-}
-
 // Expand returns a bounding box that holds both bounding box and a vector.
 func (b BB) Expand(v Vect) BB {
   return BB{
@@ -91,9 +79,24 @@ func (b BB) Expand(v Vect) BB {
     math.Max(b.t, v.Y)}
 }
 
-// Area returns the area of the bounding box.
-func (b BB) Area() float64 {
-  return (b.r - b.l) * (b.t - b.b)
+// Intersects returns true if two bounding boxes intersect.
+func (a BB) Intersects(b BB) bool {
+  return a.l <= b.r && b.l <= a.r && a.b <= b.t && b.b <= a.t
+}
+
+// IntersectsSegment returns true if the bounding box intersects the line
+// segment defined using two points.
+func (bb BB) IntersectsSegment(a, b Vect) bool {
+  return !math.IsInf(bb.SegmentQuery(a, b), 1)
+}
+
+// Merge returns a bounding box that holds both bounding boxes.
+func (a BB) Merge(b BB) BB {
+  return BB{
+    math.Min(a.l, b.l),
+    math.Min(a.b, b.b),
+    math.Max(a.r, b.r),
+    math.Max(a.t, b.t)}
 }
 
 // MergedArea merges two bounding boxes and returns the area of the merged bounding box.
@@ -147,15 +150,9 @@ func (bb BB) SegmentQuery(a, b Vect) float64 {
   return pinf
 }
 
-// IntersectsSegment returns true if the bounding box intersects the line
-// segment defined using two points.
-func (bb BB) IntersectsSegment(a, b Vect) bool {
-  return !math.IsInf(bb.SegmentQuery(a, b), 1)
-}
-
-// ClampVect clamps a vector to a bounding box.
-func (bb BB) ClampVect(v Vect) Vect {
-  return Vect{X: math.Min(math.Max(bb.l, v.X), bb.r), Y: math.Min(math.Max(bb.b, v.Y), bb.t)}
+// String converts a BB to a human-readable string.
+func (b BB) String() string {
+  return fmt.Sprintf("(BB){l:%g, b:%g, r:%g, t:%g}", b.l, b.b, b.r, b.t)
 }
 
 // WrapVect wraps a vector to a bounding box.
@@ -179,9 +176,18 @@ func (bb BB) WrapVect(v Vect) Vect {
   return Vect{X: x + bb.l, Y: y + bb.b}
 }
 
-// String converts a BB to a human-readable string.
-func (b BB) String() string {
-  return fmt.Sprintf("(BB){l:%g, b:%g, r:%g, t:%g}", b.l, b.b, b.r, b.t)
+// c converts BB to C.cpBB.
+func (b BB) c() C.cpBB {
+  return C.cpBB{
+    l: C.cpFloat(b.l),
+    b: C.cpFloat(b.b),
+    r: C.cpFloat(b.r),
+    t: C.cpFloat(b.t)}
+}
+
+// cpBB converts C.cpBB to BB.
+func cpBB(bb C.cpBB) BB {
+  return BBNew(float64(bb.l), float64(bb.b), float64(bb.r), float64(bb.t))
 }
 
 // Local Variables:

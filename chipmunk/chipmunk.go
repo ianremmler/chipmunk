@@ -37,6 +37,8 @@ import (
   "unsafe"
 )
 
+////////////////////////////////////////////////////////////////////////////////
+
 // Timestamp is type used for various timestamps.
 type Timestamp uint
 
@@ -49,12 +51,96 @@ type Group C.cpGroup
 // Layers is a type used for Shape.Layers.
 type Layers uint
 
+////////////////////////////////////////////////////////////////////////////////
+
 const (
   // NoGroup is a value for Shape.Group signifying that a shape is in no group.
   NoGroup = Group(0)
   // AllLayers is a value for Shape.Layers signifying that a shape is in every layer.
   AllLayers = Layers(0)
 )
+
+// Chipmunk version.
+const (
+  VersionMajor   = int(C.CP_VERSION_MAJOR)
+  VersionMinor   = int(C.CP_VERSION_MINOR)
+  VersionRelease = int(C.CP_VERSION_RELEASE)
+)
+
+////////////////////////////////////////////////////////////////////////////////
+
+// AreaForCircle returns the area of a hollow circle.
+func AreaForCircle(r1, r2 float64) float64 {
+  return float64(C.cpAreaForCircle(C.cpFloat(r1), C.cpFloat(r2)))
+}
+
+// AreaForPoly returns the signed area of a polygon.
+// A Clockwise winding gives positive area. This is probably backwards from what
+// you expect, but matches Chipmunk's the winding for poly shapes.
+func AreaForPoly(verts []Vect) float64 {
+  v := (*C.cpVect)(unsafe.Pointer(&verts[0]))
+  return float64(C.cpAreaForPoly(C.int(len(verts)), v))
+}
+
+// AreaForSegment returns the area of a fattened (capsule shaped) line segment.
+func AreaForSegment(a, b Vect, r float64) float64 {
+  return float64(C.cpAreaForSegment(a.c(), b.c(), C.cpFloat(r)))
+}
+
+// CentroidForPoly returns the natural centroid of a polygon.
+func CentroidForPoly(verts []Vect) Vect {
+  v := (*C.cpVect)(unsafe.Pointer(&verts[0]))
+  return cpVect(C.cpCentroidForPoly(C.int(len(verts)), v))
+}
+
+// ConvexHull calculates the convex hull of a given set of points.
+// Returns the points and index of the first vertex in the hull came from the input.
+// Tolerance is the allowed amount to shrink the hull when simplifying it.
+// A tolerance of 0.0 creates an exact hull.
+func ConvexHull(verts []Vect, tolerance float64) ([]Vect, int) {
+  result := make([]Vect, len(verts))
+  var first C.int
+  v := (*C.cpVect)(unsafe.Pointer(&verts[0]))
+  r := (*C.cpVect)(unsafe.Pointer(&result[0]))
+  num := int(C.cpConvexHull(C.int(len(verts)), v, r, &first, C.cpFloat(tolerance)))
+  final := make([]Vect, num, num)
+  copy(final, result[:num])
+  return final, int(first)
+}
+
+// MomentForBox returns the moment of inertia for a solid box.
+func MomentForBox(m, width, height float64) float64 {
+  return float64(C.cpMomentForBox(C.cpFloat(m), C.cpFloat(width), C.cpFloat(height)))
+}
+
+// MomentForBox2 returns the moment of inertia for a solid box.
+func MomentForBox2(m float64, box BB) float64 {
+  return float64(C.cpMomentForBox2(C.cpFloat(m), box.c()))
+}
+
+// MomentForCircle returns the moment of inertia for a circle.
+func MomentForCircle(m, r1, r2 float64, offset Vect) float64 {
+  return float64(C.cpMomentForCircle(C.cpFloat(m), C.cpFloat(r1), C.cpFloat(r2), offset.c()))
+}
+
+// MomentForPoly returns the moment of inertia for a solid polygon shape assuming
+// it's center of gravity is at it's centroid. The offset is added to each vertex.
+func MomentForPoly(m float64, verts []Vect, offset Vect) float64 {
+  v := (*C.cpVect)(unsafe.Pointer(&verts[0]))
+  return float64(C.cpMomentForPoly(C.cpFloat(m), C.int(len(verts)), v, offset.c()))
+}
+
+// MomentForSegment returns the moment of inertia for a line segment.
+func MomentForSegment(m float64, a, b Vect) float64 {
+  return float64(C.cpMomentForSegment(C.cpFloat(m), a.c(), b.c()))
+}
+
+// RecenterPoly centers the polygon on the origin (subtracts the centroid
+// of the polygon from each vertex).
+func RecenterPoly(verts []Vect) {
+  v := (*C.cpVect)(unsafe.Pointer(&verts[0]))
+  C.cpRecenterPoly(C.int(len(verts)), v)
+}
 
 // String converts Group to a human-readable string.
 func (g Group) String() string {
@@ -74,112 +160,9 @@ func (l Layers) String() string {
   return fmt.Sprintf("(Layers){0x%x}", uint(l))
 }
 
-func (c CollisionType) c() C.cpCollisionType {
-  return C.cpCollisionType(c)
-}
-
-func (g Group) c() C.cpGroup {
-  return C.cpGroup(g)
-}
-
-func (l Layers) c() C.cpLayers {
-  return C.cpLayers(l)
-}
-
-func boolToC(b bool) C.cpBool {
-  v := 0
-
-  if b {
-    v = 1
-  }
-
-  return C.cpBool(v)
-}
-
-func cpBool(b C.cpBool) bool {
-  return int(b) != 0
-}
-
-func cpData(p C.cpDataPointer) interface{} {
-  data := *(*interface{})(p)
-  return data
-}
-
-func dataToC(data interface{}) C.cpDataPointer {
-  return C.cpDataPointer(unsafe.Pointer(&data))
-}
-
-// MomentForCircle returns the moment of inertia for a circle.
-func MomentForCircle(m, r1, r2 float64, offset Vect) float64 {
-  return float64(C.cpMomentForCircle(C.cpFloat(m), C.cpFloat(r1), C.cpFloat(r2), offset.c()))
-}
-
-// AreaForCircle returns the area of a hollow circle.
-func AreaForCircle(r1, r2 float64) float64 {
-  return float64(C.cpAreaForCircle(C.cpFloat(r1), C.cpFloat(r2)))
-}
-
-// MomentForSegment returns the moment of inertia for a line segment.
-func MomentForSegment(m float64, a, b Vect) float64 {
-  return float64(C.cpMomentForSegment(C.cpFloat(m), a.c(), b.c()))
-}
-
-// AreaForSegment returns the area of a fattened (capsule shaped) line segment.
-func AreaForSegment(a, b Vect, r float64) float64 {
-  return float64(C.cpAreaForSegment(a.c(), b.c(), C.cpFloat(r)))
-}
-
-// MomentForPoly returns the moment of inertia for a solid polygon shape assuming
-// it's center of gravity is at it's centroid. The offset is added to each vertex.
-func MomentForPoly(m float64, verts []Vect, offset Vect) float64 {
-  v := (*C.cpVect)(unsafe.Pointer(&verts[0]))
-  return float64(C.cpMomentForPoly(C.cpFloat(m), C.int(len(verts)), v, offset.c()))
-}
-
-// AreaForPoly returns the signed area of a polygon.
-// A Clockwise winding gives positive area. This is probably backwards from what
-// you expect, but matches Chipmunk's the winding for poly shapes.
-func AreaForPoly(verts []Vect) float64 {
-  v := (*C.cpVect)(unsafe.Pointer(&verts[0]))
-  return float64(C.cpAreaForPoly(C.int(len(verts)), v))
-}
-
-// CentroidForPoly returns the natural centroid of a polygon.
-func CentroidForPoly(verts []Vect) Vect {
-  v := (*C.cpVect)(unsafe.Pointer(&verts[0]))
-  return cpVect(C.cpCentroidForPoly(C.int(len(verts)), v))
-}
-
-// RecenterPoly centers the polygon on the origin (subtracts the centroid
-// of the polygon from each vertex).
-func RecenterPoly(verts []Vect) {
-  v := (*C.cpVect)(unsafe.Pointer(&verts[0]))
-  C.cpRecenterPoly(C.int(len(verts)), v)
-}
-
-// MomentForBox returns the moment of inertia for a solid box.
-func MomentForBox(m, width, height float64) float64 {
-  return float64(C.cpMomentForBox(C.cpFloat(m), C.cpFloat(width), C.cpFloat(height)))
-}
-
-// MomentForBox2 returns the moment of inertia for a solid box.
-func MomentForBox2(m float64, box BB) float64 {
-  return float64(C.cpMomentForBox2(C.cpFloat(m), box.c()))
-}
-
-// ConvexHull calculates the convex hull of a given set of points.
-// Returns the points and index of the first vertex in the hull came from the input.
-// Tolerance is the allowed amount to shrink the hull when simplifying it.
-// A tolerance of 0.0 creates an exact hull.
-func ConvexHull(verts []Vect, tolerance float64) ([]Vect, int) {
-  result := make([]Vect, len(verts))
-  var first C.int
-  v := (*C.cpVect)(unsafe.Pointer(&verts[0]))
-  r := (*C.cpVect)(unsafe.Pointer(&result[0]))
-  num := int(C.cpConvexHull(C.int(len(verts)), v, r, &first, C.cpFloat(tolerance)))
-  final := make([]Vect, num, num)
-  copy(final, result[:num])
-  return final, int(first)
+// Version returns Chipmunk version string.
+func Version() string {
+  return C.GoString(C.cpVersionString)
 }
 
 // VertsEqual returns a boolean reporting whether a == b.
@@ -197,16 +180,46 @@ func VertsEqual(a, b []Vect) bool {
   return true
 }
 
-// Chipmunk version.
-const (
-  VersionMajor   = int(C.CP_VERSION_MAJOR)
-  VersionMinor   = int(C.CP_VERSION_MINOR)
-  VersionRelease = int(C.CP_VERSION_RELEASE)
-)
+// boolToC converts bool to C.cpBool.
+func boolToC(b bool) C.cpBool {
+  v := 0
 
-// Version returns Chipmunk version string.
-func Version() string {
-  return C.GoString(C.cpVersionString)
+  if b {
+    v = 1
+  }
+
+  return C.cpBool(v)
+}
+
+// c converts CollisionType to c.cpCollisionType.
+func (c CollisionType) c() C.cpCollisionType {
+  return C.cpCollisionType(c)
+}
+
+// c converts Group to c.cpGroup.
+func (g Group) c() C.cpGroup {
+  return C.cpGroup(g)
+}
+
+// c converts Layers to c.cpLayers.
+func (l Layers) c() C.cpLayers {
+  return C.cpLayers(l)
+}
+
+// cpBool converts C.cpBool to bool.
+func cpBool(b C.cpBool) bool {
+  return int(b) != 0
+}
+
+// cpData converts C.cpDataPointer to interface.
+func cpData(p C.cpDataPointer) interface{} {
+  data := *(*interface{})(p)
+  return data
+}
+
+// dataToC converts interface to C.cpDataPointer.
+func dataToC(data interface{}) C.cpDataPointer {
+  return C.cpDataPointer(unsafe.Pointer(&data))
 }
 
 // Local Variables:
