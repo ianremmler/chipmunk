@@ -29,6 +29,7 @@ import "C"
 
 import (
   "fmt"
+  "unsafe"
 )
 
 // CircleShape is a circle shape type.
@@ -40,6 +41,12 @@ type CircleShape struct {
 func CircleShapeNew(body Body, radius float64, offset Vect) CircleShape {
   s := C.cpCircleShapeNew(body.b, C.cpFloat(radius), offset.c())
   return CircleShape{shapeBase{s}}
+}
+
+// Center returns the center of the circle shape (world coordinates).
+func (s CircleShape) Center() Vect {
+  p := (unsafe.Pointer)(s.s)
+  return cpVect((*C.cpCircleShape)(p).tc)
 }
 
 // Offset returns the offset from the center of gravity.
