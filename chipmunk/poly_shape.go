@@ -29,6 +29,7 @@ import "C"
 
 import (
   "fmt"
+  "reflect"
   "unsafe"
 )
 
@@ -69,9 +70,35 @@ func (s PolyShape) NumVerts() int {
   return int(C.cpPolyShapeGetNumVerts(s.s))
 }
 
-// Vert returns a specific vertex of a polygon shape.
-func (s PolyShape) Vert(idx int) Vect {
+// VertLocal returns a specific vertex of a polygon shape (local coordinates).
+func (s PolyShape) VertLocal(idx int) Vect {
   return cpVect(C.cpPolyShapeGetVert(s.s, C.int(idx)))
+}
+
+// VertsWorld returns vertex positions (world coordinates).
+func (s PolyShape) VertsWorld() []Vect {
+  num := s.NumVerts()
+  var verts []Vect
+
+  vertsH := (*reflect.SliceHeader)((unsafe.Pointer(&verts)))
+  vertsH.Cap = num
+  vertsH.Len = num
+  vertsH.Data = uintptr(unsafe.Pointer(((*C.cpPolyShape)(unsafe.Pointer(s.s)).tVerts)))
+
+  return verts
+}
+
+// VertsWorld returns vertex positions (world coordinates) as array of float64 values.
+func (s PolyShape) VertsWorldFloat64() []float64 {
+  num := s.NumVerts() * 2
+  var verts []float64
+
+  vertsH := (*reflect.SliceHeader)((unsafe.Pointer(&verts)))
+  vertsH.Cap = num
+  vertsH.Len = num
+  vertsH.Data = uintptr(unsafe.Pointer(((*C.cpPolyShape)(unsafe.Pointer(s.s)).tVerts)))
+
+  return verts
 }
 
 // SetVerts sets the vertexes of a poly shape.
