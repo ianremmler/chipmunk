@@ -52,13 +52,8 @@ func (c RatchetJoint) Ratchet() float64 {
 
 // RatchetJointNew creates a new ratchet joint.
 func RatchetJointNew(a, b Body, phase, ratchet float64) RatchetJoint {
-  return RatchetJoint{
-    constraintBase{
-      C.cpRatchetJointNew(
-        a.c(),
-        b.c(),
-        C.cpFloat(phase),
-        C.cpFloat(ratchet))}}
+  c := C.cpRatchetJointNew(a.c(), b.c(), C.cpFloat(phase), C.cpFloat(ratchet))
+  return RatchetJoint{constraintBase{c}}
 }
 
 // SetAngle sets the ratchet position in radians.

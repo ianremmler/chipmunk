@@ -52,16 +52,17 @@ func DampedSpringNew(
   a, b Body,
   anchr1, anchr2 Vect,
   restLength, stiffness, damping float64) DampedSpring {
-  return DampedSpring{
-    constraintBase{
-      C.cpDampedSpringNew(
-        a.c(),
-        b.c(),
-        anchr1.c(),
-        anchr2.c(),
-        C.cpFloat(restLength),
-        C.cpFloat(stiffness),
-        C.cpFloat(damping))}}
+
+  c := C.cpDampedSpringNew(
+    a.c(),
+    b.c(),
+    anchr1.c(),
+    anchr2.c(),
+    C.cpFloat(restLength),
+    C.cpFloat(stiffness),
+    C.cpFloat(damping))
+
+  return DampedSpring{constraintBase{c}}
 }
 
 // Damping returns the amount of viscous damping to apply.

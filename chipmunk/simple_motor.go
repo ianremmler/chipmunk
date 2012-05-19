@@ -48,12 +48,8 @@ func (c SimpleMotor) SetRate(m float64) {
 
 // SimpleMotorNew creates a new simple motor.
 func SimpleMotorNew(a, b Body, rate float64) SimpleMotor {
-  return SimpleMotor{
-    constraintBase{
-      C.cpSimpleMotorNew(
-        a.c(),
-        b.c(),
-        C.cpFloat(rate))}}
+  c := C.cpSimpleMotorNew(a.c(), b.c(), C.cpFloat(rate))
+  return SimpleMotor{constraintBase{c}}
 }
 
 // Local Variables:

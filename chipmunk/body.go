@@ -101,12 +101,12 @@ func (b Body) ApplyImpulse(j, r Vect) {
 
 // BodyNew creates a new body.
 func BodyNew(m, i float64) Body {
-  return Body{b: C.cpBodyNew(C.cpFloat(m), C.cpFloat(i))}
+  return Body{C.cpBodyNew(C.cpFloat(m), C.cpFloat(i))}
 }
 
 // BodyStaticNew creates a new static body.
 func BodyStaticNew() Body {
-  return Body{b: C.cpBodyNewStatic()}
+  return Body{C.cpBodyNewStatic()}
 }
 
 // ContainedInSpace returns true if the body is in the space.

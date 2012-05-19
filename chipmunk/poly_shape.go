@@ -44,12 +44,14 @@ type PolyShape struct {
 
 // BoxShapeNew creates a new box shape.
 func BoxShapeNew(b Body, width, height float64) Shape {
-  return PolyShape{shapeBase{s: C.cpBoxShapeNew(b.c(), C.cpFloat(width), C.cpFloat(height))}}
+  s := C.cpBoxShapeNew(b.c(), C.cpFloat(width), C.cpFloat(height))
+  return PolyShape{shapeBase{s}}
 }
 
 // BoxShapeNew2 creates a new box shape.
 func BoxShapeNew2(b Body, box BB) Shape {
-  return PolyShape{shapeBase{s: C.cpBoxShapeNew2(b.c(), box.c())}}
+  s := C.cpBoxShapeNew2(b.c(), box.c())
+  return PolyShape{shapeBase{s}}
 }
 
 // NumVerts returns the number of vertices in a polygon shape.
@@ -60,7 +62,8 @@ func (s PolyShape) NumVerts() int {
 // PolyShapeNew creates a new polygon shape.
 func PolyShapeNew(b Body, verts []Vect, offset Vect) PolyShape {
   v := (*C.cpVect)(unsafe.Pointer(&verts[0]))
-  return PolyShape{shapeBase{s: C.cpPolyShapeNew(b.c(), C.int(len(verts)), v, offset.c())}}
+  s := C.cpPolyShapeNew(b.c(), C.int(len(verts)), v, offset.c())
+  return PolyShape{shapeBase{s}}
 }
 
 // PolyValidate returns true if a set of vertexes is convex and has a clockwise winding.

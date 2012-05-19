@@ -53,7 +53,8 @@ func (c PinJoint) Dist() float64 {
 
 // PinJointNew creates a new pin joint.
 func PinJointNew(a, b Body, anchr1, anchr2 Vect) PinJoint {
-  return PinJoint{constraintBase{C.cpPinJointNew(a.c(), b.c(), anchr1.c(), anchr2.c())}}
+  c := C.cpPinJointNew(a.c(), b.c(), anchr1.c(), anchr2.c())
+  return PinJoint{constraintBase{c}}
 }
 
 // SetAnchr1 sets the anchor point on the first body.

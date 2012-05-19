@@ -47,12 +47,14 @@ func (c PivotJoint) Anchr2() Vect {
 
 // PivotJointNew creates a new pivot joint.
 func PivotJointNew(a, b Body, pivot Vect) PivotJoint {
-  return PivotJoint{constraintBase{C.cpPivotJointNew(a.c(), b.c(), pivot.c())}}
+  c := C.cpPivotJointNew(a.c(), b.c(), pivot.c())
+  return PivotJoint{constraintBase{c}}
 }
 
 // PivotJointNew2 creates a new pivot joint with the two anchor points.
 func PivotJointNew2(a, b Body, anchr1, anchr2 Vect) PivotJoint {
-  return PivotJoint{constraintBase{C.cpPivotJointNew2(a.c(), b.c(), anchr1.c(), anchr2.c())}}
+  c := C.cpPivotJointNew2(a.c(), b.c(), anchr1.c(), anchr2.c())
+  return PivotJoint{constraintBase{c}}
 }
 
 // SetAnchr1 sets the anchor point on the first body.
