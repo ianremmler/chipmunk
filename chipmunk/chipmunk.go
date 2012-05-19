@@ -29,6 +29,10 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #cgo LDFLAGS: -lchipmunk -lm
 
 #include <chipmunk.h>
+
+#if CP_USE_DOUBLES != 1
+#error CP_USE_DOUBLES != 1 while Go bindings only has double precision support
+#endif
 */
 import "C"
 
