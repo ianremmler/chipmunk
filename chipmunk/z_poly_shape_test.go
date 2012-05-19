@@ -47,10 +47,10 @@ func Test_PolyShapeUnsafe(t *testing.T) {
 
   points = []Vect{VectNew(1.0, 0.0), VectNew(0.0, 0.0), VectNew(0.0, 1.0), VectNew(1.0, 1.0)}
   s.SetVerts(points, VectNew(1.0, -4.0))
-  testEq(t, s.Vert(0), VectNew(2.0, -4.0))
-  testEq(t, s.Vert(1), VectNew(1.0, -4.0))
-  testEq(t, s.Vert(2), VectNew(1.0, -3.0))
-  testEq(t, s.Vert(3), VectNew(2.0, -3.0))
+  testEq(t, s.VertLocal(0), VectNew(2.0, -4.0))
+  testEq(t, s.VertLocal(1), VectNew(1.0, -4.0))
+  testEq(t, s.VertLocal(2), VectNew(1.0, -3.0))
+  testEq(t, s.VertLocal(3), VectNew(2.0, -3.0))
 
   s.Free()
   b.Free()
