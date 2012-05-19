@@ -28,7 +28,7 @@ import (
 )
 
 func Test_PolyShapeNew(t *testing.T) {
-  b := NewBody(1.0, 1.0)
+  b := BodyNew(1.0, 1.0)
   points := []Vect{VectNew(0.0, 0.0), VectNew(0.0, 1.0), VectNew(1.0, 1.0), VectNew(1.0, 0.0)}
   s := PolyShapeNew(b, points, Origin())
 
@@ -41,7 +41,7 @@ func Test_PolyShapeNew(t *testing.T) {
 }
 
 func Test_PolyShapeUnsafe(t *testing.T) {
-  b := NewBody(1.0, 1.0)
+  b := BodyNew(1.0, 1.0)
   points := []Vect{VectNew(0.0, 0.0), VectNew(0.0, 1.0), VectNew(1.0, 1.0), VectNew(1.0, 0.0)}
   s := PolyShapeNew(b, points, Origin())
 

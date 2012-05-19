@@ -77,6 +77,7 @@ static void space_each_body(cpSpace *space, void *f) {
 import "C"
 
 import (
+  "fmt"
   "unsafe"
 )
 
@@ -141,8 +142,8 @@ type ContainedInSpace interface {
   ContainedInSpace(s Space) bool
 }
 
-// NewSpace creates a new space.
-func NewSpace() Space {
+// SpaceNew creates a new space.
+func SpaceNew() Space {
   return spaceBase{C.cpSpaceNew()}
 }
 
@@ -503,6 +504,11 @@ func (s spaceBase) EachConstraint(iter func(Constraint)) {
 func (s spaceBase) EachBody(iter func(Body)) {
   p := unsafe.Pointer(&iter)
   C.space_each_body(s.s, p)
+}
+
+// String converts a space to a human-readable string.
+func (s spaceBase) String() string {
+  return fmt.Sprintf("(Space)%+v", s.s)
 }
 
 // Local Variables:

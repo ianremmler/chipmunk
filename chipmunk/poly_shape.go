@@ -28,6 +28,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 import "C"
 
 import (
+  "fmt"
   "unsafe"
 )
 
@@ -54,7 +55,7 @@ func BoxShapeNew2(b Body, box BB) Shape {
 
 // String converts a polygon shape to a human-readable string.
 func (s PolyShape) String() string {
-  return "poly shape"
+  return fmt.Sprintf("(PolyShape)%+v", s.s)
 }
 
 // PolyValidate returns true if a set of vertexes is convex and has a clockwise winding.

@@ -27,6 +27,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 import "C"
 
 import (
+  "fmt"
   "math"
 )
 
@@ -176,6 +177,11 @@ func (bb BB) WrapVect(v Vect) Vect {
   }
 
   return Vect{X: x + bb.l, Y: y + bb.b}
+}
+
+// String converts a BB to a human-readable string.
+func (b BB) String() string {
+  return fmt.Sprintf("(BB){l:%g, b:%g, r:%g, t:%g}", b.l, b.b, b.r, b.t)
 }
 
 // Local Variables:

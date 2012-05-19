@@ -28,7 +28,7 @@ import (
 )
 
 func Test_BodyNewFree(t *testing.T) {
-  b := NewBody(1.0, 1.0)
+  b := BodyNew(1.0, 1.0)
 
   if b.c() == nil {
     t.Fatal("nil body")
@@ -38,8 +38,8 @@ func Test_BodyNewFree(t *testing.T) {
 }
 
 func Test_BodyInSpace(t *testing.T) {
-  s := NewSpace()
-  b := NewBody(1.0, 1.0)
+  s := SpaceNew()
+  b := BodyNew(1.0, 1.0)
 
   if b.Space() != nil || b.ContainedInSpace(s) || s.Contains(b) {
     t.Fatal("not nil space before Add")

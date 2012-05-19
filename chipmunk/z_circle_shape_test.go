@@ -28,7 +28,7 @@ import (
 )
 
 func Test_CircleShapeNew(t *testing.T) {
-  b := NewBody(1.0, 1.0)
+  b := BodyNew(1.0, 1.0)
   s := CircleShapeNew(b, 1.0, Origin())
 
   if s.c() == nil {
@@ -40,7 +40,7 @@ func Test_CircleShapeNew(t *testing.T) {
 }
 
 func Test_CircleShapeUnsafe(t *testing.T) {
-  b := NewBody(1.0, 1.0)
+  b := BodyNew(1.0, 1.0)
   s := CircleShapeNew(b, 1.0, Origin())
 
   offset := VectNew(1.0, 1.0)

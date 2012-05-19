@@ -28,7 +28,7 @@ import (
 )
 
 func Test_SpaceNewFree(t *testing.T) {
-  s := NewSpace()
+  s := SpaceNew()
 
   if s == nil {
     t.Fatal("nil space")
@@ -38,7 +38,7 @@ func Test_SpaceNewFree(t *testing.T) {
 }
 
 func Test_SpaceUserData(t *testing.T) {
-  s := NewSpace()
+  s := SpaceNew()
   x := "w00t"
   s.SetUserData(x)
 
@@ -54,10 +54,10 @@ func Test_SpaceContains(t *testing.T) {
   // func Test_SpaceRemoveShape(t *testing.T) {
   // func Test_SpaceRemoveBody(t *testing.T) {
   // func Test_SpaceRemoveConstraint(t *testing.T) {
-  s := NewSpace()
+  s := SpaceNew()
 
-  b := NewBody(1.0, 1.0)
-  b2 := NewBody(1.0, 1.0)
+  b := BodyNew(1.0, 1.0)
+  b2 := BodyNew(1.0, 1.0)
   c := CircleShapeNew(b, 8.0, Vect{0.0, 0.0})
   p := PinJointNew(b, b2, Origin(), Origin())
 

@@ -33,6 +33,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 import "C"
 
 import (
+  "fmt"
   "unsafe"
 )
 
@@ -54,6 +55,24 @@ const (
   // AllLayers is a value for Shape.Layers signifying that a shape is in every layer.
   AllLayers = Layers(0)
 )
+
+// String converts Group to a human-readable string.
+func (g Group) String() string {
+  if g == NoGroup {
+    return "NoGroup"
+  }
+
+  return fmt.Sprintf("(Group){%d}", uint(g))
+}
+
+// String converts Layers to a human-readable string.
+func (l Layers) String() string {
+  if l == AllLayers {
+    return "AllLayers"
+  }
+
+  return fmt.Sprintf("(Layers){0x%x}", uint(l))
+}
 
 func (c CollisionType) c() C.cpCollisionType {
   return C.cpCollisionType(c)

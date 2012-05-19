@@ -27,6 +27,10 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // #include <chipmunk_unsafe.h>
 import "C"
 
+import (
+  "fmt"
+)
+
 // SegmentShape is a a beveled (rounded) segment shape.
 type SegmentShape struct {
   shapeBase
@@ -77,7 +81,7 @@ func (s SegmentShape) SetRadius(radius float64) {
 
 // String converts a segment shape to a human-readable string.
 func (s SegmentShape) String() string {
-  return "segment shape"
+  return fmt.Sprintf("(SegmentShape)%+v", s.s)
 }
 
 // Local Variables:

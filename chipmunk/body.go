@@ -47,6 +47,7 @@ static void body_each_arbiter(cpBody *body, void *f) {
 import "C"
 
 import (
+  "fmt"
   "unsafe"
 )
 
@@ -55,13 +56,13 @@ type Body struct {
   b *C.cpBody
 }
 
-// NewBody creates a new body.
-func NewBody(m, i float64) Body {
+// BodyNew creates a new body.
+func BodyNew(m, i float64) Body {
   return Body{b: C.cpBodyNew(C.cpFloat(m), C.cpFloat(i))}
 }
 
-// NewBody creates a new static body.
-func NewBodyStatic() Body {
+// BodyStaticNew creates a new static body.
+func BodyStaticNew() Body {
   return Body{b: C.cpBodyNewStatic()}
 }
 
@@ -288,6 +289,11 @@ func (b Body) EachConstraint(iter func(Body, Constraint)) {
 func (b Body) EachArbiter(iter func(Body, Shape)) {
   p := unsafe.Pointer(&iter)
   C.body_each_arbiter(b.b, p)
+}
+
+// String converts a body to a human-readable string.
+func (b Body) String() string {
+  return fmt.Sprintf("(Body)%+v", b.b)
 }
 
 // Local Variables:

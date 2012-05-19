@@ -28,7 +28,7 @@ import (
 )
 
 func Test_SegmentShapeNew(t *testing.T) {
-  b := NewBody(1.0, 1.0)
+  b := BodyNew(1.0, 1.0)
   s := SegmentShapeNew(b, VectNew(1.0, 2.0), Origin(), 2.0)
 
   if s.c() == nil {
@@ -40,7 +40,7 @@ func Test_SegmentShapeNew(t *testing.T) {
 }
 
 func Test_SegmentShapeUnsafe(t *testing.T) {
-  b := NewBody(1.0, 1.0)
+  b := BodyNew(1.0, 1.0)
   s := SegmentShapeNew(b, VectNew(1.0, 2.0), Origin(), 5.0)
 
   e1, e2 := VectNew(1.0, 1.0), VectNew(2.0, 2.0)

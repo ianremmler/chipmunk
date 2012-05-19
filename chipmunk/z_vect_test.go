@@ -52,7 +52,8 @@ func Test_VectOrigin(t *testing.T) {
 }
 
 func Test_VectString(t *testing.T) {
-  testEq(t, Origin().String(), "(0.000000, 0.000000)")
+  testEq(t, Origin().String(), "(Vect){0, 0}")
+  testEq(t, VectNew(-1.3, 4.55).String(), "(Vect){-1.3, 4.55}")
 }
 
 func Test_VectAdd(t *testing.T) {

@@ -53,7 +53,7 @@ func Origin() Vect {
 
 // String converts a vector to a human-readable string.
 func (v Vect) String() string {
-  return fmt.Sprintf("(%f, %f)", v.X, v.Y)
+  return fmt.Sprintf("(Vect){%g, %g}", v.X, v.Y)
 }
 
 // Add adds one vector to another.

@@ -27,6 +27,10 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // #include <chipmunk_unsafe.h>
 import "C"
 
+import (
+  "fmt"
+)
+
 // CircleShape is a circle shape type.
 type CircleShape struct {
   shapeBase
@@ -62,7 +66,7 @@ func (s CircleShape) SetRadius(radius float64) {
 
 // String converts a circle shape to a human-readable string.
 func (s CircleShape) String() string {
-  return "circle shape"
+  return fmt.Sprintf("(CircleShape)%+v", s.s)
 }
 
 // Local Variables:

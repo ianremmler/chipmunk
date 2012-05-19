@@ -27,6 +27,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 import "C"
 
 import (
+  "fmt"
   "unsafe"
 )
 
@@ -166,6 +167,11 @@ func (a Arbiter) Point(i int) Vect {
 // Depth returns the depth of specific contact point.
 func (a Arbiter) Depth(i int) float64 {
   return float64(C.cpArbiterGetDepth(a.a, C.int(i)))
+}
+
+// String converts an arbiter to a human-readable string.
+func (a Arbiter) String() string {
+  return fmt.Sprintf("(Arbiter)%+v", a.a)
 }
 
 // Local Variables:
