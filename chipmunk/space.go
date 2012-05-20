@@ -96,9 +96,9 @@ type SegmentQuery func(s Shape, t float64, n Vect)
 
 type Space interface {
   ActivateShapesTouchingShape(Shape)
+  Add(SpaceObject) SpaceObject
   AddBody(Body) Body
   AddConstraint(Constraint) Constraint
-  AddObject(SpaceObject) SpaceObject
   AddPostStepCallback(func(Space, interface{}), interface{})
   AddShape(Shape) Shape
   AddStaticShape(Shape) Shape
@@ -116,7 +116,6 @@ type Space interface {
   EnableContactGraph() bool
   Free()
   FreeChildren()
-  FreeObject(SpaceObject)
   Gravity() Vect
   IdleSpeedThreshold() float64
   IsLocked() bool
@@ -127,10 +126,10 @@ type Space interface {
   ReindexShape(Shape)
   ReindexShapesForBody(Body)
   ReindexStatic()
+  Remove(SpaceObject)
   RemoveBody(Body)
   RemoveCollisionHandler(CollisionType, CollisionType)
   RemoveConstraint(Constraint)
-  RemoveObject(SpaceObject)
   RemoveShape(Shape)
   RemoveStaticShape(Shape)
   SegmentQuery(Vect, Vect, Layers, Group, SegmentQuery)
@@ -150,6 +149,7 @@ type Space interface {
   UseSpatialHash(float64, int)
   UserData() interface{}
   c() *C.cpSpace
+  freeObject(SpaceObject)
 }
 
 // SpaceObject is an interface every space object must implement.
@@ -179,6 +179,12 @@ func (s spaceBase) ActivateShapesTouchingShape(sh Shape) {
   C.cpSpaceActivateShapesTouchingShape(s.s, sh.c())
 }
 
+// Add adds an object from space.
+func (s spaceBase) Add(obj SpaceObject) SpaceObject {
+  obj.addToSpace(s)
+  return obj
+}
+
 // AddBody adds a rigid body to the simulation.
 func (s spaceBase) AddBody(b Body) Body {
   return Body{b: C.cpSpaceAddBody(s.s, b.b)}
@@ -187,12 +193,6 @@ func (s spaceBase) AddBody(b Body) Body {
 // AddConstraint adds a constraint to the simulation.
 func (s spaceBase) AddConstraint(c Constraint) Constraint {
   return cpConstraint(C.cpSpaceAddConstraint(s.s, c.c()))
-}
-
-// AddObject removes an object from space.
-func (s spaceBase) AddObject(obj SpaceObject) SpaceObject {
-  obj.addToSpace(s)
-  return obj
 }
 
 // AddPostStepCallback schedules a post-step callback to be called when Space.Step() finishes.
@@ -297,8 +297,8 @@ func (s spaceBase) Free() {
 // FreeChildren frees all bodies, constraints and shapes in the space.
 func (s spaceBase) FreeChildren() {
   remove := func(s Space, obj interface{}) {
-    s.RemoveObject(obj.(SpaceObject))
-    s.FreeObject(obj.(SpaceObject))
+    s.Remove(obj.(SpaceObject))
+    s.freeObject(obj.(SpaceObject))
   }
 
   s.EachShape(func(shape Shape) {
@@ -312,11 +312,6 @@ func (s spaceBase) FreeChildren() {
   s.EachBody(func(body Body) {
     s.AddPostStepCallback(remove, body)
   })
-}
-
-// FreeObject frees an object.
-func (s spaceBase) FreeObject(obj SpaceObject) {
-  obj.Free()
 }
 
 // Gravity returns current gravity used when integrating velocity for rigid bodies.
@@ -366,8 +361,8 @@ func (s spaceBase) PointQueryFirst(point Vect, layers Layers, group Group) Shape
   return cpShape(C.cpSpacePointQueryFirst(s.s, point.c(), layers.c(), group.c()))
 }
 
-// RemoveObject removes an object from space.
-func (s spaceBase) RemoveObject(obj SpaceObject) {
+// Remove removes an object from space.
+func (s spaceBase) Remove(obj SpaceObject) {
   obj.removeFromSpace(s)
 }
 
@@ -561,6 +556,11 @@ func eachConstraint_space(c *C.cpConstraint, p unsafe.Pointer) {
 func eachShape_space(sh *C.cpShape, p unsafe.Pointer) {
   f := *(*func(Shape))(p)
   f(cpShape(sh))
+}
+
+// freeObject frees an object.
+func (s spaceBase) freeObject(obj SpaceObject) {
+  obj.Free()
 }
 
 //export nearestPointQuery
