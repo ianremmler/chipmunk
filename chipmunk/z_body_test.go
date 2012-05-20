@@ -41,19 +41,19 @@ func Test_BodyInSpace(t *testing.T) {
   s := SpaceNew()
   b := BodyNew(1.0, 1.0)
 
-  if b.Space() != nil || b.ContainedInSpace(s) || s.Contains(b) {
+  if b.Space() != nil || s.Contains(b) {
     t.Fatal("not nil space before Add")
   }
 
   s.AddBody(b)
 
-  if b.Space() == nil || !b.ContainedInSpace(s) || !s.Contains(b) {
+  if b.Space() == nil || !s.Contains(b) {
     t.Fatal("nil space after Add")
   }
 
   s.RemoveBody(b)
 
-  if b.Space() != nil || b.ContainedInSpace(s) || s.Contains(b) {
+  if b.Space() != nil || s.Contains(b) {
     t.Fatal("not nil space after Remove")
   }
 
