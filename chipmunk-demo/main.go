@@ -245,6 +245,9 @@ func onKey(key, state int) {
   switch key {
   case glfw.KeyEsc:
     Running = false
+
+  case 'R':
+    defer space.FreeChildren()
   }
 }
 
