@@ -56,32 +56,31 @@ type SegmentQueryInfo struct {
 
 // Shape is an opaque collision shape struct.
 type Shape interface {
-  Free()
-  String() string
-  c() *C.cpShape
-  ContainedInSpace(Space) bool
-  NearestPointQuery(Vect) (float64, NearestPointQueryInfo)
-  SegmentQuery(Vect, Vect) (bool, SegmentQueryInfo)
-  PointQuery(Vect) bool
-  CacheBB() BB
-  Update(Vect, Vect) BB
   BB() BB
-  Sensor() bool
-  Elasticity() float64
-  Friction() float64
-  SurfaceVelocity() Vect
+  Body() Body
+  CacheBB() BB
   CollisionType() CollisionType
+  Elasticity() float64
+  Free()
+  Friction() float64
   Group() Group
   Layers() Layers
-  Body() Body
-  SetSensor(bool)
+  NearestPointQuery(Vect) (float64, NearestPointQueryInfo)
+  PointQuery(Vect) bool
+  SegmentQuery(Vect, Vect) (bool, SegmentQueryInfo)
+  Sensor() bool
+  SetBody(Body)
+  SetCollisionType(CollisionType)
   SetElasticity(float64)
   SetFriction(float64)
-  SetSurfaceVelocity(Vect)
-  SetCollisionType(CollisionType)
   SetGroup(Group)
   SetLayers(Layers)
-  SetBody(Body)
+  SetSensor(bool)
+  SetSurfaceVelocity(Vect)
+  String() string
+  SurfaceVelocity() Vect
+  Update(Vect, Vect) BB
+  c() *C.cpShape
 }
 
 // shapeBase is a base for every shape.
@@ -118,11 +117,6 @@ func (s shapeBase) CacheBB() BB {
 // CollisionType returns collision type of the shape used when picking collision handlers.
 func (s shapeBase) CollisionType() CollisionType {
   return CollisionType(C.cpShapeGetCollisionType(s.s))
-}
-
-// ContainedInSpace returns true if the space contains the shape.
-func (s shapeBase) ContainedInSpace(space Space) bool {
-  return cpBool(C.cpSpaceContainsShape(space.c(), s.s))
 }
 
 // Elasticity returns shape's coefficient of restitution.
@@ -254,9 +248,19 @@ func (s shapeBase) UserData() interface{} {
   return cpData(C.cpShapeGetUserData(s.s))
 }
 
+// addToSpace adds a shape to space.
+func (s shapeBase) addToSpace(space Space) {
+  space.AddShape(cpShape(s.c()))
+}
+
 // c converts Shape to C.cpShape pointer.
 func (s shapeBase) c() *C.cpShape {
   return s.s
+}
+
+// containedInSpace returns true if the space contains the shape.
+func (s shapeBase) containedInSpace(space Space) bool {
+  return cpBool(C.cpSpaceContainsShape(space.c(), s.s))
 }
 
 // cpShape converts C.cpShape pointer to Shape.
@@ -277,6 +281,11 @@ func cpShape(s *C.cpShape) Shape {
   }
 
   panic("unknown type of shape in cpShape")
+}
+
+// removeFromSpace removes a shape from space.
+func (s shapeBase) removeFromSpace(space Space) {
+  space.RemoveShape(cpShape(s.s))
 }
 
 // Local Variables:

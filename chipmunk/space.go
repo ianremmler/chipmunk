@@ -85,10 +85,6 @@ import (
 // BBQuery is a rectangle query callback function type.
 type BBQuery func(s Shape)
 
-type ContainedInSpace interface {
-  ContainedInSpace(s Space) bool
-}
-
 // NearestPointQuery is a callback function type for NearestPointQuery function.
 type NearestPointQuery func(s Shape, distance float64, point Vect)
 
@@ -102,6 +98,7 @@ type Space interface {
   ActivateShapesTouchingShape(Shape)
   AddBody(Body) Body
   AddConstraint(Constraint) Constraint
+  AddObject(SpaceObject) SpaceObject
   AddPostStepCallback(func(Space, interface{}), interface{})
   AddShape(Shape) Shape
   AddStaticShape(Shape) Shape
@@ -109,7 +106,7 @@ type Space interface {
   CollisionBias() float64
   CollisionPersistence() Timestamp
   CollisionSlop() float64
-  Contains(ContainedInSpace) bool
+  Contains(SpaceObject) bool
   CurrentTimeStep() float64
   Damping() float64
   EachBody(func(Body))
@@ -117,6 +114,8 @@ type Space interface {
   EachShape(func(Shape))
   EnableContactGraph() bool
   Free()
+  FreeChildren()
+  FreeObject(SpaceObject)
   Gravity() Vect
   IdleSpeedThreshold() float64
   IsLocked() bool
@@ -130,6 +129,7 @@ type Space interface {
   RemoveBody(Body)
   RemoveCollisionHandler(CollisionType, CollisionType)
   RemoveConstraint(Constraint)
+  RemoveObject(SpaceObject)
   RemoveShape(Shape)
   RemoveStaticShape(Shape)
   SegmentQuery(Vect, Vect, Layers, Group, SegmentQuery)
@@ -149,6 +149,14 @@ type Space interface {
   UseSpatialHash(float64, int)
   UserData() interface{}
   c() *C.cpSpace
+}
+
+// SpaceObject is an interface every space object must implement.
+type SpaceObject interface {
+  Free()
+  addToSpace(Space)
+  containedInSpace(Space) bool
+  removeFromSpace(Space)
 }
 
 // Space is a basic unit of simulation in Chipmunk.
@@ -178,6 +186,12 @@ func (s spaceBase) AddBody(b Body) Body {
 // AddConstraint adds a constraint to the simulation.
 func (s spaceBase) AddConstraint(c Constraint) Constraint {
   return cpConstraint(C.cpSpaceAddConstraint(s.s, c.c()))
+}
+
+// AddObject removes an object from space.
+func (s spaceBase) AddObject(obj SpaceObject) SpaceObject {
+  obj.addToSpace(s)
+  return obj
 }
 
 // AddPostStepCallback schedules a post-step callback to be called when Space.Step() finishes.
@@ -221,8 +235,8 @@ func (s spaceBase) CollisionPersistence() Timestamp {
 }
 
 // Contains tests if a collision shape, rigid body or a constraint has been added to the space.
-func (s spaceBase) Contains(o ContainedInSpace) bool {
-  return o.ContainedInSpace(s)
+func (s spaceBase) Contains(obj SpaceObject) bool {
+  return obj.containedInSpace(s)
 }
 
 // CurrentTimeStep returns the current (if you are in a callback from SpaceStep())
@@ -263,6 +277,31 @@ func (s spaceBase) EnableContactGraph() bool {
 func (s spaceBase) Free() {
   delete(postStepCallbackMap, s.s)
   C.cpSpaceFree(s.s)
+}
+
+// FreeChildren frees all bodies, constraints and shapes in the space.
+func (s spaceBase) FreeChildren() {
+  remove := func(s Space, obj interface{}) {
+    s.RemoveObject(obj.(SpaceObject))
+    s.FreeObject(obj.(SpaceObject))
+  }
+
+  s.EachShape(func(shape Shape) {
+    s.AddPostStepCallback(remove, shape)
+  })
+
+  s.EachConstraint(func(constraint Constraint) {
+    s.AddPostStepCallback(remove, constraint)
+  })
+
+  s.EachBody(func(body Body) {
+    s.AddPostStepCallback(remove, body)
+  })
+}
+
+// FreeObject frees an object.
+func (s spaceBase) FreeObject(obj SpaceObject) {
+  obj.Free()
 }
 
 // Gravity returns current gravity used when integrating velocity for rigid bodies.
@@ -310,6 +349,11 @@ func (s spaceBase) PointQuery(point Vect, layers Layers, group Group, f PointQue
 // the first shape found. Returns nil if no shapes were found.
 func (s spaceBase) PointQueryFirst(point Vect, layers Layers, group Group) Shape {
   return cpShape(C.cpSpacePointQueryFirst(s.s, point.c(), layers.c(), group.c()))
+}
+
+// RemoveObject removes an object from space.
+func (s spaceBase) RemoveObject(obj SpaceObject) {
+  obj.removeFromSpace(s)
 }
 
 // SegmentQuery performs a directed line segment query (like a raycast)

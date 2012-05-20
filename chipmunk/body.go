@@ -109,11 +109,6 @@ func BodyStaticNew() Body {
   return Body{C.cpBodyNewStatic()}
 }
 
-// ContainedInSpace returns true if the body is in the space.
-func (b Body) ContainedInSpace(s Space) bool {
-  return cpBool(C.cpSpaceContainsBody(s.c(), b.b))
-}
-
 // EachArbiter calls a callback function once for each arbiter which is currently
 // active on the body.
 func (b Body) EachArbiter(iter func(Body, Shape)) {
@@ -269,6 +264,26 @@ func (b Body) VelocityLimit() float64 {
   return float64(C.cpBodyGetVelLimit(b.b))
 }
 
+// addToSpace adds a body to space.
+func (b Body) addToSpace(s Space) {
+  s.AddBody(b)
+}
+
+// c converts Body to c.cpBody pointer.
+func (b Body) c() *C.cpBody {
+  return b.b
+}
+
+// containedInSpace returns true if the body is in the space.
+func (b Body) containedInSpace(s Space) bool {
+  return cpBool(C.cpSpaceContainsBody(s.c(), b.b))
+}
+
+// cpBody converts C.cpBody pointer to Body.
+func cpBody(b *C.cpBody) Body {
+  return Body{b}
+}
+
 //export eachShape_body
 func eachShape_body(b *C.cpBody, sh *C.cpShape, p unsafe.Pointer) {
   f := *(*func(Body, Shape))(p)
@@ -287,14 +302,9 @@ func eachArbiter_body(b *C.cpBody, a *C.cpArbiter, p unsafe.Pointer) {
   f(cpBody(b), cpArbiter(a))
 }
 
-// c converts Body to c.cpBody pointer.
-func (b Body) c() *C.cpBody {
-  return b.b
-}
-
-// cpBody converts C.cpBody pointer to Body.
-func cpBody(b *C.cpBody) Body {
-  return Body{b}
+// removeFromSpace removes a body from space.
+func (b Body) removeFromSpace(s Space) {
+  s.RemoveBody(b)
 }
 
 // Local Variables:

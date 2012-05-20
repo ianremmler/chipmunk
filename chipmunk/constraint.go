@@ -30,22 +30,21 @@ import "C"
 
 // Constraint is a type of object which is used to connect two bodies together.
 type Constraint interface {
-  ContainedInSpace(Space) bool
-  Free()
-  c() *C.cpConstraint
   A() Body
+  ActivateBodies()
   B() Body
-  Space() Space
-  MaxForce() float64
   ErrorBias() float64
+  Free()
+  Impulse() float64
   MaxBias() float64
-  UserData() interface{}
-  SetMaxForce(float64)
+  MaxForce() float64
   SetErrorBias(float64)
   SetMaxBias(float64)
+  SetMaxForce(float64)
   SetUserData(interface{})
-  ActivateBodies()
-  Impulse() float64
+  Space() Space
+  UserData() interface{}
+  c() *C.cpConstraint
 }
 
 type constraintBase struct {
@@ -83,11 +82,6 @@ func (c constraintBase) ActivateBodies() {
 // B returns the second body the constraint controls.
 func (c constraintBase) B() Body {
   return cpBody(C.cpConstraintGetB(c.ct))
-}
-
-// ContainedInSpace returns true if the constraint is in the space.
-func (c constraintBase) ContainedInSpace(s Space) bool {
-  return cpBool(C.cpSpaceContainsConstraint(s.c(), c.ct))
 }
 
 // ErrorBias returns the rate at which joint error is corrected.
@@ -152,9 +146,19 @@ func (c constraintBase) UserData() interface{} {
   return cpData(C.cpConstraintGetUserData(c.ct))
 }
 
+// addToSpace adds a constraint to space.
+func (c constraintBase) addToSpace(s Space) {
+  s.AddConstraint(c)
+}
+
 // c converts Constraint to c.cpConstraint pointer.
 func (c constraintBase) c() *C.cpConstraint {
   return c.ct
+}
+
+// containedInSpace returns true if the constraint is in the space.
+func (c constraintBase) containedInSpace(s Space) bool {
+  return cpBool(C.cpSpaceContainsConstraint(s.c(), c.ct))
 }
 
 // cpConstraint converts C.cpConstraint pointer to Constraint.
@@ -189,6 +193,11 @@ func cpConstraint(ct *C.cpConstraint) Constraint {
   }
 
   panic("unknown constraint class in cpConstraint")
+}
+
+// removeFromSpace removes a constraint from space.
+func (c constraintBase) removeFromSpace(s Space) {
+  s.RemoveConstraint(c)
 }
 
 // Local Variables:
