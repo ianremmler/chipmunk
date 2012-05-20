@@ -195,7 +195,7 @@ func drawPoly(s PolyShape) {
 }
 
 func drawShapes(s Space) {
-  s.EachShape(func(sh Shape) {
+  s.Each(func(sh Shape) {
     switch sh.(type) {
     case CircleShape:
       drawCircle(sh.(CircleShape))
