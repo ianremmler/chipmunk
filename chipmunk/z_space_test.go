@@ -37,6 +37,36 @@ func Test_SpaceNewFree(t *testing.T) {
   s.Free()
 }
 
+func Test_SpaceAddPostStepCallback(t *testing.T) {
+  s := SpaceNew()
+  b := BodyNew(1.0, 1.0)
+  c := CircleShapeNew(b, 8.0, Vect{0.0, 0.0})
+
+  s.AddBody(b)
+  s.AddShape(c)
+  result := false
+
+  s.AddPostStepCallback(func(s2 Space, key interface{}) {
+    testEq(t, key.(Body), b)
+    testEq(t, s2, s)
+    s2.RemoveShape(c)
+    s2.RemoveBody(b)
+    c.Free()
+    b.Free()
+    result = true
+  }, b)
+
+  s.Step(0.1)
+  testEq(t, result, true)
+  result = false
+  s.Step(0.1)
+  testEq(t, result, false)
+  s.Step(0.1)
+  testEq(t, result, false)
+
+  s.Free()
+}
+
 func Test_SpaceUserData(t *testing.T) {
   s := SpaceNew()
   x := "w00t"

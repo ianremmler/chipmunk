@@ -32,7 +32,12 @@ extern void eachConstraint_space(cpConstraint *c, void *p);
 extern void eachShape_space(cpShape *s, void *p);
 extern void nearestPointQuery(cpShape *s, cpFloat distance, cpVect point, void *p);
 extern void pointQuery(cpShape *s, void *p);
+extern void postStep(cpSpace *space, cpDataPointer key, cpDataPointer data);
 extern void segmentQuery(cpShape *s, cpFloat t, cpVect n, void *p);
+
+static void space_add_poststep(cpSpace *space, cpDataPointer key, cpDataPointer data) {
+  cpSpaceAddPostStepCallback(space, (void *)postStep, key, data);
+}
 
 static void space_bb_query(cpSpace *space, cpBB bb, cpLayers layers, cpGroup group, void *f) {
   cpSpaceBBQuery(space, bb, layers, group, bbQuery, f);
@@ -97,6 +102,7 @@ type Space interface {
   ActivateShapesTouchingShape(Shape)
   AddBody(Body) Body
   AddConstraint(Constraint) Constraint
+  AddPostStepCallback(func(Space, interface{}), interface{})
   AddShape(Shape) Shape
   AddStaticShape(Shape) Shape
   BBQuery(BB, Layers, Group, BBQuery)
@@ -152,6 +158,12 @@ type spaceBase struct {
 
 ////////////////////////////////////////////////////////////////////////////////
 
+var (
+  postStepCallbackMap = make(map[*C.cpSpace]*map[interface{}]func(Space, interface{}))
+)
+
+////////////////////////////////////////////////////////////////////////////////
+
 // ActivateShapesTouchingShape activates body (calls Activate()) of any shape
 // that overlaps the given shape.
 func (s spaceBase) ActivateShapesTouchingShape(sh Shape) {
@@ -166,6 +178,13 @@ func (s spaceBase) AddBody(b Body) Body {
 // AddConstraint adds a constraint to the simulation.
 func (s spaceBase) AddConstraint(c Constraint) Constraint {
   return cpConstraint(C.cpSpaceAddConstraint(s.s, c.c()))
+}
+
+// AddPostStepCallback schedules a post-step callback to be called when Space.Step() finishes.
+// You can only register one callback per unique value for key.
+func (s spaceBase) AddPostStepCallback(f func(Space, interface{}), key interface{}) {
+  (*postStepCallbackMap[s.s])[key] = f
+  C.space_add_poststep(s.s, dataToC(key), dataToC(f))
 }
 
 // AddShape adds a collision shape to the simulation.
@@ -242,6 +261,7 @@ func (s spaceBase) EnableContactGraph() bool {
 
 // Free removes a space.
 func (s spaceBase) Free() {
+  delete(postStepCallbackMap, s.s)
   C.cpSpaceFree(s.s)
 }
 
@@ -372,7 +392,10 @@ func (s spaceBase) SleepTimeThreshold() float64 {
 
 // SpaceNew creates a new space.
 func SpaceNew() Space {
-  return spaceBase{C.cpSpaceNew()}
+  s := C.cpSpaceNew()
+  m := make(map[interface{}]func(Space, interface{}))
+  postStepCallbackMap[s] = &m
+  return spaceBase{s}
 }
 
 // String converts a space to a human-readable string.
@@ -491,6 +514,17 @@ func nearestPointQuery(s *C.cpShape, distance C.cpFloat, point C.cpVect, p unsaf
 func pointQuery(s *C.cpShape, p unsafe.Pointer) {
   f := *(*PointQuery)(p)
   f(cpShape(s))
+}
+
+//export postStep
+func postStep(s *C.cpSpace, p, data C.cpDataPointer) {
+  key := cpData(p)
+  f := cpData(data).(func(Space, interface{}))
+
+  // execute callback
+  f(cpSpace(s), key)
+  // remove from map
+  delete(*postStepCallbackMap[s], key)
 }
 
 //export segmentQuery
