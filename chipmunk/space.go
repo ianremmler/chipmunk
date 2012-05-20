@@ -109,6 +109,7 @@ type Space interface {
   Contains(SpaceObject) bool
   CurrentTimeStep() float64
   Damping() float64
+  Each(interface{})
   EachBody(func(Body))
   EachConstraint(func(Constraint))
   EachShape(func(Shape))
@@ -248,6 +249,20 @@ func (s spaceBase) CurrentTimeStep() float64 {
 // Damping returns the damping rate expressed as the fraction of velocity bodies retain each second.
 func (s spaceBase) Damping() float64 {
   return float64(C.cpSpaceGetDamping(s.s))
+}
+
+// Each calls a callback function on each object of specific type (according to iterator) in the space.
+func (s spaceBase) Each(iter interface{}) {
+  switch iter.(type) {
+  case func(Body):
+    s.EachBody(iter.(func(Body)))
+  case func(Constraint):
+    s.EachConstraint(iter.(func(Constraint)))
+  case func(Shape):
+    s.EachShape(iter.(func(Shape)))
+  default:
+    panic("invalid iterator in Each()")
+  }
 }
 
 // EachBody calls a callback function on each body in the space.
