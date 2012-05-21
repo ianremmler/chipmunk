@@ -77,6 +77,7 @@ import "C"
 
 import (
   "fmt"
+  . "unsafe"
   "unsafe"
 )
 
@@ -161,14 +162,12 @@ type SpaceObject interface {
 }
 
 // Space is a basic unit of simulation in Chipmunk.
-type spaceBase struct {
-  s *C.cpSpace
-}
+type spaceBase uintptr
 
 ////////////////////////////////////////////////////////////////////////////////
 
 var (
-  postStepCallbackMap = make(map[*C.cpSpace]*map[interface{}]func(Space, interface{}))
+  postStepCallbackMap = make(map[spaceBase]*map[interface{}]func(Space, interface{}))
 )
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -176,7 +175,7 @@ var (
 // ActivateShapesTouchingShape activates body (calls Activate()) of any shape
 // that overlaps the given shape.
 func (s spaceBase) ActivateShapesTouchingShape(sh Shape) {
-  C.cpSpaceActivateShapesTouchingShape(s.s, sh.c())
+  C.cpSpaceActivateShapesTouchingShape(s.c(), sh.c())
 }
 
 // Add adds an object from space.
@@ -187,52 +186,52 @@ func (s spaceBase) Add(obj SpaceObject) SpaceObject {
 
 // AddBody adds a rigid body to the simulation.
 func (s spaceBase) AddBody(b Body) Body {
-  return Body{b: C.cpSpaceAddBody(s.s, b.b)}
+  return cpBody(C.cpSpaceAddBody(s.c(), b.c()))
 }
 
 // AddConstraint adds a constraint to the simulation.
 func (s spaceBase) AddConstraint(c Constraint) Constraint {
-  return cpConstraint(C.cpSpaceAddConstraint(s.s, c.c()))
+  return cpConstraint(C.cpSpaceAddConstraint(s.c(), c.c()))
 }
 
 // AddPostStepCallback schedules a post-step callback to be called when Space.Step() finishes.
 // You can only register one callback per unique value for key.
 func (s spaceBase) AddPostStepCallback(f func(Space, interface{}), key interface{}) {
-  (*postStepCallbackMap[s.s])[key] = f
-  C.space_add_poststep(s.s, dataToC(key), dataToC(f))
+  (*postStepCallbackMap[s])[key] = f
+  C.space_add_poststep(s.c(), dataToC(key), dataToC(f))
 }
 
 // AddShape adds a collision shape to the simulation.
 // If the shape is attached to a static body, it will be added as a static shape.
 func (s spaceBase) AddShape(sh Shape) Shape {
-  return cpShape(C.cpSpaceAddShape(s.s, sh.c()))
+  return cpShape(C.cpSpaceAddShape(s.c(), sh.c()))
 }
 
 // AddStaticShape explicity adds a shape as a static shape to the simulation.
 func (s spaceBase) AddStaticShape(sh Shape) Shape {
-  return cpShape(C.cpSpaceAddStaticShape(s.s, sh.c()))
+  return cpShape(C.cpSpaceAddStaticShape(s.c(), sh.c()))
 }
 
 // BBQuery performs a fast rectangle query on the space calling a callback
 // function for each shape found.
 // Only the shape's bounding boxes are checked for overlap, not their full shape.
 func (s spaceBase) BBQuery(bb BB, layers Layers, group Group, f BBQuery) {
-  C.space_bb_query(s.s, bb.c(), layers.c(), group.c(), unsafe.Pointer(&f))
+  C.space_bb_query(s.c(), bb.c(), layers.c(), group.c(), Pointer(&f))
 }
 
 // CollisionBias returns the speed of how fast overlapping shapes are pushed apart.
 func (s spaceBase) CollisionBias() float64 {
-  return float64(C.cpSpaceGetCollisionBias(s.s))
+  return float64(C.cpSpaceGetCollisionBias(s.c()))
 }
 
 // CollisionSlop returns amount of encouraged penetration between colliding shapes.
 func (s spaceBase) CollisionSlop() float64 {
-  return float64(C.cpSpaceGetCollisionSlop(s.s))
+  return float64(C.cpSpaceGetCollisionSlop(s.c()))
 }
 
 // CollisionPersistence returns the number of frames that contact information should persist.
 func (s spaceBase) CollisionPersistence() Timestamp {
-  return Timestamp(C.cpSpaceGetCollisionPersistence(s.s))
+  return Timestamp(C.cpSpaceGetCollisionPersistence(s.c()))
 }
 
 // Contains tests if a collision shape, rigid body or a constraint has been added to the space.
@@ -243,12 +242,12 @@ func (s spaceBase) Contains(obj SpaceObject) bool {
 // CurrentTimeStep returns the current (if you are in a callback from SpaceStep())
 // or most recent (outside of a SpaceStep() call) timestep.
 func (s spaceBase) CurrentTimeStep() float64 {
-  return float64(C.cpSpaceGetCurrentTimeStep(s.s))
+  return float64(C.cpSpaceGetCurrentTimeStep(s.c()))
 }
 
 // Damping returns the damping rate expressed as the fraction of velocity bodies retain each second.
 func (s spaceBase) Damping() float64 {
-  return float64(C.cpSpaceGetDamping(s.s))
+  return float64(C.cpSpaceGetDamping(s.c()))
 }
 
 // Each calls a callback function on each object of specific type (according to iterator) in the space.
@@ -267,31 +266,31 @@ func (s spaceBase) Each(iter interface{}) {
 
 // EachBody calls a callback function on each body in the space.
 func (s spaceBase) EachBody(iter func(Body)) {
-  p := unsafe.Pointer(&iter)
-  C.space_each_body(s.s, p)
+  p := Pointer(&iter)
+  C.space_each_body(s.c(), p)
 }
 
 // EachConstraint calls a callback function on each constraint in the space.
 func (s spaceBase) EachConstraint(iter func(Constraint)) {
-  p := unsafe.Pointer(&iter)
-  C.space_each_constraint(s.s, p)
+  p := Pointer(&iter)
+  C.space_each_constraint(s.c(), p)
 }
 
 // EachShape calls a callback function on each shape in the space.
 func (s spaceBase) EachShape(iter func(Shape)) {
-  p := unsafe.Pointer(&iter)
-  C.space_each_shape(s.s, p)
+  p := Pointer(&iter)
+  C.space_each_shape(s.c(), p)
 }
 
 // EnableContactGraph returns true if rebuild of the contact graph during each step is enabled.
 func (s spaceBase) EnableContactGraph() bool {
-  return 0 != int(C.cpSpaceGetEnableContactGraph(s.s))
+  return 0 != int(C.cpSpaceGetEnableContactGraph(s.c()))
 }
 
 // Free removes a space.
 func (s spaceBase) Free() {
-  delete(postStepCallbackMap, s.s)
-  C.cpSpaceFree(s.s)
+  delete(postStepCallbackMap, s)
+  C.cpSpaceFree(s.c())
 }
 
 // FreeChildren frees all bodies, constraints and shapes in the space.
@@ -316,22 +315,22 @@ func (s spaceBase) FreeChildren() {
 
 // Gravity returns current gravity used when integrating velocity for rigid bodies.
 func (s spaceBase) Gravity() Vect {
-  return cpVect(C.cpSpaceGetGravity(s.s))
+  return cpVect(C.cpSpaceGetGravity(s.c()))
 }
 
 // IdleSpeedThreshold returns speed threshold for a body to be considered idle.
 func (s spaceBase) IdleSpeedThreshold() float64 {
-  return float64(C.cpSpaceGetIdleSpeedThreshold(s.s))
+  return float64(C.cpSpaceGetIdleSpeedThreshold(s.c()))
 }
 
 // IsLocked returns true if objects cannot be added/removed inside a callback.
 func (s spaceBase) IsLocked() bool {
-  return cpBool(C.cpSpaceIsLocked(s.s))
+  return cpBool(C.cpSpaceIsLocked(s.c()))
 }
 
 // Iterations returns the number of iterations to use in the impulse solver (to solve contacts).
 func (s spaceBase) Iterations() int {
-  return int(C.cpSpaceGetIterations(s.s))
+  return int(C.cpSpaceGetIterations(s.c()))
 }
 
 // NearestPointQuery queries the space at a point and calls a callback function for each shape found.
@@ -342,23 +341,23 @@ func (s spaceBase) NearestPointQuery(
   group Group,
   f NearestPointQuery) {
   C.space_nearest_point_query(
-    s.s,
+    s.c(),
     point.c(),
     C.cpFloat(maxDistance),
     layers.c(),
     group.c(),
-    unsafe.Pointer(&f))
+    Pointer(&f))
 }
 
 // PointQuery queries the space at a point and calls a callback function for each shape found.
 func (s spaceBase) PointQuery(point Vect, layers Layers, group Group, f PointQuery) {
-  C.space_point_query(s.s, point.c(), layers.c(), group.c(), unsafe.Pointer(&f))
+  C.space_point_query(s.c(), point.c(), layers.c(), group.c(), Pointer(&f))
 }
 
 // PointQueryFirst queries the space at a point and returns
 // the first shape found. Returns nil if no shapes were found.
 func (s spaceBase) PointQueryFirst(point Vect, layers Layers, group Group) Shape {
-  return cpShape(C.cpSpacePointQueryFirst(s.s, point.c(), layers.c(), group.c()))
+  return cpShape(C.cpSpacePointQueryFirst(s.c(), point.c(), layers.c(), group.c()))
 }
 
 // Remove removes an object from space.
@@ -369,25 +368,25 @@ func (s spaceBase) Remove(obj SpaceObject) {
 // SegmentQuery performs a directed line segment query (like a raycast)
 // against the space calling a callback function for each shape intersected.
 func (s spaceBase) SegmentQuery(start, end Vect, layers Layers, group Group, f SegmentQuery) {
-  C.space_segment_query(s.s, start.c(), end.c(), layers.c(), group.c(), unsafe.Pointer(&f))
+  C.space_segment_query(s.c(), start.c(), end.c(), layers.c(), group.c(), Pointer(&f))
 }
 
 // SetGravity sets the gravity to pass to rigid bodies when integrating velocity.
 func (s spaceBase) SetGravity(g Vect) {
-  C.cpSpaceSetGravity(s.s, g.c())
+  C.cpSpaceSetGravity(s.c(), g.c())
 }
 
 // SetCollisionBias sets the speed of how fast overlapping shapes are pushed apart.
 // Expressed as a fraction of the error remaining after each second.
 // Defaults to pow(1.0 - 0.1, 60.0) meaning that Chipmunk fixes 10% of overlap each frame at 60Hz.
 func (s spaceBase) SetCollisionBias(b float64) {
-  C.cpSpaceSetCollisionBias(s.s, C.cpFloat(b))
+  C.cpSpaceSetCollisionBias(s.c(), C.cpFloat(b))
 }
 
 // SetCollisionPersistence sets the number of frames that contact information should persist.
 // Defaults to 3. There is probably never a reason to change this value.
 func (s spaceBase) SetCollisionPersistence(p Timestamp) {
-  C.cpSpaceSetCollisionPersistence(s.s, C.cpTimestamp(p))
+  C.cpSpaceSetCollisionPersistence(s.c(), C.cpTimestamp(p))
 }
 
 // SetCollisionSlop sets amount of encouraged penetration between colliding shapes.
@@ -395,7 +394,7 @@ func (s spaceBase) SetCollisionPersistence(p Timestamp) {
 // Defaults to 0.1. If you have poor simulation quality,
 // increase this number as much as possible without allowing visible amounts of overlap.
 func (s spaceBase) SetCollisionSlop(sl float64) {
-  C.cpSpaceSetCollisionSlop(s.s, C.cpFloat(sl))
+  C.cpSpaceSetCollisionSlop(s.c(), C.cpFloat(sl))
 }
 
 // SetDamping sets the damping rate expressed as the fraction of velocity bodies retain each second.
@@ -403,7 +402,7 @@ func (s spaceBase) SetCollisionSlop(sl float64) {
 // The default value is 1.0, meaning no damping is applied.
 // Note this damping value is different than those of DampedSpring and DampedRotarySpring.
 func (s spaceBase) SetDamping(d float64) {
-  C.cpSpaceSetDamping(s.s, C.cpFloat(d))
+  C.cpSpaceSetDamping(s.c(), C.cpFloat(d))
 }
 
 // SetEnableContactGraph enables a rebuild of the contact graph during each step.
@@ -411,50 +410,50 @@ func (s spaceBase) SetDamping(d float64) {
 // Disabled by default for a small performance boost.
 // Enabled implicitly when the sleeping feature is enabled.
 func (s spaceBase) SetEnableContactGraph(cg bool) {
-  C.cpSpaceSetEnableContactGraph(s.s, boolToC(cg))
+  C.cpSpaceSetEnableContactGraph(s.c(), boolToC(cg))
 }
 
 // SetIdleSpeedThreshold sets the speed threshold for a body to be considered idle.
 // The default value of 0.0 means to let the space guess a good threshold based on gravity.
 func (s spaceBase) SetIdleSpeedThreshold(t float64) {
-  C.cpSpaceSetIdleSpeedThreshold(s.s, C.cpFloat(t))
+  C.cpSpaceSetIdleSpeedThreshold(s.c(), C.cpFloat(t))
 }
 
 // SetIterations sets the number of iterations to use in the impulse solver to solve contacts.
 func (s spaceBase) SetIterations(i int) {
-  C.cpSpaceSetIterations(s.s, C.int(i))
+  C.cpSpaceSetIterations(s.c(), C.int(i))
 }
 
 // SetSleepTimeThreshold sets the time a group of bodies must remain idle in order to fall asleep.
 // Enabling sleeping also implicitly enables the the contact graph.
 // The default value of math.Inf(1) disables the sleeping algorithm.
 func (s spaceBase) SetSleepTimeThreshold(t float64) {
-  C.cpSpaceSetSleepTimeThreshold(s.s, C.cpFloat(t))
+  C.cpSpaceSetSleepTimeThreshold(s.c(), C.cpFloat(t))
 }
 
 // SetUserData sets user definable data pointer.
 // Generally this points to your game's controller or game state
 // so you can access it when given a Space reference in a callback.
 func (s spaceBase) SetUserData(data interface{}) {
-  C.cpSpaceSetUserData(s.s, dataToC(data))
+  C.cpSpaceSetUserData(s.c(), dataToC(data))
 }
 
 // SleepTimeThreshold returns the time a groups of bodies must remain idle in order to "fall asleep".
 func (s spaceBase) SleepTimeThreshold() float64 {
-  return float64(C.cpSpaceGetSleepTimeThreshold(s.s))
+  return float64(C.cpSpaceGetSleepTimeThreshold(s.c()))
 }
 
 // SpaceNew creates a new space.
 func SpaceNew() Space {
-  s := C.cpSpaceNew()
+  s := spaceBase(Pointer(C.cpSpaceNew()))
   m := make(map[interface{}]func(Space, interface{}))
   postStepCallbackMap[s] = &m
-  return spaceBase{s}
+  return s
 }
 
 // String converts a space to a human-readable string.
 func (s spaceBase) String() string {
-  return fmt.Sprintf("(Space)%+v", s.s)
+  return fmt.Sprintf("(Space)%+v", s)
 }
 
 // StaticBody returns a dedicated static body for the space.
@@ -462,62 +461,62 @@ func (s spaceBase) String() string {
 // it's very convenient.
 // You can set its user data pointer to something helpful if you want for callbacks.
 func (s spaceBase) StaticBody() Body {
-  return cpBody(C.cpSpaceGetStaticBody(s.s))
+  return cpBody(C.cpSpaceGetStaticBody(s.c()))
 }
 
 // Step makes the space step forward in time by dt seconds.
 func (s spaceBase) Step(dt float64) {
-  C.cpSpaceStep(s.s, C.cpFloat(dt))
+  C.cpSpaceStep(s.c(), C.cpFloat(dt))
 }
 
 // ReindexShape updates the collision detection data for a specific shape in the space.
 func (s spaceBase) ReindexShape(sh Shape) {
-  C.cpSpaceReindexShape(s.s, sh.c())
+  C.cpSpaceReindexShape(s.c(), sh.c())
 }
 
 // ReindexShapesForBody updates the collision detection data for all shapes attached to a body.
 func (s spaceBase) ReindexShapesForBody(b Body) {
-  C.cpSpaceReindexShapesForBody(s.s, b.c())
+  C.cpSpaceReindexShapesForBody(s.c(), b.c())
 }
 
 // ReindexStatic updates the collision detection info for the static shape in the space.
 func (s spaceBase) ReindexStatic() {
-  C.cpSpaceReindexStatic(s.s)
+  C.cpSpaceReindexStatic(s.c())
 }
 
 // RemoveBody removes a rigid body from the simulation.
 func (s spaceBase) RemoveBody(b Body) {
-  C.cpSpaceRemoveBody(s.s, b.b)
+  C.cpSpaceRemoveBody(s.c(), b.c())
 }
 
 // RemoveCollisionHandler unsets a collision handler.
 func (s spaceBase) RemoveCollisionHandler(a CollisionType, b CollisionType) {
-  C.cpSpaceRemoveCollisionHandler(s.s, C.cpCollisionType(a), C.cpCollisionType(b))
+  C.cpSpaceRemoveCollisionHandler(s.c(), C.cpCollisionType(a), C.cpCollisionType(b))
 }
 
 // RemoveConstraint removes a constraint from the simulation.
 func (s spaceBase) RemoveConstraint(c Constraint) {
-  C.cpSpaceRemoveConstraint(s.s, c.c())
+  C.cpSpaceRemoveConstraint(s.c(), c.c())
 }
 
 // RemoveShape removes a collision shape from the simulation.
 func (s spaceBase) RemoveShape(sh Shape) {
-  C.cpSpaceRemoveShape(s.s, sh.c())
+  C.cpSpaceRemoveShape(s.c(), sh.c())
 }
 
 // RemoveStaticShape removes a collision shape added using AddStaticShape() from the simulation.
 func (s spaceBase) RemoveStaticShape(sh Shape) {
-  C.cpSpaceRemoveStaticShape(s.s, sh.c())
+  C.cpSpaceRemoveStaticShape(s.c(), sh.c())
 }
 
 // UserData returns user defined data.
 func (s spaceBase) UserData() interface{} {
-  return cpData(C.cpSpaceGetUserData(s.s))
+  return cpData(C.cpSpaceGetUserData(s.c()))
 }
 
 // UseSpatialHash switches the space to use a spatial has as it's spatial index.
 func (s spaceBase) UseSpatialHash(dim float64, count int) {
-  C.cpSpaceUseSpatialHash(s.s, C.cpFloat(dim), C.int(count))
+  C.cpSpaceUseSpatialHash(s.c(), C.cpFloat(dim), C.int(count))
 }
 
 //export bbQuery
@@ -528,13 +527,13 @@ func bbQuery(s *C.cpShape, p unsafe.Pointer) {
 
 // c converts Space to c.cpSpace pointer.
 func (s spaceBase) c() *C.cpSpace {
-  return s.s
+  return (*C.cpSpace)(Pointer(s))
 }
 
 // cpSpace converts C.cpSpace pointer to Space.
 func cpSpace(s *C.cpSpace) Space {
   if s != nil {
-    return spaceBase{s}
+    return spaceBase(Pointer(s))
   }
 
   return nil
@@ -583,7 +582,7 @@ func postStep(s *C.cpSpace, p, data C.cpDataPointer) {
   // execute callback
   f(cpSpace(s), key)
   // remove from map
-  delete(*postStepCallbackMap[s], key)
+  delete(*postStepCallbackMap[spaceBase(Pointer(s))], key)
 }
 
 //export segmentQuery

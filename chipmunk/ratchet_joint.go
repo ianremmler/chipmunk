@@ -37,39 +37,39 @@ type RatchetJoint struct {
 
 // Angle returns the current ratchet position in radians.
 func (c RatchetJoint) Angle() float64 {
-  return float64(C.cpRatchetJointGetAngle(c.ct))
+  return float64(C.cpRatchetJointGetAngle(c.c()))
 }
 
 // Phase returns the angular offset of the ratchet positions in radians.
 func (c RatchetJoint) Phase() float64 {
-  return float64(C.cpRatchetJointGetPhase(c.ct))
+  return float64(C.cpRatchetJointGetPhase(c.c()))
 }
 
 // Ratchet returns the angle in radians of each ratchet position.
 func (c RatchetJoint) Ratchet() float64 {
-  return float64(C.cpRatchetJointGetRatchet(c.ct))
+  return float64(C.cpRatchetJointGetRatchet(c.c()))
 }
 
 // RatchetJointNew creates a new ratchet joint.
 func RatchetJointNew(a, b Body, phase, ratchet float64) RatchetJoint {
   c := C.cpRatchetJointNew(a.c(), b.c(), C.cpFloat(phase), C.cpFloat(ratchet))
-  return RatchetJoint{constraintBase{c}}
+  return RatchetJoint{cpconstraint(c)}
 }
 
 // SetAngle sets the ratchet position in radians.
 func (c RatchetJoint) SetAngle(m float64) {
-  C.cpRatchetJointSetAngle(c.ct, C.cpFloat(m))
+  C.cpRatchetJointSetAngle(c.c(), C.cpFloat(m))
 }
 
 // SetPhase sets the angular offset of the ratchet positions in radians.
 func (c RatchetJoint) SetPhase(m float64) {
-  C.cpRatchetJointSetPhase(c.ct, C.cpFloat(m))
+  C.cpRatchetJointSetPhase(c.c(), C.cpFloat(m))
 }
 
 // SetRatchet sets the angle in radians of each ratchet position.
 // Negative values cause the ratchet to operate in the opposite direction.
 func (c RatchetJoint) SetRatchet(m float64) {
-  C.cpRatchetJointSetRatchet(c.ct, C.cpFloat(m))
+  C.cpRatchetJointSetRatchet(c.c(), C.cpFloat(m))
 }
 
 // Local Variables:

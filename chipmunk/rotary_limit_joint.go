@@ -39,28 +39,28 @@ type RotaryLimitJoint struct {
 
 // Max returns the maximum angular delta of the joint in radians.
 func (c RotaryLimitJoint) Max() float64 {
-  return float64(C.cpRotaryLimitJointGetMax(c.ct))
+  return float64(C.cpRotaryLimitJointGetMax(c.c()))
 }
 
 // Min returns the minimum angular delta of the joint in radians.
 func (c RotaryLimitJoint) Min() float64 {
-  return float64(C.cpRotaryLimitJointGetMin(c.ct))
+  return float64(C.cpRotaryLimitJointGetMin(c.c()))
 }
 
 // RotaryLimitJointNew creates a new rotary limit joint.
 func RotaryLimitJointNew(a, b Body, min, max float64) RotaryLimitJoint {
   c := C.cpRotaryLimitJointNew(a.c(), b.c(), C.cpFloat(min), C.cpFloat(max))
-  return RotaryLimitJoint{constraintBase{c}}
+  return RotaryLimitJoint{cpconstraint(c)}
 }
 
 // SetMax sets the maximum angular delta of the joint in radians.
 func (c RotaryLimitJoint) SetMax(m float64) {
-  C.cpRotaryLimitJointSetMax(c.ct, C.cpFloat(m))
+  C.cpRotaryLimitJointSetMax(c.c(), C.cpFloat(m))
 }
 
 // SetMin sets the minimum angular delta of the joint in radians.
 func (c RotaryLimitJoint) SetMin(m float64) {
-  C.cpRotaryLimitJointSetMin(c.ct, C.cpFloat(m))
+  C.cpRotaryLimitJointSetMin(c.c(), C.cpFloat(m))
 }
 
 // Local Variables:

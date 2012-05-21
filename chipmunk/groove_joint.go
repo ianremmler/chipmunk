@@ -38,17 +38,17 @@ type GrooveJoint struct {
 
 // Anchr2 returns the anchor point on the second body that is held to the line segment on the first.
 func (c GrooveJoint) Anchr2() Vect {
-  return cpVect(C.cpGrooveJointGetAnchr2(c.ct))
+  return cpVect(C.cpGrooveJointGetAnchr2(c.c()))
 }
 
 // GrooveA returns the start of the line segment on the first body.
 func (c GrooveJoint) GrooveA() Vect {
-  return cpVect(C.cpGrooveJointGetGrooveA(c.ct))
+  return cpVect(C.cpGrooveJointGetGrooveA(c.c()))
 }
 
 // GrooveB returns the end of the line segment on the first body.
 func (c GrooveJoint) GrooveB() Vect {
-  return cpVect(C.cpGrooveJointGetGrooveB(c.ct))
+  return cpVect(C.cpGrooveJointGetGrooveB(c.c()))
 }
 
 // GrooveJointNew creates a new groove joint.
@@ -56,22 +56,22 @@ func (c GrooveJoint) GrooveB() Vect {
 // into shape as soon as you start simulating the space.
 func GrooveJointNew(a, b Body, groove_a, groove_b, anchr2 Vect) GrooveJoint {
   c := C.cpGrooveJointNew(a.c(), b.c(), groove_a.c(), groove_b.c(), anchr2.c())
-  return GrooveJoint{constraintBase{c}}
+  return GrooveJoint{cpconstraint(c)}
 }
 
 // SetAnchr2 sets the anchor point on the second body that is held to the line segment on the first.
 func (c GrooveJoint) SetAnchr2(v Vect) {
-  C.cpGrooveJointSetAnchr2(c.ct, v.c())
+  C.cpGrooveJointSetAnchr2(c.c(), v.c())
 }
 
 // SetGrooveA sets the start of the line segment on the first body.
 func (c GrooveJoint) SetGrooveA(v Vect) {
-  C.cpGrooveJointSetGrooveA(c.ct, v.c())
+  C.cpGrooveJointSetGrooveA(c.c(), v.c())
 }
 
 // SetGrooveB sets the end of the line segment on the first body.
 func (c GrooveJoint) SetGrooveB(v Vect) {
-  C.cpGrooveJointSetGrooveB(c.ct, v.c())
+  C.cpGrooveJointSetGrooveB(c.c(), v.c())
 }
 
 // Local Variables:

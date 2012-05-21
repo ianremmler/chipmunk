@@ -30,7 +30,7 @@ import "C"
 import (
   "fmt"
   "reflect"
-  "unsafe"
+  . "unsafe"
 )
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -45,47 +45,47 @@ type PolyShape struct {
 // BoxShapeNew creates a new box shape.
 func BoxShapeNew(b Body, width, height float64) Shape {
   s := C.cpBoxShapeNew(b.c(), C.cpFloat(width), C.cpFloat(height))
-  return PolyShape{shapeBase{s}}
+  return PolyShape{cpshape(s)}
 }
 
 // BoxShapeNew2 creates a new box shape.
 func BoxShapeNew2(b Body, box BB) Shape {
   s := C.cpBoxShapeNew2(b.c(), box.c())
-  return PolyShape{shapeBase{s}}
+  return PolyShape{cpshape(s)}
 }
 
 // NumVerts returns the number of vertices in a polygon shape.
 func (s PolyShape) NumVerts() int {
-  return int(C.cpPolyShapeGetNumVerts(s.s))
+  return int(C.cpPolyShapeGetNumVerts(s.c()))
 }
 
 // PolyShapeNew creates a new polygon shape.
 func PolyShapeNew(b Body, verts []Vect, offset Vect) PolyShape {
-  v := (*C.cpVect)(unsafe.Pointer(&verts[0]))
+  v := (*C.cpVect)(Pointer(&verts[0]))
   s := C.cpPolyShapeNew(b.c(), C.int(len(verts)), v, offset.c())
-  return PolyShape{shapeBase{s}}
+  return PolyShape{cpshape(s)}
 }
 
 // PolyValidate returns true if a set of vertexes is convex and has a clockwise winding.
 func PolyValidate(verts []Vect) bool {
-  v := (*C.cpVect)(unsafe.Pointer(&verts[0]))
+  v := (*C.cpVect)(Pointer(&verts[0]))
   return cpBool(C.cpPolyValidate(v, C.int(len(verts))))
 }
 
 // SetVerts sets the vertexes of a poly shape.
 func (s PolyShape) SetVerts(verts []Vect, offset Vect) {
-  v := (*C.cpVect)(unsafe.Pointer(&verts[0]))
-  C.cpPolyShapeSetVerts(s.s, C.int(len(verts)), v, offset.c())
+  v := (*C.cpVect)(Pointer(&verts[0]))
+  C.cpPolyShapeSetVerts(s.c(), C.int(len(verts)), v, offset.c())
 }
 
 // String converts a polygon shape to a human-readable string.
 func (s PolyShape) String() string {
-  return fmt.Sprintf("(PolyShape)%+v", s.s)
+  return fmt.Sprintf("(PolyShape)%+v", s.c())
 }
 
 // VertLocal returns a specific vertex of a polygon shape (local coordinates).
 func (s PolyShape) VertLocal(idx int) Vect {
-  return cpVect(C.cpPolyShapeGetVert(s.s, C.int(idx)))
+  return cpVect(C.cpPolyShapeGetVert(s.c(), C.int(idx)))
 }
 
 // VertsWorld returns vertex positions (world coordinates).
@@ -93,10 +93,10 @@ func (s PolyShape) VertsWorld() []Vect {
   num := s.NumVerts()
   var verts []Vect
 
-  vertsH := (*reflect.SliceHeader)((unsafe.Pointer(&verts)))
+  vertsH := (*reflect.SliceHeader)((Pointer(&verts)))
   vertsH.Cap = num
   vertsH.Len = num
-  vertsH.Data = uintptr(unsafe.Pointer(((*C.cpPolyShape)(unsafe.Pointer(s.s)).tVerts)))
+  vertsH.Data = uintptr(Pointer(((*C.cpPolyShape)(Pointer(s.c())).tVerts)))
 
   return verts
 }
@@ -106,10 +106,10 @@ func (s PolyShape) VertsWorldFloat64() []float64 {
   num := s.NumVerts() * 2
   var verts []float64
 
-  vertsH := (*reflect.SliceHeader)((unsafe.Pointer(&verts)))
+  vertsH := (*reflect.SliceHeader)((Pointer(&verts)))
   vertsH.Cap = num
   vertsH.Len = num
-  vertsH.Data = uintptr(unsafe.Pointer(((*C.cpPolyShape)(unsafe.Pointer(s.s)).tVerts)))
+  vertsH.Data = uintptr(Pointer(((*C.cpPolyShape)(Pointer(s.c())).tVerts)))
 
   return verts
 }

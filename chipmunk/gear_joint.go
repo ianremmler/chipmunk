@@ -42,27 +42,27 @@ type GearJoint struct {
 // GearJointNew creates a new gear joint.
 func GearJointNew(a, b Body, phase, ratio float64) GearJoint {
   c := C.cpGearJointNew(a.c(), b.c(), C.cpFloat(phase), C.cpFloat(ratio))
-  return GearJoint{constraintBase{c}}
+  return GearJoint{cpconstraint(c)}
 }
 
 // Phase returns the angular offset in radians.
 func (c GearJoint) Phase() float64 {
-  return float64(C.cpGearJointGetPhase(c.ct))
+  return float64(C.cpGearJointGetPhase(c.c()))
 }
 
 // Ratio returns the ratio of the rotational speeds.
 func (c GearJoint) Ratio() float64 {
-  return float64(C.cpGearJointGetRatio(c.ct))
+  return float64(C.cpGearJointGetRatio(c.c()))
 }
 
 // SetPhase sets the angular offset in radians.
 func (c GearJoint) SetPhase(m float64) {
-  C.cpGearJointSetPhase(c.ct, C.cpFloat(m))
+  C.cpGearJointSetPhase(c.c(), C.cpFloat(m))
 }
 
 // SetRatio sets the ratio of the rotational speeds.
 func (c GearJoint) SetRatio(m float64) {
-  C.cpGearJointSetRatio(c.ct, C.cpFloat(m))
+  C.cpGearJointSetRatio(c.c(), C.cpFloat(m))
 }
 
 // Local Variables:

@@ -38,48 +38,48 @@ type SlideJoint struct {
 
 // Anchr1 returns the anchor point on the first body.
 func (c SlideJoint) Anchr1() Vect {
-  return cpVect(C.cpSlideJointGetAnchr1(c.ct))
+  return cpVect(C.cpSlideJointGetAnchr1(c.c()))
 }
 
 // Anchr2 returns the anchor point on the second body.
 func (c SlideJoint) Anchr2() Vect {
-  return cpVect(C.cpSlideJointGetAnchr2(c.ct))
+  return cpVect(C.cpSlideJointGetAnchr2(c.c()))
 }
 
 // Max returns the maximum allowed distance between anchor points.
 func (c SlideJoint) Max() float64 {
-  return float64(C.cpSlideJointGetMax(c.ct))
+  return float64(C.cpSlideJointGetMax(c.c()))
 }
 
 // Min returns the minimum allowed distance between anchor points.
 func (c SlideJoint) Min() float64 {
-  return float64(C.cpSlideJointGetMin(c.ct))
+  return float64(C.cpSlideJointGetMin(c.c()))
 }
 
 // SetAnchr1 sets the anchor point on the first body.
 func (c SlideJoint) SetAnchr1(v Vect) {
-  C.cpSlideJointSetAnchr1(c.ct, v.c())
+  C.cpSlideJointSetAnchr1(c.c(), v.c())
 }
 
 // SetAnchr2 sets the anchor point on the second body.
 func (c SlideJoint) SetAnchr2(v Vect) {
-  C.cpSlideJointSetAnchr2(c.ct, v.c())
+  C.cpSlideJointSetAnchr2(c.c(), v.c())
 }
 
 // SetMax sets the maximum allowed distance between anchor points.
 func (c SlideJoint) SetMax(m float64) {
-  C.cpSlideJointSetMax(c.ct, C.cpFloat(m))
+  C.cpSlideJointSetMax(c.c(), C.cpFloat(m))
 }
 
 // SetMin sets the minimum allowed distance between anchor points.
 func (c SlideJoint) SetMin(m float64) {
-  C.cpSlideJointSetMin(c.ct, C.cpFloat(m))
+  C.cpSlideJointSetMin(c.c(), C.cpFloat(m))
 }
 
 // SlideJointNew creates a new slide joint.
 func SlideJointNew(a, b Body, anchr1, anchr2 Vect, min, max float64) SlideJoint {
   c := C.cpSlideJointNew(a.c(), b.c(), anchr1.c(), anchr2.c(), C.cpFloat(min), C.cpFloat(max))
-  return SlideJoint{constraintBase{c}}
+  return SlideJoint{cpconstraint(c)}
 }
 
 // Local Variables:

@@ -38,18 +38,18 @@ type SimpleMotor struct {
 
 // Rate returns the relative rotation speed of the two bodies in radians per second.
 func (c SimpleMotor) Rate() float64 {
-  return float64(C.cpSimpleMotorGetRate(c.ct))
+  return float64(C.cpSimpleMotorGetRate(c.c()))
 }
 
 // SetRate sets the relative rotation speed of the two bodies in radians per second.
 func (c SimpleMotor) SetRate(m float64) {
-  C.cpSimpleMotorSetRate(c.ct, C.cpFloat(m))
+  C.cpSimpleMotorSetRate(c.c(), C.cpFloat(m))
 }
 
 // SimpleMotorNew creates a new simple motor.
 func SimpleMotorNew(a, b Body, rate float64) SimpleMotor {
   c := C.cpSimpleMotorNew(a.c(), b.c(), C.cpFloat(rate))
-  return SimpleMotor{constraintBase{c}}
+  return SimpleMotor{cpconstraint(c)}
 }
 
 // Local Variables:

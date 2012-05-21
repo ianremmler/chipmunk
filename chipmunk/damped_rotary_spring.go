@@ -44,37 +44,37 @@ func DampedRotarySpringNew(a, b Body, restAngle, stiffness, damping float64) Dam
     C.cpFloat(stiffness),
     C.cpFloat(damping))
 
-  return DampedRotarySpring{constraintBase{c}}
+  return DampedRotarySpring{cpconstraint(c)}
 }
 
 // Damping returns the amount of viscous damping to apply.
 func (c DampedRotarySpring) Damping() float64 {
-  return float64(C.cpDampedRotarySpringGetDamping(c.ct))
+  return float64(C.cpDampedRotarySpringGetDamping(c.c()))
 }
 
 // RestAngle returns the angular offset in radians the spring attempts to keep between the two bodies.
 func (c DampedRotarySpring) RestAngle() float64 {
-  return float64(C.cpDampedRotarySpringGetRestAngle(c.ct))
+  return float64(C.cpDampedRotarySpringGetRestAngle(c.c()))
 }
 
 // SetDamping sets the amount of viscous damping to apply.
 func (c DampedRotarySpring) SetDamping(damping float64) {
-  C.cpDampedRotarySpringSetDamping(c.ct, C.cpFloat(damping))
+  C.cpDampedRotarySpringSetDamping(c.c(), C.cpFloat(damping))
 }
 
 // SetRestAngle sets the angular offset in radians the spring attempts to keep between the two bodies.
 func (c DampedRotarySpring) SetRestAngle(restAngle float64) {
-  C.cpDampedRotarySpringSetRestAngle(c.ct, C.cpFloat(restAngle))
+  C.cpDampedRotarySpringSetRestAngle(c.c(), C.cpFloat(restAngle))
 }
 
 // SetStiffness sets the young's modulus of the spring.
 func (c DampedRotarySpring) SetStiffness(stiffness float64) {
-  C.cpDampedRotarySpringSetStiffness(c.ct, C.cpFloat(stiffness))
+  C.cpDampedRotarySpringSetStiffness(c.c(), C.cpFloat(stiffness))
 }
 
 // Stiffness returns the young's modulus of the spring.
 func (c DampedRotarySpring) Stiffness() float64 {
-  return float64(C.cpDampedRotarySpringGetStiffness(c.ct))
+  return float64(C.cpDampedRotarySpringGetStiffness(c.c()))
 }
 
 // Local Variables:
