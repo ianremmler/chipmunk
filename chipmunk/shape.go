@@ -142,6 +142,16 @@ func (s shapeBase) Group() Group {
   return Group(C.cpShapeGetGroup(s.c()))
 }
 
+// HitDistance returns the hit distance for a segment query.
+func (s SegmentQueryInfo) HitDistance(start, end Vect) float64 {
+  return start.Dist(end) * s.T
+}
+
+// HitPoint returns the hit point for a segment query.
+func (s SegmentQueryInfo) HitPoint(start, end Vect) Vect {
+  return start.Lerp(end, s.T)
+}
+
 // Layers returns layers bitmask of the shape. Shapes collide only if bitwise
 // of their layers is non-zero.
 func (s shapeBase) Layers() Layers {
