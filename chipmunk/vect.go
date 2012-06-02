@@ -45,6 +45,11 @@ func (a Vect) Add(b Vect) Vect {
   return VectNew(a.X+b.X, a.Y+b.Y)
 }
 
+// Dist returns distance between two vectors.
+func (a Vect) Dist(b Vect) float64 {
+  return a.Sub(b).Length()
+}
+
 // Div divides vector by a value thus shrinking it.
 func (v Vect) Div(x float64) Vect {
   return VectNew(v.X/x, v.Y/x)
