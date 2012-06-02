@@ -62,7 +62,7 @@ func DampedSpringNew(
     C.cpFloat(stiffness),
     C.cpFloat(damping))
 
-  return DampedSpring{cpconstraint(c)}
+  return DampedSpring{cpconstraint_new(c)}
 }
 
 // Damping returns the amount of viscous damping to apply.

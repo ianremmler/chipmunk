@@ -42,7 +42,7 @@ type GearJoint struct {
 // GearJointNew creates a new gear joint.
 func GearJointNew(a, b Body, phase, ratio float64) GearJoint {
   c := C.cpGearJointNew(a.c(), b.c(), C.cpFloat(phase), C.cpFloat(ratio))
-  return GearJoint{cpconstraint(c)}
+  return GearJoint{cpconstraint_new(c)}
 }
 
 // Phase returns the angular offset in radians.

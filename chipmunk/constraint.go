@@ -23,7 +23,20 @@ OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-// #include <chipmunk.h>
+/*
+#include <chipmunk.h>
+
+extern void constraint_postsolve(cpConstraint *c, cpSpace *s);
+extern void constraint_presolve(cpConstraint *c, cpSpace *s);
+
+static void constraint_set_postsolve_func(cpConstraint *c, cpBool set) {
+  cpConstraintSetPostSolveFunc(c, set ? constraint_postsolve : NULL);
+}
+
+static void constraint_set_presolve_func(cpConstraint *c, cpBool set) {
+  cpConstraintSetPreSolveFunc(c, set ? constraint_presolve : NULL);
+}
+*/
 import "C"
 
 import (
@@ -52,6 +65,18 @@ type Constraint interface {
 }
 
 type constraintBase uintptr
+
+type constraintData struct {
+  postSolveFunc func(Constraint, Space)
+  preSolveFunc  func(Constraint, Space)
+  userData      interface{}
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+var (
+  constraintDataMap = make(map[constraintBase]*constraintData)
+)
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -93,6 +118,7 @@ func (c constraintBase) ErrorBias() float64 {
 
 // Free frees the constraint.
 func (c constraintBase) Free() {
+  constraintDataMap[c] = nil
   C.cpConstraintFree(c.c())
 }
 
@@ -130,11 +156,25 @@ func (c constraintBase) SetMaxForce(f float64) {
   C.cpConstraintSetMaxForce(c.c(), C.cpFloat(f))
 }
 
+// SetPostSolveFunc sets a callback function type that gets called after solving a joint.
+// Use the applied impulse to perform effects like breakable joints.
+func (c constraintBase) SetPostSolveFunc(f func(c Constraint, s Space)) {
+  constraintDataMap[c].postSolveFunc = f
+  C.constraint_set_postsolve_func(c.c(), boolToC(f != nil))
+}
+
+// SetPreSolveFunc sets a callback function type that gets called before solving a joint.
+// Animate your joint anchors, update your motor torque, etc.
+func (c constraintBase) SetPreSolveFunc(f func(c Constraint, s Space)) {
+  constraintDataMap[c].preSolveFunc = f
+  C.constraint_set_presolve_func(c.c(), boolToC(f != nil))
+}
+
 // SetUserData sets user definable data pointer.
 // Generally this points to your the game object so you can access it
 // when given a Constraint reference in a callback.
 func (c constraintBase) SetUserData(data interface{}) {
-  C.cpConstraintSetUserData(c.c(), dataToC(data))
+  constraintDataMap[c].userData = data
 }
 
 // Space returns space the constraint was added to or nil if the constraint
@@ -145,7 +185,7 @@ func (c constraintBase) Space() Space {
 
 // UserData returns user defined data.
 func (c constraintBase) UserData() interface{} {
-  return cpData(C.cpConstraintGetUserData(c.c()))
+  return constraintDataMap[c].userData
 }
 
 // addToSpace adds a constraint to space.
@@ -156,6 +196,20 @@ func (c constraintBase) addToSpace(s Space) {
 // c converts Constraint to c.cpConstraint pointer.
 func (c constraintBase) c() *C.cpConstraint {
   return (*C.cpConstraint)(Pointer(c))
+}
+
+//export constraint_postsolve
+func constraint_postsolve(c *C.cpConstraint, s *C.cpSpace) {
+  constraint := cpConstraint(c)
+  data := constraintDataMap[cpconstraint(c)]
+  data.postSolveFunc(constraint, cpSpace(s))
+}
+
+//export constraint_presolve
+func constraint_presolve(c *C.cpConstraint, s *C.cpSpace) {
+  constraint := cpConstraint(c)
+  data := constraintDataMap[cpconstraint(c)]
+  data.preSolveFunc(constraint, cpSpace(s))
 }
 
 // containedInSpace returns true if the constraint is in the space.
@@ -198,8 +252,15 @@ func cpConstraint(ct *C.cpConstraint) Constraint {
 }
 
 // cpconstraint converts C.cpConstraint pointer to constraintBase.
-func cpconstraint(s *C.cpConstraint) constraintBase {
-  return constraintBase(Pointer(s))
+func cpconstraint(ct *C.cpConstraint) constraintBase {
+  return constraintBase(Pointer(ct))
+}
+
+// cpconstraint_new creates a new constraintBase out of C.cpConstraint pointer.
+func cpconstraint_new(ct *C.cpConstraint) constraintBase {
+  c := cpconstraint(ct)
+  constraintDataMap[c] = &constraintData{}
+  return c
 }
 
 // removeFromSpace removes a constraint from space.
