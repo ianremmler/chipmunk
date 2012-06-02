@@ -61,6 +61,78 @@ func Test_BodyInSpace(t *testing.T) {
   s.Free()
 }
 
+func Test_BodySetPositionFunc(t *testing.T) {
+  s := SpaceNew()
+  b := BodyNew(1.0, 1.0)
+
+  s.AddBody(b)
+
+  type data struct {
+    called bool
+    s      string
+  }
+
+  b.SetUserData(&data{false, "userdata"})
+  b.SetPositionFunc(func(b Body, dt float64) {
+    d := b.UserData().(*data)
+
+    if d.s != "userdata" {
+      t.Fatal("wrong userdata")
+    }
+
+    if dt != 0.123 {
+      t.Fatal("wrong dt value")
+    }
+
+    d.called = true
+  })
+
+  s.Step(0.123)
+
+  if !b.UserData().(*data).called {
+    t.Fatal("position func wasn't called")
+  }
+
+  b.Free()
+  s.Free()
+}
+
+func Test_BodySetVelocityFunc(t *testing.T) {
+  s := SpaceNew()
+  b := BodyNew(1.0, 1.0)
+
+  s.AddBody(b)
+
+  type data struct {
+    called bool
+    s      string
+  }
+
+  b.SetUserData(&data{false, "userdata"})
+  b.SetVelocityFunc(func(b Body, gravity Vect, damping, dt float64) {
+    d := b.UserData().(*data)
+
+    if d.s != "userdata" {
+      t.Fatal("wrong userdata")
+    }
+
+    if dt != 0.123 {
+      t.Fatal("wrong dt value")
+    }
+
+    d.called = true
+  })
+
+  s.Step(0.123)
+
+  if !b.UserData().(*data).called {
+    t.Fatal("velocity func wasn't called")
+  }
+
+  b.Free()
+  s.Free()
+}
+
 // Local Variables:
 // indent-tabs-mode: nil
 // tab-width: 2

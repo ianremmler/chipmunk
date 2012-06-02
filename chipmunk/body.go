@@ -29,6 +29,11 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 extern void eachArbiter_body(cpBody *b, cpArbiter *a, void *p);
 extern void eachConstraint_body(cpBody *b, cpConstraint *c, void *p);
 extern void eachShape_body(cpBody *b, cpShape *s, void *p);
+extern void updatePosition(cpBody *b, void *data, cpFloat dt);
+extern void updateVelocity(cpBody *b, void *data, cpVect gravity, cpFloat damping, cpFloat dt);
+
+static void body_update_position(cpBody *body, cpFloat dt);
+static void body_update_velocity(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt);
 
 static void body_each_arbiter(cpBody *body, void *f) {
   cpBodyEachArbiter(body, eachArbiter_body, f);
@@ -40,6 +45,22 @@ static void body_each_constraint(cpBody *body, void *f) {
 
 static void body_each_shape(cpBody *body, void *f) {
   cpBodyEachShape(body, eachShape_body, f);
+}
+
+static void body_set_position_func(cpBody *body, cpBool set) {
+  body->position_func = set ? body_update_position : cpBodyUpdatePosition;
+}
+
+static void body_set_velocity_func(cpBody *body, cpBool set) {
+  body->velocity_func = set ? body_update_velocity : cpBodyUpdateVelocity;
+}
+
+static void body_update_position(cpBody *body, cpFloat dt) {
+  updatePosition(body, NULL, dt);
+}
+
+static void body_update_velocity(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt) {
+  updateVelocity(body, NULL, gravity, damping, dt);
 }
 */
 import "C"
@@ -53,6 +74,18 @@ import (
 
 // Body is a rigid body struct.
 type Body uintptr
+
+type bodyData struct {
+  positionFunc func(Body, float64)
+  userData     interface{}
+  velocityFunc func(Body, Vect, float64, float64)
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+var (
+  bodyDataMap = make(map[Body]*bodyData)
+)
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -99,12 +132,16 @@ func (b Body) ApplyImpulse(j, r Vect) {
 
 // BodyNew creates a new body.
 func BodyNew(m, i float64) Body {
-  return cpBody(C.cpBodyNew(C.cpFloat(m), C.cpFloat(i)))
+  b := cpBody(C.cpBodyNew(C.cpFloat(m), C.cpFloat(i)))
+  bodyDataMap[b] = &bodyData{}
+  return b
 }
 
 // BodyStaticNew creates a new static body.
 func BodyStaticNew() Body {
-  return cpBody(C.cpBodyNewStatic())
+  b := cpBody(C.cpBodyNewStatic())
+  bodyDataMap[b] = &bodyData{}
+  return b
 }
 
 // EachArbiter calls a callback function once for each arbiter which is currently
@@ -130,6 +167,7 @@ func (b Body) EachShape(iter func(Body, Shape)) {
 
 // Free removes a body.
 func (b Body) Free() {
+  delete(bodyDataMap, b)
   C.cpBodyFree(b.c())
 }
 
@@ -188,16 +226,39 @@ func (b Body) Rotation() Vect {
   return cpVect(C.cpBodyGetRot(b.c()))
 }
 
+// SetAngularVelocityLimit sets the maximum rotational rate (in radians/second) allowed when updating
+// the angular velocity.
+func (b Body) SetAngularVelocityLimit(limit float64) {
+  C.cpBodySetAngVelLimit(b.c(), C.cpFloat(limit))
+}
+
 // SetPosition sets the position of the body.
 func (b Body) SetPosition(v Vect) {
   C.cpBodySetPos(b.c(), v.c())
+}
+
+// SetPositionFunc sets a function that is called to integrate the body's position.
+func (b Body) SetPositionFunc(f func(b Body, dt float64)) {
+  bodyDataMap[b].positionFunc = f
+  C.body_set_position_func(b.c(), boolToC(f != nil))
 }
 
 // SetUserData sets user definable data pointer.
 // Generally this points to your the game object so you can access it
 // when given a Body reference in a callback.
 func (b Body) SetUserData(data interface{}) {
-  C.cpBodySetUserData(b.c(), dataToC(data))
+  bodyDataMap[b].userData = data
+}
+
+// SetVelocityFunc sets a function that is called to integrate the body's velocity.
+func (b Body) SetVelocityFunc(f func(b Body, gravity Vect, damping, dt float64)) {
+  bodyDataMap[b].velocityFunc = f
+  C.body_set_velocity_func(b.c(), boolToC(f != nil))
+}
+
+// SetVelocityLimit sets the maximum velocity allowed when updating the velocity.
+func (b Body) SetVelocityLimit(limit float64) {
+  C.cpBodySetVelLimit(b.c(), C.cpFloat(limit))
 }
 
 // Sleep forces a body to fall asleep immediately.
@@ -237,7 +298,7 @@ func (b Body) UpdateVelocity(gravity Vect, damping float64, dt float64) {
 
 // UserData returns user defined data.
 func (b Body) UserData() interface{} {
-  return cpData(C.cpBodyGetUserData(b.c()))
+  return bodyDataMap[b].userData
 }
 
 // Velocity returns the velocity of the rigid body's center of gravity.
@@ -282,10 +343,10 @@ func cpBody(b *C.cpBody) Body {
   return Body(unsafe.Pointer(b))
 }
 
-//export eachShape_body
-func eachShape_body(b *C.cpBody, sh *C.cpShape, p unsafe.Pointer) {
-  f := *(*func(Body, Shape))(p)
-  f(cpBody(b), cpShape(sh))
+//export eachArbiter_body
+func eachArbiter_body(b *C.cpBody, a *C.cpArbiter, p unsafe.Pointer) {
+  f := *(*func(Body, Arbiter))(p)
+  f(cpBody(b), cpArbiter(a))
 }
 
 //export eachConstraint_body
@@ -294,15 +355,27 @@ func eachConstraint_body(b *C.cpBody, c *C.cpConstraint, p unsafe.Pointer) {
   f(cpBody(b), cpConstraint(c))
 }
 
-//export eachArbiter_body
-func eachArbiter_body(b *C.cpBody, a *C.cpArbiter, p unsafe.Pointer) {
-  f := *(*func(Body, Arbiter))(p)
-  f(cpBody(b), cpArbiter(a))
+//export eachShape_body
+func eachShape_body(b *C.cpBody, sh *C.cpShape, p unsafe.Pointer) {
+  f := *(*func(Body, Shape))(p)
+  f(cpBody(b), cpShape(sh))
 }
 
 // removeFromSpace removes a body from space.
 func (b Body) removeFromSpace(s Space) {
   s.RemoveBody(b)
+}
+
+//export updatePosition
+func updatePosition(b *C.cpBody, data unsafe.Pointer, dt C.cpFloat) {
+  d := bodyDataMap[cpBody(b)]
+  d.positionFunc(cpBody(b), float64(dt))
+}
+
+//export updateVelocity
+func updateVelocity(b *C.cpBody, data unsafe.Pointer, gravity C.cpVect, damping, dt C.cpFloat) {
+  d := bodyDataMap[cpBody(b)]
+  d.velocityFunc(cpBody(b), cpVect(gravity), float64(damping), float64(dt))
 }
 
 // Local Variables:
