@@ -29,11 +29,8 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 extern void eachArbiter_body(cpBody *b, cpArbiter *a, void *p);
 extern void eachConstraint_body(cpBody *b, cpConstraint *c, void *p);
 extern void eachShape_body(cpBody *b, cpShape *s, void *p);
-extern void updatePosition(cpBody *b, void *data, cpFloat dt);
-extern void updateVelocity(cpBody *b, void *data, cpVect gravity, cpFloat damping, cpFloat dt);
-
-static void body_update_position(cpBody *body, cpFloat dt);
-static void body_update_velocity(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt);
+extern void updatePosition(cpBody *b, cpFloat dt);
+extern void updateVelocity(cpBody *b, cpVect gravity, cpFloat damping, cpFloat dt);
 
 static void body_each_arbiter(cpBody *body, void *f) {
   cpBodyEachArbiter(body, eachArbiter_body, f);
@@ -48,19 +45,11 @@ static void body_each_shape(cpBody *body, void *f) {
 }
 
 static void body_set_position_func(cpBody *body, cpBool set) {
-  body->position_func = set ? body_update_position : cpBodyUpdatePosition;
+  body->position_func = set ? updatePosition : cpBodyUpdatePosition;
 }
 
 static void body_set_velocity_func(cpBody *body, cpBool set) {
-  body->velocity_func = set ? body_update_velocity : cpBodyUpdateVelocity;
-}
-
-static void body_update_position(cpBody *body, cpFloat dt) {
-  updatePosition(body, NULL, dt);
-}
-
-static void body_update_velocity(cpBody *body, cpVect gravity, cpFloat damping, cpFloat dt) {
-  updateVelocity(body, NULL, gravity, damping, dt);
+  body->velocity_func = set ? updateVelocity : cpBodyUpdateVelocity;
 }
 */
 import "C"
@@ -367,13 +356,13 @@ func (b Body) removeFromSpace(s Space) {
 }
 
 //export updatePosition
-func updatePosition(b *C.cpBody, data unsafe.Pointer, dt C.cpFloat) {
+func updatePosition(b *C.cpBody, dt C.cpFloat) {
   d := bodyDataMap[cpBody(b)]
   d.positionFunc(cpBody(b), float64(dt))
 }
 
 //export updateVelocity
-func updateVelocity(b *C.cpBody, data unsafe.Pointer, gravity C.cpVect, damping, dt C.cpFloat) {
+func updateVelocity(b *C.cpBody, gravity C.cpVect, damping, dt C.cpFloat) {
   d := bodyDataMap[cpBody(b)]
   d.velocityFunc(cpBody(b), cpVect(gravity), float64(damping), float64(dt))
 }
