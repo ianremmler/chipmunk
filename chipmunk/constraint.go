@@ -29,11 +29,11 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 extern void constraint_postsolve(cpConstraint *c, cpSpace *s);
 extern void constraint_presolve(cpConstraint *c, cpSpace *s);
 
-static void constraint_set_postsolve_func(cpConstraint *c, cpBool set) {
+static inline void constraint_set_postsolve_func(cpConstraint *c, cpBool set) {
   cpConstraintSetPostSolveFunc(c, set ? constraint_postsolve : NULL);
 }
 
-static void constraint_set_presolve_func(cpConstraint *c, cpBool set) {
+static inline void constraint_set_presolve_func(cpConstraint *c, cpBool set) {
   cpConstraintSetPreSolveFunc(c, set ? constraint_presolve : NULL);
 }
 */

@@ -35,41 +35,41 @@ extern void pointQuery(cpShape *s, void *p);
 extern void postStep(cpSpace *space, cpDataPointer key, cpDataPointer data);
 extern void segmentQuery(cpShape *s, cpFloat t, cpVect n, void *p);
 
-static void space_add_poststep(cpSpace *space, cpDataPointer key, cpDataPointer data) {
+static inline void space_add_poststep(cpSpace *space, cpDataPointer key, cpDataPointer data) {
   cpSpaceAddPostStepCallback(space, (void *)postStep, key, data);
 }
 
-static void space_bb_query(cpSpace *space, cpBB bb, cpLayers layers, cpGroup group, void *f) {
+static inline void space_bb_query(cpSpace *space, cpBB bb, cpLayers layers, cpGroup group, void *f) {
   cpSpaceBBQuery(space, bb, layers, group, bbQuery, f);
 }
 
-static void space_each_body(cpSpace *space, void *f) {
+static inline void space_each_body(cpSpace *space, void *f) {
   cpSpaceEachBody(space, eachBody_space, f);
 }
 
-static void space_each_constraint(cpSpace *space, void *f) {
+static inline void space_each_constraint(cpSpace *space, void *f) {
   cpSpaceEachConstraint(space, eachConstraint_space, f);
 }
 
-static void space_each_shape(cpSpace *space, void *f) {
+static inline void space_each_shape(cpSpace *space, void *f) {
   cpSpaceEachShape(space, eachShape_space, f);
 }
 
-static void space_nearest_point_query(cpSpace *space, cpVect point, cpFloat maxDistance,
-                                      cpLayers layers, cpGroup group, void *f) {
+static inline void space_nearest_point_query(cpSpace *space, cpVect point, cpFloat maxDistance,
+                                             cpLayers layers, cpGroup group, void *f) {
   cpSpaceNearestPointQuery(space, point, maxDistance, layers, group, nearestPointQuery, f);
 }
 
-static void space_point_query(cpSpace *s, cpVect point, cpLayers layers, cpGroup group, void *p) {
+static inline void space_point_query(cpSpace *s, cpVect point, cpLayers layers, cpGroup group, void *p) {
   cpSpacePointQuery(s, point, layers, group, pointQuery, p);
 }
 
-static void space_segment_query(cpSpace *space,
-                                cpVect   start,
-                                cpVect   end,
-                                cpLayers layers,
-                                cpGroup  group,
-                                void    *f) {
+static inline void space_segment_query(cpSpace *space,
+                                       cpVect   start,
+                                       cpVect   end,
+                                       cpLayers layers,
+                                       cpGroup  group,
+                                       void    *f) {
   cpSpaceSegmentQuery(space, start, end, layers, group, segmentQuery, f);
 }
 */

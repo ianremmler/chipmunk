@@ -32,23 +32,23 @@ extern void eachShape_body(cpBody *b, cpShape *s, void *p);
 extern void updatePosition(cpBody *b, cpFloat dt);
 extern void updateVelocity(cpBody *b, cpVect gravity, cpFloat damping, cpFloat dt);
 
-static void body_each_arbiter(cpBody *body, void *f) {
+static inline void body_each_arbiter(cpBody *body, void *f) {
   cpBodyEachArbiter(body, eachArbiter_body, f);
 }
 
-static void body_each_constraint(cpBody *body, void *f) {
+static inline void body_each_constraint(cpBody *body, void *f) {
   cpBodyEachConstraint(body, eachConstraint_body, f);
 }
 
-static void body_each_shape(cpBody *body, void *f) {
+static inline void body_each_shape(cpBody *body, void *f) {
   cpBodyEachShape(body, eachShape_body, f);
 }
 
-static void body_set_position_func(cpBody *body, cpBool set) {
+static inline void body_set_position_func(cpBody *body, cpBool set) {
   body->position_func = set ? updatePosition : cpBodyUpdatePosition;
 }
 
-static void body_set_velocity_func(cpBody *body, cpBool set) {
+static inline void body_set_velocity_func(cpBody *body, cpBool set) {
   body->velocity_func = set ? updateVelocity : cpBodyUpdateVelocity;
 }
 */
