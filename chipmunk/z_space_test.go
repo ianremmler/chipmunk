@@ -24,16 +24,13 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 import (
+  "github.com/bmizerany/assert"
   "testing"
 )
 
 func Test_SpaceNewFree(t *testing.T) {
   s := SpaceNew()
-
-  if s == nil {
-    t.Fatal("nil space")
-  }
-
+  assert.NotEqual(t, nil, s)
   s.Free()
 }
 
@@ -47,8 +44,8 @@ func Test_SpaceAddPostStepCallback(t *testing.T) {
   result := false
 
   s.AddPostStepCallback(func(s2 Space, key interface{}) {
-    testEq(t, key.(Body), b)
-    testEq(t, s2, s)
+    assert.Equal(t, b, key.(Body))
+    assert.Equal(t, s, s2)
     s2.RemoveShape(c)
     s2.RemoveBody(b)
     c.Free()
@@ -57,12 +54,12 @@ func Test_SpaceAddPostStepCallback(t *testing.T) {
   }, b)
 
   s.Step(0.1)
-  testEq(t, result, true)
+  assert.T(t, result)
   result = false
   s.Step(0.1)
-  testEq(t, result, false)
+  assert.T(t, !result)
   s.Step(0.1)
-  testEq(t, result, false)
+  assert.T(t, !result)
 
   s.Free()
 }
@@ -72,7 +69,7 @@ func Test_SpaceUserData(t *testing.T) {
   x := "w00t"
   s.SetUserData(x)
 
-  testEq(t, (s.UserData()).(string), "w00t")
+  assert.Equal(t, "w00t", (s.UserData()).(string))
 
   s.Free()
 }
@@ -91,26 +88,26 @@ func Test_SpaceContains(t *testing.T) {
   c := CircleShapeNew(b, 8.0, Vect{0.0, 0.0})
   p := PinJointNew(b, b2, Origin(), Origin())
 
-  testEq(t, s.Contains(b), false)
-  testEq(t, s.Contains(b2), false)
-  testEq(t, s.Contains(c), false)
-  testEq(t, s.Contains(p), false)
+  assert.T(t, !s.Contains(b))
+  assert.T(t, !s.Contains(b2))
+  assert.T(t, !s.Contains(c))
+  assert.T(t, !s.Contains(p))
   s.AddBody(b)
   s.AddBody(b2)
   s.AddShape(c)
   s.AddConstraint(p)
-  testEq(t, s.Contains(b), true)
-  testEq(t, s.Contains(b2), true)
-  testEq(t, s.Contains(c), true)
-  testEq(t, s.Contains(p), true)
+  assert.T(t, s.Contains(b))
+  assert.T(t, s.Contains(b2))
+  assert.T(t, s.Contains(c))
+  assert.T(t, s.Contains(p))
   s.RemoveBody(b)
   s.RemoveBody(b2)
   s.RemoveShape(c)
   s.RemoveConstraint(p)
-  testEq(t, s.Contains(b), false)
-  testEq(t, s.Contains(b2), false)
-  testEq(t, s.Contains(c), false)
-  testEq(t, s.Contains(p), false)
+  assert.T(t, !s.Contains(b))
+  assert.T(t, !s.Contains(b2))
+  assert.T(t, !s.Contains(c))
+  assert.T(t, !s.Contains(p))
 
   b.Free()
   b2.Free()

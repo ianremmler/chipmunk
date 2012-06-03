@@ -24,21 +24,15 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 import (
+  "github.com/bmizerany/assert"
   "testing"
 )
-
-func testEq(t *testing.T, r, m interface{}) {
-  if r != m {
-    t.Fatal("got", r, "instead of", m)
-  }
-}
 
 func Test_VectNew(t *testing.T) {
   v := VectNew(1.2345, -2.34567)
 
-  if v.X != 1.2345 || v.Y != -2.34567 {
-    t.Fatal("wrong X/Y")
-  }
+  assert.Equal(t, 1.2345, v.X)
+  assert.Equal(t, -2.34567, v.Y)
 }
 
 // FIXME func Test_VectForAngle(t *testing.T) {
@@ -46,42 +40,41 @@ func Test_VectNew(t *testing.T) {
 func Test_VectOrigin(t *testing.T) {
   v := Origin()
 
-  if v.X != 0.0 || v.Y != 0.0 {
-    t.Fatal("wrong X/Y for Origin")
-  }
+  assert.Equal(t, 0.0, v.X)
+  assert.Equal(t, 0.0, v.Y)
 }
 
 func Test_VectString(t *testing.T) {
-  testEq(t, Origin().String(), "(Vect){0, 0}")
-  testEq(t, VectNew(-1.3, 4.55).String(), "(Vect){-1.3, 4.55}")
+  assert.Equal(t, "(Vect){0, 0}", Origin().String())
+  assert.Equal(t, "(Vect){-1.3, 4.55}", VectNew(-1.3, 4.55).String())
 }
 
 func Test_VectAdd(t *testing.T) {
-  testEq(t, VectNew(1.5, -2.5).Add(VectNew(-1.5, 2.5)), Origin())
+  assert.Equal(t, Origin(), VectNew(1.5, -2.5).Add(VectNew(-1.5, 2.5)))
 }
 
 func Test_VectSub(t *testing.T) {
-  testEq(t, VectNew(1.5, -2.5).Sub(VectNew(1.5, -2.5)), Origin())
+  assert.Equal(t, Origin(), VectNew(1.5, -2.5).Sub(VectNew(1.5, -2.5)))
 }
 
 func Test_VectMul(t *testing.T) {
-  testEq(t, VectNew(1.5, -2.5).Mul(3.0), VectNew(4.5, -7.5))
+  assert.Equal(t, VectNew(4.5, -7.5), VectNew(1.5, -2.5).Mul(3.0))
 }
 
 func Test_VectDiv(t *testing.T) {
-  testEq(t, VectNew(4.5, -7.5).Div(-3.0), VectNew(-1.5, 2.5))
+  assert.Equal(t, VectNew(-1.5, 2.5), VectNew(4.5, -7.5).Div(-3.0))
 }
 
 func Test_VectDot(t *testing.T) {
-  testEq(t, VectNew(3.0, 1.0).Dot(VectNew(2.0, 4.0)), 10.0)
+  assert.Equal(t, 10.0, VectNew(3.0, 1.0).Dot(VectNew(2.0, 4.0)))
 }
 
 func Test_VectLength(t *testing.T) {
-  testEq(t, VectNew(0.0, -9.0).Length(), 9.0)
+  assert.Equal(t, 9.0, VectNew(0.0, -9.0).Length())
 }
 
 func Test_VectNeg(t *testing.T) {
-  testEq(t, VectNew(-1.5, 999.9).Neg(), VectNew(1.5, -999.9))
+  assert.Equal(t, VectNew(1.5, -999.9), VectNew(-1.5, 999.9).Neg())
 }
 
 // FIXME func Test_VectLerp(t *testing.T) {

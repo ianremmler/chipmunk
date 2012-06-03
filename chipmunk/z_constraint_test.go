@@ -24,6 +24,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 import (
+  "github.com/bmizerany/assert"
   "testing"
 )
 
@@ -60,21 +61,16 @@ func Test_ConstraintSetPostSolveFunc(t *testing.T) {
   c := GrooveJointNew(b1, b2, VectNew(0.0, 0.0), VectNew(0.0, 0.0), Origin())
   s.AddConstraint(c)
   c.SetUserData(13)
-  called := 0
+  called := false
 
   c.SetPostSolveFunc(func(c Constraint, s Space) {
-    if 13 != c.UserData() {
-      t.Fatal("wrong userdata")
-    }
-
-    called++
+    assert.Equal(t, 13, c.UserData())
+    called = true
   })
 
   s.Step(0.1)
 
-  if called != 1 {
-    t.Fatal("postsolve func wasn't called")
-  }
+  assert.Tf(t, called, "postsolve func wasn't called")
 
   b1.Free()
   b2.Free()
@@ -95,21 +91,16 @@ func Test_ConstraintSetPreSolveFunc(t *testing.T) {
   c := GrooveJointNew(b1, b2, VectNew(0.0, 0.0), VectNew(0.0, 0.0), Origin())
   s.AddConstraint(c)
   c.SetUserData(13)
-  called := 0
+  called := false
 
   c.SetPreSolveFunc(func(c Constraint, s Space) {
-    if 13 != c.UserData() {
-      t.Fatal("wrong userdata")
-    }
-
-    called++
+    assert.Equal(t, 13, c.UserData())
+    called = true
   })
 
   s.Step(0.1)
 
-  if called != 1 {
-    t.Fatal("presolve func wasn't called")
-  }
+  assert.Tf(t, called, "presolve func wasn't called")
 
   b1.Free()
   b2.Free()

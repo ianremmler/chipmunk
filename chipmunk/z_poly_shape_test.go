@@ -24,6 +24,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 import (
+  "github.com/bmizerany/assert"
   "testing"
 )
 
@@ -32,9 +33,7 @@ func Test_PolyShapeNew(t *testing.T) {
   points := []Vect{VectNew(0.0, 0.0), VectNew(0.0, 1.0), VectNew(1.0, 1.0), VectNew(1.0, 0.0)}
   s := PolyShapeNew(b, points, Origin())
 
-  if s.c() == nil {
-    t.Fatal("nil circle shape")
-  }
+  assert.NotEqual(t, nil, s.c())
 
   s.Free()
   b.Free()
@@ -47,10 +46,10 @@ func Test_PolyShapeUnsafe(t *testing.T) {
 
   points = []Vect{VectNew(1.0, 0.0), VectNew(0.0, 0.0), VectNew(0.0, 1.0), VectNew(1.0, 1.0)}
   s.SetVerts(points, VectNew(1.0, -4.0))
-  testEq(t, s.VertLocal(0), VectNew(2.0, -4.0))
-  testEq(t, s.VertLocal(1), VectNew(1.0, -4.0))
-  testEq(t, s.VertLocal(2), VectNew(1.0, -3.0))
-  testEq(t, s.VertLocal(3), VectNew(2.0, -3.0))
+  assert.Equal(t, VectNew(2.0, -4.0), s.VertLocal(0))
+  assert.Equal(t, VectNew(1.0, -4.0), s.VertLocal(1))
+  assert.Equal(t, VectNew(1.0, -3.0), s.VertLocal(2))
+  assert.Equal(t, VectNew(2.0, -3.0), s.VertLocal(3))
 
   s.Free()
   b.Free()

@@ -24,38 +24,30 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 import (
+  "github.com/bmizerany/assert"
   "testing"
 )
 
 func Test_BodyNewFree(t *testing.T) {
   b := BodyNew(1.0, 1.0)
-
-  if b.c() == nil {
-    t.Fatal("nil body")
-  }
-
+  assert.NotEqual(t, nil, b.c())
   b.Free()
 }
 
 func Test_BodyInSpace(t *testing.T) {
   s := SpaceNew()
-  b := BodyNew(1.0, 1.0)
 
-  if b.Space() != nil || s.Contains(b) {
-    t.Fatal("not nil space before Add")
-  }
+  b := BodyNew(1.0, 1.0)
+  assert.Equal(t, nil, b.Space())
+  assert.T(t, !s.Contains(b))
 
   s.AddBody(b)
-
-  if b.Space() == nil || !s.Contains(b) {
-    t.Fatal("nil space after Add")
-  }
+  assert.NotEqual(t, nil, b.Space())
+  assert.T(t, s.Contains(b))
 
   s.RemoveBody(b)
-
-  if b.Space() != nil || s.Contains(b) {
-    t.Fatal("not nil space after Remove")
-  }
+  assert.Equal(t, nil, b.Space())
+  assert.T(t, !s.Contains(b))
 
   b.Free()
   s.Free()
@@ -75,23 +67,15 @@ func Test_BodySetPositionFunc(t *testing.T) {
   b.SetUserData(&data{false, "userdata"})
   b.SetPositionFunc(func(b Body, dt float64) {
     d := b.UserData().(*data)
-
-    if d.s != "userdata" {
-      t.Fatal("wrong userdata")
-    }
-
-    if dt != 0.123 {
-      t.Fatal("wrong dt value")
-    }
-
     d.called = true
+
+    assert.Equal(t, "userdata", d.s)
+    assert.Equal(t, 0.123, dt)
   })
 
   s.Step(0.123)
 
-  if !b.UserData().(*data).called {
-    t.Fatal("position func wasn't called")
-  }
+  assert.Tf(t, b.UserData().(*data).called, "position func wasn't called")
 
   b.Free()
   s.Free()
@@ -111,23 +95,15 @@ func Test_BodySetVelocityFunc(t *testing.T) {
   b.SetUserData(&data{false, "userdata"})
   b.SetVelocityFunc(func(b Body, gravity Vect, damping, dt float64) {
     d := b.UserData().(*data)
-
-    if d.s != "userdata" {
-      t.Fatal("wrong userdata")
-    }
-
-    if dt != 0.123 {
-      t.Fatal("wrong dt value")
-    }
-
     d.called = true
+
+    assert.Equal(t, "userdata", d.s)
+    assert.Equal(t, 0.123, dt)
   })
 
   s.Step(0.123)
 
-  if !b.UserData().(*data).called {
-    t.Fatal("velocity func wasn't called")
-  }
+  assert.Tf(t, b.UserData().(*data).called, "velocity func wasn't called")
 
   b.Free()
   s.Free()

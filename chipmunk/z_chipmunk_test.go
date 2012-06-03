@@ -24,6 +24,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 import (
+  "github.com/bmizerany/assert"
   "testing"
 )
 
@@ -32,8 +33,8 @@ func Test_ConvexHull(t *testing.T) {
   result, first := ConvexHull(verts, 0.5)
   r := []Vect{VectNew(0.0, 0.0), VectNew(0.0, 3.0), VectNew(2.1, 3.0), VectNew(1.0, 0.0)}
 
-  testEq(t, first, 0)
-  testEq(t, VertsEqual(r, result), true)
+  assert.Equal(t, 0, first)
+  assert.T(t, VertsEqual(r, result))
 }
 
 // Local Variables:
