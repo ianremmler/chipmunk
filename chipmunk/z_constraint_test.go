@@ -1,7 +1,7 @@
 package chipmunk
 
 /*
-Copyright (c) 2012 Serge Zirukin
+Copyright © 2012 Serge Zirukin
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
