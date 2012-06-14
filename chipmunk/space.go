@@ -35,8 +35,8 @@ extern void pointQuery(cpShape *s, void *p);
 extern void postStep(cpSpace *space, cpDataPointer key, cpDataPointer data);
 extern void segmentQuery(cpShape *s, cpFloat t, cpVect n, void *p);
 
-static inline void space_add_poststep(cpSpace *space, cpDataPointer key, cpDataPointer data) {
-  cpSpaceAddPostStepCallback(space, (void *)postStep, key, data);
+static inline cpBool space_add_poststep(cpSpace *space, cpDataPointer key, cpDataPointer data) {
+  return cpSpaceAddPostStepCallback(space, (void *)postStep, key, data);
 }
 
 static inline void space_bb_query(cpSpace *space, cpBB bb, cpLayers layers, cpGroup group, void *f) {
@@ -100,7 +100,7 @@ type Space interface {
   Add(SpaceObject) SpaceObject
   AddBody(Body) Body
   AddConstraint(Constraint) Constraint
-  AddPostStepCallback(func(Space, interface{}), interface{})
+  AddPostStepCallback(func(Space, interface{}), interface{}) bool
   AddShape(Shape) Shape
   AddStaticShape(Shape) Shape
   BBQuery(BB, Layers, Group, BBQuery)
@@ -196,9 +196,10 @@ func (s spaceBase) AddConstraint(c Constraint) Constraint {
 
 // AddPostStepCallback schedules a post-step callback to be called when Space.Step() finishes.
 // You can only register one callback per unique value for key.
-func (s spaceBase) AddPostStepCallback(f func(Space, interface{}), key interface{}) {
+// Returns true only if the key has never been scheduled before.
+func (s spaceBase) AddPostStepCallback(f func(Space, interface{}), key interface{}) bool {
   (*postStepCallbackMap[s])[key] = f
-  C.space_add_poststep(s.c(), dataToC(key), dataToC(f))
+  return cpBool(C.space_add_poststep(s.c(), dataToC(key), dataToC(f)))
 }
 
 // AddShape adds a collision shape to the simulation.
