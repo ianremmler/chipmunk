@@ -23,13 +23,8 @@ OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-/*
-#include <chipmunk.h>
-
-static inline cpShapeType shape_type(cpShape *s) {
-  return s->klass_private->type;
-}
-*/
+// #include <chipmunk.h>
+// #include "shape.h"
 import "C"
 
 import (

@@ -23,20 +23,8 @@ OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-/*
-#include <chipmunk.h>
-
-extern void constraint_postsolve(cpConstraint *c, cpSpace *s);
-extern void constraint_presolve(cpConstraint *c, cpSpace *s);
-
-static inline void constraint_set_postsolve_func(cpConstraint *c, cpBool set) {
-  cpConstraintSetPostSolveFunc(c, set ? constraint_postsolve : NULL);
-}
-
-static inline void constraint_set_presolve_func(cpConstraint *c, cpBool set) {
-  cpConstraintSetPreSolveFunc(c, set ? constraint_presolve : NULL);
-}
-*/
+// #include <chipmunk.h>
+// #include "constraint.h"
 import "C"
 
 import (

@@ -23,56 +23,8 @@ OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-/*
-#include <chipmunk.h>
-
-extern void bbQuery(cpShape *s, void *p);
-extern void eachBody_space(cpBody *b, void *p);
-extern void eachConstraint_space(cpConstraint *c, void *p);
-extern void eachShape_space(cpShape *s, void *p);
-extern void nearestPointQuery(cpShape *s, cpFloat distance, cpVect point, void *p);
-extern void pointQuery(cpShape *s, void *p);
-extern void postStep(cpSpace *space, cpDataPointer key, cpDataPointer data);
-extern void segmentQuery(cpShape *s, cpFloat t, cpVect n, void *p);
-
-static inline cpBool space_add_poststep(cpSpace *space, cpDataPointer key, cpDataPointer data) {
-  return cpSpaceAddPostStepCallback(space, (void *)postStep, key, data);
-}
-
-static inline void space_bb_query(cpSpace *space, cpBB bb, cpLayers layers, cpGroup group, void *f) {
-  cpSpaceBBQuery(space, bb, layers, group, bbQuery, f);
-}
-
-static inline void space_each_body(cpSpace *space, void *f) {
-  cpSpaceEachBody(space, eachBody_space, f);
-}
-
-static inline void space_each_constraint(cpSpace *space, void *f) {
-  cpSpaceEachConstraint(space, eachConstraint_space, f);
-}
-
-static inline void space_each_shape(cpSpace *space, void *f) {
-  cpSpaceEachShape(space, eachShape_space, f);
-}
-
-static inline void space_nearest_point_query(cpSpace *space, cpVect point, cpFloat maxDistance,
-                                             cpLayers layers, cpGroup group, void *f) {
-  cpSpaceNearestPointQuery(space, point, maxDistance, layers, group, nearestPointQuery, f);
-}
-
-static inline void space_point_query(cpSpace *s, cpVect point, cpLayers layers, cpGroup group, void *p) {
-  cpSpacePointQuery(s, point, layers, group, pointQuery, p);
-}
-
-static inline void space_segment_query(cpSpace *space,
-                                       cpVect   start,
-                                       cpVect   end,
-                                       cpLayers layers,
-                                       cpGroup  group,
-                                       void    *f) {
-  cpSpaceSegmentQuery(space, start, end, layers, group, segmentQuery, f);
-}
-*/
+// #include <chipmunk.h>
+// #include "space.h"
 import "C"
 
 import (
