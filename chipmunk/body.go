@@ -161,7 +161,7 @@ func (b Body) KineticEnergy() float64 {
 
 // LocalToWorld converts body relative/local coordinates to absolute/world coordinates.
 func (b Body) LocalToWorld(v Vect) Vect {
-  return cpVect(C.cpBodyWorld2Local(b.c(), v.c()))
+  return cpVect(C.cpBodyLocal2World(b.c(), v.c()))
 }
 
 // Mass returns the mass of the body.
@@ -284,6 +284,11 @@ func (b Body) VelocityAtWorldPoint(point Vect) Vect {
 // VelocityLimit returns the maximum velocity allowed when updating the velocity.
 func (b Body) VelocityLimit() float64 {
   return float64(C.cpBodyGetVelLimit(b.c()))
+}
+
+// WorldToLocal converts body absolute/world coordinates to relative/local coordinates.
+func (b Body) WorldToLocal(v Vect) Vect {
+  return cpVect(C.cpBodyWorld2Local(b.c(), v.c()))
 }
 
 // addToSpace adds a body to space.
