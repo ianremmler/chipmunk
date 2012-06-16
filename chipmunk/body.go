@@ -47,13 +47,14 @@ type bodyData struct {
 
 var (
   bodyDataMap = make(map[Body]*bodyData)
+  nullBody    = Body(uintptr(0))
 )
 
 ////////////////////////////////////////////////////////////////////////////////
 
 // Activate wakes up a sleeping or idle body.
 func (b Body) Activate() {
-  if b != Body(uintptr(0)) {
+  if b != nullBody {
     C.cpBodyActivate(b.c())
   }
 }
