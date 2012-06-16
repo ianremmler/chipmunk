@@ -8,6 +8,11 @@ Installation
 
     $ go get github.com/ftrvxmtrx/gochipmunk/chipmunk
 
+Documentation
+=============
+
+[gochipmunk on go.pkgdoc.org](http://go.pkgdoc.org/github.com/ftrvxmtrx/gochipmunk/chipmunk)
+
 Usage
 =====
 

@@ -1,4 +1,8 @@
-// Package chipmunk is an interface to Chipmunk Physics library
+/*
+Package chipmunk is an interface to Chipmunk Physics library.
+
+Usage example: https://github.com/ftrvxmtrx/gochipmunk/blob/master/chipmunk-demo/main.go
+*/
 package chipmunk
 
 /*
