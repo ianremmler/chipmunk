@@ -235,7 +235,7 @@ func (b Body) SleepWithGroup(g Body) {
 }
 
 // Space returns space the body was added to or nil if the body doesn't belong to any space.
-func (b Body) Space() Space {
+func (b Body) Space() *Space {
   return cpSpace(C.cpBodyGetSpace(b.c()))
 }
 
@@ -292,7 +292,7 @@ func (b Body) WorldToLocal(v Vect) Vect {
 }
 
 // addToSpace adds a body to space.
-func (b Body) addToSpace(s Space) {
+func (b Body) addToSpace(s *Space) {
   s.AddBody(b)
 }
 
@@ -302,7 +302,7 @@ func (b Body) c() *C.cpBody {
 }
 
 // containedInSpace returns true if the body is in the space.
-func (b Body) containedInSpace(s Space) bool {
+func (b Body) containedInSpace(s *Space) bool {
   return cpBool(C.cpSpaceContainsBody(s.c(), b.c()))
 }
 
@@ -330,7 +330,7 @@ func eachShape_body(b *C.cpBody, sh *C.cpShape, p unsafe.Pointer) {
 }
 
 // removeFromSpace removes a body from space.
-func (b Body) removeFromSpace(s Space) {
+func (b Body) removeFromSpace(s *Space) {
   s.RemoveBody(b)
 }
 

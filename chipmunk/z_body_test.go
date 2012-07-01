@@ -38,7 +38,7 @@ func Test_BodyInSpace(t *testing.T) {
   s := SpaceNew()
 
   b := BodyNew(1.0, 1.0)
-  assert.Equal(t, nil, b.Space())
+  assert.Equal(t, (*Space)(nil), b.Space())
   assert.T(t, !s.Contains(b))
 
   s.AddBody(b)
@@ -46,7 +46,7 @@ func Test_BodyInSpace(t *testing.T) {
   assert.T(t, s.Contains(b))
 
   s.RemoveBody(b)
-  assert.Equal(t, nil, b.Space())
+  assert.Equal(t, (*Space)(nil), b.Space())
   assert.T(t, !s.Contains(b))
 
   b.Free()

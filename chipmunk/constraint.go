@@ -47,7 +47,7 @@ type Constraint interface {
   SetMaxBias(float64)
   SetMaxForce(float64)
   SetUserData(interface{})
-  Space() Space
+  Space() *Space
   UserData() interface{}
   c() *C.cpConstraint
 }
@@ -55,8 +55,8 @@ type Constraint interface {
 type constraintBase uintptr
 
 type constraintData struct {
-  postSolveFunc func(Constraint, Space)
-  preSolveFunc  func(Constraint, Space)
+  postSolveFunc func(Constraint, *Space)
+  preSolveFunc  func(Constraint, *Space)
   userData      interface{}
 }
 
@@ -146,14 +146,14 @@ func (c constraintBase) SetMaxForce(f float64) {
 
 // SetPostSolveFunc sets a callback function type that gets called after solving a joint.
 // Use the applied impulse to perform effects like breakable joints.
-func (c constraintBase) SetPostSolveFunc(f func(c Constraint, s Space)) {
+func (c constraintBase) SetPostSolveFunc(f func(c Constraint, s *Space)) {
   constraintDataMap[c].postSolveFunc = f
   C.constraint_set_postsolve_func(c.c(), boolToC(f != nil))
 }
 
 // SetPreSolveFunc sets a callback function type that gets called before solving a joint.
 // Animate your joint anchors, update your motor torque, etc.
-func (c constraintBase) SetPreSolveFunc(f func(c Constraint, s Space)) {
+func (c constraintBase) SetPreSolveFunc(f func(c Constraint, s *Space)) {
   constraintDataMap[c].preSolveFunc = f
   C.constraint_set_presolve_func(c.c(), boolToC(f != nil))
 }
@@ -167,7 +167,7 @@ func (c constraintBase) SetUserData(data interface{}) {
 
 // Space returns space the constraint was added to or nil if the constraint
 // doesn't belong to any space.
-func (c constraintBase) Space() Space {
+func (c constraintBase) Space() *Space {
   return cpSpace(C.cpConstraintGetSpace(c.c()))
 }
 
@@ -177,7 +177,7 @@ func (c constraintBase) UserData() interface{} {
 }
 
 // addToSpace adds a constraint to space.
-func (c constraintBase) addToSpace(s Space) {
+func (c constraintBase) addToSpace(s *Space) {
   s.AddConstraint(c)
 }
 
@@ -201,7 +201,7 @@ func constraint_presolve(c *C.cpConstraint, s *C.cpSpace) {
 }
 
 // containedInSpace returns true if the constraint is in the space.
-func (c constraintBase) containedInSpace(s Space) bool {
+func (c constraintBase) containedInSpace(s *Space) bool {
   return cpBool(C.cpSpaceContainsConstraint(s.c(), c.c()))
 }
 
@@ -252,7 +252,7 @@ func cpconstraint_new(ct *C.cpConstraint) constraintBase {
 }
 
 // removeFromSpace removes a constraint from space.
-func (c constraintBase) removeFromSpace(s Space) {
+func (c constraintBase) removeFromSpace(s *Space) {
   s.RemoveConstraint(c)
 }
 

@@ -43,7 +43,7 @@ func Test_SpaceAddPostStepCallback(t *testing.T) {
   s.AddShape(c)
   result := false
 
-  s.AddPostStepCallback(func(s2 Space, key interface{}) {
+  s.AddPostStepCallback(func(s2 *Space, key interface{}) {
     assert.Equal(t, b, key.(Body))
     assert.Equal(t, s, s2)
     s2.RemoveShape(c)

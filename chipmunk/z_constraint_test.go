@@ -63,7 +63,7 @@ func Test_ConstraintSetPostSolveFunc(t *testing.T) {
   c.SetUserData(13)
   called := false
 
-  c.SetPostSolveFunc(func(c Constraint, s Space) {
+  c.SetPostSolveFunc(func(c Constraint, s *Space) {
     assert.Equal(t, 13, c.UserData())
     called = true
   })
@@ -93,7 +93,7 @@ func Test_ConstraintSetPreSolveFunc(t *testing.T) {
   c.SetUserData(13)
   called := false
 
-  c.SetPreSolveFunc(func(c Constraint, s Space) {
+  c.SetPreSolveFunc(func(c Constraint, s *Space) {
     assert.Equal(t, 13, c.UserData())
     called = true
   })
