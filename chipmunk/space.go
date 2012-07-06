@@ -147,13 +147,13 @@ func (s *Space) Damping() float64 {
 
 // Each calls a callback function on each object of specific type (according to iterator) in the space.
 func (s *Space) Each(iter interface{}) {
-  switch iter.(type) {
+  switch f := iter.(type) {
   case func(Body):
-    s.EachBody(iter.(func(Body)))
+    s.EachBody(f)
   case func(Constraint):
-    s.EachConstraint(iter.(func(Constraint)))
+    s.EachConstraint(f)
   case func(Shape):
-    s.EachShape(iter.(func(Shape)))
+    s.EachShape(f)
   default:
     panic("invalid iterator in Each()")
   }
