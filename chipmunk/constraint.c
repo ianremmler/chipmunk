@@ -21,7 +21,7 @@ OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include <chipmunk.h>
+#include <chipmunk/chipmunk.h>
 
 extern void constraint_postsolve(cpConstraint *c, cpSpace *s);
 extern void constraint_presolve(cpConstraint *c, cpSpace *s);

@@ -21,7 +21,7 @@ OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include <chipmunk.h>
+#include <chipmunk/chipmunk.h>
 
 extern void bbQuery(cpShape *s, void *p);
 extern void eachBody_space(cpBody *b, void *p);
