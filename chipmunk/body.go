@@ -109,7 +109,7 @@ func BodyStaticNew() Body {
 
 // EachArbiter calls a callback function once for each arbiter which is currently
 // active on the body.
-func (b Body) EachArbiter(iter func(Body, Shape)) {
+func (b Body) EachArbiter(iter func(Body, Arbiter)) {
   p := unsafe.Pointer(&iter)
   C.body_each_arbiter(b.c(), p)
 }
