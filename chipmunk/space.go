@@ -58,10 +58,12 @@ type SpaceObject interface {
 	removeFromSpace(*Space)
 }
 
+// collisionTypePair is a pair of collision types
 type collisionTypePair struct {
 	a, b CollisionType
 }
 
+// collisionHandler is a set of collision handler functions and optional user data
 type collisionHandler struct {
 	beginFunc    func(*Space, Arbiter, interface{}) bool
 	preSolveFunc func(*Space, Arbiter, interface{}) bool
@@ -110,6 +112,8 @@ func (s *Space) AddPostStepCallback(f func(*Space, interface{}), key interface{}
 	return cpBool(C.space_add_poststep(s.c(), dataToC(key), dataToC(f)))
 }
 
+// AddCollisionHandler sets a collision handler to be used whenever the two shapes with the
+// given collision types collide
 func (s *Space) AddCollisionHandler(a, b CollisionType,
 	beginFunc, preSolveFunc func(*Space, Arbiter, interface{}) bool,
 	postStepFunc, separateFunc func(*Space, Arbiter, interface{}), data interface{}) {
@@ -121,6 +125,10 @@ func (s *Space) AddCollisionHandler(a, b CollisionType,
 	C.space_add_collision_handler(s.c(), a.c(), b.c())
 }
 
+// SetDefaultCollisionHandler sets a default collision handler for this space.  The default
+// collision handler is invoked for each colliding pair of shapes that isn't explicitly handled
+// by a specific collision handler.  You can pass NULL for any function you don't want to
+// implement.
 func (s *Space) SetDefaultCollisionHandler(beginFunc, preSolveFunc func(*Space, Arbiter, interface{}) bool,
 	postStepFunc, separateFunc func(*Space, Arbiter, interface{}), data interface{}) {
 
