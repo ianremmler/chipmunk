@@ -32,8 +32,28 @@ extern void pointQuery(cpShape *s, void *p);
 extern void postStep(cpSpace *space, cpDataPointer key, cpDataPointer data);
 extern void segmentQuery(cpShape *s, cpFloat t, cpVect n, void *p);
 
+extern cpBool begin(cpArbiter *arb, cpSpace *space, cpDataPointer data);
+extern cpBool preSolve(cpArbiter *arb, cpSpace *space, cpDataPointer data);
+extern void postSolve(cpArbiter *arb, cpSpace *space, cpDataPointer data);
+extern void separate(cpArbiter *arb, cpSpace *space, cpDataPointer data);
+
+extern cpBool beginDefault(cpArbiter *arb, cpSpace *space, cpDataPointer data);
+extern cpBool preSolveDefault(cpArbiter *arb, cpSpace *space, cpDataPointer data);
+extern void postSolveDefault(cpArbiter *arb, cpSpace *space, cpDataPointer data);
+extern void separateDefault(cpArbiter *arb, cpSpace *space, cpDataPointer data);
+
 inline cpBool space_add_poststep(cpSpace *space, cpDataPointer key, cpDataPointer data) {
   return cpSpaceAddPostStepCallback(space, (void *)postStep, key, data);
+}
+
+inline void space_add_collision_handler(cpSpace *space, cpCollisionType a, cpCollisionType b) {
+  cpSpaceAddCollisionHandler(space, a, b, (void *)begin, (void *)preSolve, (void *)postSolve,
+                             (void *)separate, NULL);
+}
+
+inline void space_set_default_collision_handler(cpSpace *space) {
+  cpSpaceSetDefaultCollisionHandler(space, (void *)beginDefault, (void *)preSolveDefault,
+                                    (void *)postSolveDefault, (void *)separateDefault, NULL);
 }
 
 inline void space_bb_query(cpSpace *space, cpBB bb, cpLayers layers, cpGroup group, void *f) {

@@ -25,6 +25,8 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define _GOCHIPMUNK_SPACE_H
 
 inline cpBool space_add_poststep(cpSpace *space, cpDataPointer key, cpDataPointer data);
+inline void space_add_collision_handler(cpSpace *space, cpCollisionType a, cpCollisionType b);
+inline void space_set_default_collision_handler(cpSpace *space);
 inline void space_bb_query(cpSpace *space, cpBB bb, cpLayers layers, cpGroup group, void *f);
 inline void space_each_body(cpSpace *space, void *f);
 inline void space_each_constraint(cpSpace *space, void *f);
