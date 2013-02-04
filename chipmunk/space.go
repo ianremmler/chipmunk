@@ -102,7 +102,7 @@ func (s *Space) AddConstraint(c Constraint) Constraint {
 	return cpConstraint(C.cpSpaceAddConstraint(s.c(), c.c()))
 }
 
-// AddPostStepCallback schedules a postSolve-step callback to be called when Space.Step() finishes.
+// AddPostStepCallback schedules a post-step callback to be called when Space.Step() finishes.
 // You can only register one callback per unique value for key.
 // Returns true only if the key has never been scheduled before.
 func (s *Space) AddPostStepCallback(f func(*Space, interface{}), key interface{}) bool {
