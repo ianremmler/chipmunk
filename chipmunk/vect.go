@@ -27,115 +27,109 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 import "C"
 
 import (
-  "fmt"
-  "math"
+	"fmt"
+	"math"
 )
 
 ////////////////////////////////////////////////////////////////////////////////
 
 // Vect is a 2D vector type.
 type Vect struct {
-  X, Y float64
+	X, Y float64
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
 // Add adds one vector to another.
 func (a Vect) Add(b Vect) Vect {
-  return VectNew(a.X+b.X, a.Y+b.Y)
+	return VectNew(a.X+b.X, a.Y+b.Y)
 }
 
 // Dist returns distance between two vectors.
 func (a Vect) Dist(b Vect) float64 {
-  return a.Sub(b).Length()
+	return a.Sub(b).Length()
 }
 
 // Div divides vector by a value thus shrinking it.
 func (v Vect) Div(x float64) Vect {
-  return VectNew(v.X/x, v.Y/x)
+	return VectNew(v.X/x, v.Y/x)
 }
 
 // Dot returns a dot product of two vectors.
 func (v1 Vect) Dot(v2 Vect) float64 {
-  return v1.X*v2.X + v1.Y*v2.Y
+	return v1.X*v2.X + v1.Y*v2.Y
 }
 
 // Length returns the length of vector.
 func (v Vect) Length() float64 {
-  return math.Sqrt(v.Dot(v))
+	return math.Sqrt(v.Dot(v))
 }
 
 // Lerp does a spherical linear interpolation between two vectors.
 func (v1 Vect) Lerp(v2 Vect, t float64) Vect {
-  omega := math.Acos(v1.Dot(v2))
+	omega := math.Acos(v1.Dot(v2))
 
-  if omega > 0.0 {
-    denom := 1.0 / math.Sin(omega)
-    return v1.Mul(math.Sin((1.0-t)*omega) * denom).Add(v2.Mul(math.Sin(t*omega) * denom))
-  }
+	if omega > 0.0 {
+		denom := 1.0 / math.Sin(omega)
+		return v1.Mul(math.Sin((1.0-t)*omega) * denom).Add(v2.Mul(math.Sin(t*omega) * denom))
+	}
 
-  return v1
+	return v1
 }
 
 // LerpConst does a spherical linear interpolation between two vectors
 // by no more than specific angle (radians).
 func (v1 Vect) LerpConst(v2 Vect, a float64) Vect {
-  angle := math.Acos(v1.Dot(v2))
-  return v1.Lerp(v2, math.Min(a, angle)/angle)
+	angle := math.Acos(v1.Dot(v2))
+	return v1.Lerp(v2, math.Min(a, angle)/angle)
 }
 
 // Mul multiples vector by a value thus scaling it.
 func (v Vect) Mul(x float64) Vect {
-  return VectNew(v.X*x, v.Y*x)
+	return VectNew(v.X*x, v.Y*x)
 }
 
 // Neg negates vector.
 func (v Vect) Neg() Vect {
-  return VectNew(-v.X, -v.Y)
+	return VectNew(-v.X, -v.Y)
 }
 
 // Origin returns zero vector.
 func Origin() Vect {
-  return VectNew(0.0, 0.0)
+	return VectNew(0.0, 0.0)
 }
 
 // String converts a vector to a human-readable string.
 func (v Vect) String() string {
-  return fmt.Sprintf("(Vect){%g, %g}", v.X, v.Y)
+	return fmt.Sprintf("(Vect){%g, %g}", v.X, v.Y)
 }
 
 // Sub subtracts one vector from another.
 func (a Vect) Sub(b Vect) Vect {
-  return VectNew(a.X-b.X, a.Y-b.Y)
+	return VectNew(a.X-b.X, a.Y-b.Y)
 }
 
 // ToAngle returns the angular direction vector is pointing in (radians).
 func (v Vect) ToAngle() float64 {
-  return math.Atan2(v.Y, v.X)
+	return math.Atan2(v.Y, v.X)
 }
 
 // VectNew returns a new 2D vector.
 func VectNew(x, y float64) Vect {
-  return Vect{x, y}
+	return Vect{x, y}
 }
 
 // VectForAngle returns the unit length vector for the given angle (radians).
 func VectForAngle(a float64) Vect {
-  return VectNew(math.Cos(a), math.Sin(a))
+	return VectNew(math.Cos(a), math.Sin(a))
 }
 
 // c converts Vect to C.cpVect.
 func (v Vect) c() C.cpVect {
-  return C.cpVect{x: C.cpFloat(v.X), y: C.cpFloat(v.Y)}
+	return C.cpVect{x: C.cpFloat(v.X), y: C.cpFloat(v.Y)}
 }
 
 // cpVect converts C.cpVect to Vect.
 func cpVect(v C.cpVect) Vect {
-  return VectNew(float64(v.x), float64(v.y))
+	return VectNew(float64(v.x), float64(v.y))
 }
-
-// Local Variables:
-// indent-tabs-mode: nil
-// tab-width: 2
-// End:
-// ex: set tabstop=2 shiftwidth=2 expandtab:

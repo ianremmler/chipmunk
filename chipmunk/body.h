@@ -31,9 +31,3 @@ inline void body_set_position_func(cpBody *body, cpBool set);
 inline void body_set_velocity_func(cpBody *body, cpBool set);
 
 #endif // !_GOCHIPMUNK_BODY_H
-
-// Local Variables:
-// indent-tabs-mode: nil
-// c-basic-offset: 2
-// End:
-// ex: set tabstop=2 shiftwidth=2 expandtab:

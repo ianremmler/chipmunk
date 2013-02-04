@@ -89,9 +89,3 @@ inline void space_segment_query(cpSpace *space,
                                 void    *f) {
   cpSpaceSegmentQuery(space, start, end, layers, group, segmentQuery, f);
 }
-
-// Local Variables:
-// indent-tabs-mode: nil
-// c-basic-offset: 2
-// End:
-// ex: set tabstop=2 shiftwidth=2 expandtab:

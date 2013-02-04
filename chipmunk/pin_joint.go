@@ -31,49 +31,43 @@ import "C"
 // PinJoint holds a set distance between points on two bodies.
 // Think of them as connecting a solid pin or rod between the two anchor points.
 type PinJoint struct {
-  constraintBase
+	constraintBase
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
 // Anchr1 returns the anchor point on the first body.
 func (c PinJoint) Anchr1() Vect {
-  return cpVect(C.cpPinJointGetAnchr1(c.c()))
+	return cpVect(C.cpPinJointGetAnchr1(c.c()))
 }
 
 // Anchr2 returns the anchor point on the second body.
 func (c PinJoint) Anchr2() Vect {
-  return cpVect(C.cpPinJointGetAnchr2(c.c()))
+	return cpVect(C.cpPinJointGetAnchr2(c.c()))
 }
 
 // Dist returns the distance between the two anchor points that the joint keeps.
 func (c PinJoint) Dist() float64 {
-  return float64(C.cpPinJointGetDist(c.c()))
+	return float64(C.cpPinJointGetDist(c.c()))
 }
 
 // PinJointNew creates a new pin joint.
 func PinJointNew(a, b Body, anchr1, anchr2 Vect) PinJoint {
-  c := C.cpPinJointNew(a.c(), b.c(), anchr1.c(), anchr2.c())
-  return PinJoint{cpconstraint_new(c)}
+	c := C.cpPinJointNew(a.c(), b.c(), anchr1.c(), anchr2.c())
+	return PinJoint{cpconstraint_new(c)}
 }
 
 // SetAnchr1 sets the anchor point on the first body.
 func (c PinJoint) SetAnchr1(v Vect) {
-  C.cpPinJointSetAnchr1(c.c(), v.c())
+	C.cpPinJointSetAnchr1(c.c(), v.c())
 }
 
 // SetAnchr2 sets the anchor point on the second body.
 func (c PinJoint) SetAnchr2(v Vect) {
-  C.cpPinJointSetAnchr2(c.c(), v.c())
+	C.cpPinJointSetAnchr2(c.c(), v.c())
 }
 
 // SetDist sets the distance between the two anchor points that the joint keeps.
 func (c PinJoint) SetDist(d float64) {
-  C.cpPinJointSetDist(c.c(), C.cpFloat(d))
+	C.cpPinJointSetDist(c.c(), C.cpFloat(d))
 }
-
-// Local Variables:
-// indent-tabs-mode: nil
-// tab-width: 2
-// End:
-// ex: set tabstop=2 shiftwidth=2 expandtab:

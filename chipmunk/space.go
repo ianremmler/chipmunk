@@ -64,7 +64,7 @@ type collisionTypePair struct {
 
 type collisionHandler struct {
 	beginFunc    func(*Space, Arbiter, interface{}) bool
-	preSolveFunc  func(*Space, Arbiter, interface{}) bool
+	preSolveFunc func(*Space, Arbiter, interface{}) bool
 	postStepFunc func(*Space, Arbiter, interface{})
 	separateFunc func(*Space, Arbiter, interface{})
 	data         interface{}
@@ -621,9 +621,3 @@ func segmentQuery(s *C.cpShape, t C.cpFloat, n C.cpVect, p unsafe.Pointer) {
 	f := *(*SegmentQuery)(p)
 	f(cpShape(s), float64(t), cpVect(n))
 }
-
-// Local Variables:
-// indent-tabs-mode: nil
-// tab-width: 2
-// End:
-// ex: set tabstop=2 shiftwidth=2 expandtab:

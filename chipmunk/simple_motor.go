@@ -31,29 +31,23 @@ import "C"
 // SimpleMotor makes two objects spin relative to each other.
 // They are most often used with the MaxForce property set to a finite value.
 type SimpleMotor struct {
-  constraintBase
+	constraintBase
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
 // Rate returns the relative rotation speed of the two bodies in radians per second.
 func (c SimpleMotor) Rate() float64 {
-  return float64(C.cpSimpleMotorGetRate(c.c()))
+	return float64(C.cpSimpleMotorGetRate(c.c()))
 }
 
 // SetRate sets the relative rotation speed of the two bodies in radians per second.
 func (c SimpleMotor) SetRate(m float64) {
-  C.cpSimpleMotorSetRate(c.c(), C.cpFloat(m))
+	C.cpSimpleMotorSetRate(c.c(), C.cpFloat(m))
 }
 
 // SimpleMotorNew creates a new simple motor.
 func SimpleMotorNew(a, b Body, rate float64) SimpleMotor {
-  c := C.cpSimpleMotorNew(a.c(), b.c(), C.cpFloat(rate))
-  return SimpleMotor{cpconstraint_new(c)}
+	c := C.cpSimpleMotorNew(a.c(), b.c(), C.cpFloat(rate))
+	return SimpleMotor{cpconstraint_new(c)}
 }
-
-// Local Variables:
-// indent-tabs-mode: nil
-// tab-width: 2
-// End:
-// ex: set tabstop=2 shiftwidth=2 expandtab:

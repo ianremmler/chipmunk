@@ -24,39 +24,33 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 import (
-  "github.com/bmizerany/assert"
-  "testing"
+	"github.com/bmizerany/assert"
+	"testing"
 )
 
 func Test_PolyShapeNew(t *testing.T) {
-  b := BodyNew(1.0, 1.0)
-  points := []Vect{VectNew(0.0, 0.0), VectNew(0.0, 1.0), VectNew(1.0, 1.0), VectNew(1.0, 0.0)}
-  s := PolyShapeNew(b, points, Origin())
+	b := BodyNew(1.0, 1.0)
+	points := []Vect{VectNew(0.0, 0.0), VectNew(0.0, 1.0), VectNew(1.0, 1.0), VectNew(1.0, 0.0)}
+	s := PolyShapeNew(b, points, Origin())
 
-  assert.NotEqual(t, nil, s.c())
+	assert.NotEqual(t, nil, s.c())
 
-  s.Free()
-  b.Free()
+	s.Free()
+	b.Free()
 }
 
 func Test_PolyShapeUnsafe(t *testing.T) {
-  b := BodyNew(1.0, 1.0)
-  points := []Vect{VectNew(0.0, 0.0), VectNew(0.0, 1.0), VectNew(1.0, 1.0), VectNew(1.0, 0.0)}
-  s := PolyShapeNew(b, points, Origin())
+	b := BodyNew(1.0, 1.0)
+	points := []Vect{VectNew(0.0, 0.0), VectNew(0.0, 1.0), VectNew(1.0, 1.0), VectNew(1.0, 0.0)}
+	s := PolyShapeNew(b, points, Origin())
 
-  points = []Vect{VectNew(1.0, 0.0), VectNew(0.0, 0.0), VectNew(0.0, 1.0), VectNew(1.0, 1.0)}
-  s.SetVerts(points, VectNew(1.0, -4.0))
-  assert.Equal(t, VectNew(2.0, -4.0), s.VertLocal(0))
-  assert.Equal(t, VectNew(1.0, -4.0), s.VertLocal(1))
-  assert.Equal(t, VectNew(1.0, -3.0), s.VertLocal(2))
-  assert.Equal(t, VectNew(2.0, -3.0), s.VertLocal(3))
+	points = []Vect{VectNew(1.0, 0.0), VectNew(0.0, 0.0), VectNew(0.0, 1.0), VectNew(1.0, 1.0)}
+	s.SetVerts(points, VectNew(1.0, -4.0))
+	assert.Equal(t, VectNew(2.0, -4.0), s.VertLocal(0))
+	assert.Equal(t, VectNew(1.0, -4.0), s.VertLocal(1))
+	assert.Equal(t, VectNew(1.0, -3.0), s.VertLocal(2))
+	assert.Equal(t, VectNew(2.0, -3.0), s.VertLocal(3))
 
-  s.Free()
-  b.Free()
+	s.Free()
+	b.Free()
 }
-
-// Local Variables:
-// indent-tabs-mode: nil
-// tab-width: 2
-// End:
-// ex: set tabstop=2 shiftwidth=2 expandtab:

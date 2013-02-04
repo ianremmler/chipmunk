@@ -24,93 +24,87 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 import (
-  "github.com/bmizerany/assert"
-  "testing"
+	"github.com/bmizerany/assert"
+	"testing"
 )
 
 func Test_ConstraintNew(t *testing.T) {
-  s := SpaceNew()
+	s := SpaceNew()
 
-  b1 := s.AddBody(BodyNew(1.0, 1.0))
-  s1 := s.AddShape(SegmentShapeNew(b1, VectNew(-10, 10), VectNew(10, 10), 0.0))
+	b1 := s.AddBody(BodyNew(1.0, 1.0))
+	s1 := s.AddShape(SegmentShapeNew(b1, VectNew(-10, 10), VectNew(10, 10), 0.0))
 
-  b2 := s.AddBody(BodyNew(1.0, 1.0))
-  s2 := s.AddShape(SegmentShapeNew(b2, VectNew(-10, 10), VectNew(10, 10), 0.0))
+	b2 := s.AddBody(BodyNew(1.0, 1.0))
+	s2 := s.AddShape(SegmentShapeNew(b2, VectNew(-10, 10), VectNew(10, 10), 0.0))
 
-  c := GrooveJointNew(b1, b2, VectNew(0.0, 0.0), VectNew(0.0, 0.0), Origin())
-  s.AddConstraint(c)
+	c := GrooveJointNew(b1, b2, VectNew(0.0, 0.0), VectNew(0.0, 0.0), Origin())
+	s.AddConstraint(c)
 
-  s.Step(0.1)
+	s.Step(0.1)
 
-  b1.Free()
-  b2.Free()
-  s1.Free()
-  s2.Free()
-  s.Free()
+	b1.Free()
+	b2.Free()
+	s1.Free()
+	s2.Free()
+	s.Free()
 }
 
 func Test_ConstraintSetPostSolveFunc(t *testing.T) {
-  s := SpaceNew()
+	s := SpaceNew()
 
-  b1 := s.AddBody(BodyNew(1.0, 1.0))
-  s1 := s.AddShape(SegmentShapeNew(b1, VectNew(-10, 10), VectNew(10, 10), 0.0))
+	b1 := s.AddBody(BodyNew(1.0, 1.0))
+	s1 := s.AddShape(SegmentShapeNew(b1, VectNew(-10, 10), VectNew(10, 10), 0.0))
 
-  b2 := s.AddBody(BodyNew(1.0, 1.0))
-  s2 := s.AddShape(SegmentShapeNew(b2, VectNew(-10, 10), VectNew(10, 10), 0.0))
+	b2 := s.AddBody(BodyNew(1.0, 1.0))
+	s2 := s.AddShape(SegmentShapeNew(b2, VectNew(-10, 10), VectNew(10, 10), 0.0))
 
-  c := GrooveJointNew(b1, b2, VectNew(0.0, 0.0), VectNew(0.0, 0.0), Origin())
-  s.AddConstraint(c)
-  c.SetUserData(13)
-  called := false
+	c := GrooveJointNew(b1, b2, VectNew(0.0, 0.0), VectNew(0.0, 0.0), Origin())
+	s.AddConstraint(c)
+	c.SetUserData(13)
+	called := false
 
-  c.SetPostSolveFunc(func(c Constraint, s *Space) {
-    assert.Equal(t, 13, c.UserData())
-    called = true
-  })
+	c.SetPostSolveFunc(func(c Constraint, s *Space) {
+		assert.Equal(t, 13, c.UserData())
+		called = true
+	})
 
-  s.Step(0.1)
+	s.Step(0.1)
 
-  assert.Tf(t, called, "postsolve func wasn't called")
+	assert.Tf(t, called, "postsolve func wasn't called")
 
-  b1.Free()
-  b2.Free()
-  s1.Free()
-  s2.Free()
-  s.Free()
+	b1.Free()
+	b2.Free()
+	s1.Free()
+	s2.Free()
+	s.Free()
 }
 
 func Test_ConstraintSetPreSolveFunc(t *testing.T) {
-  s := SpaceNew()
+	s := SpaceNew()
 
-  b1 := s.AddBody(BodyNew(1.0, 1.0))
-  s1 := s.AddShape(SegmentShapeNew(b1, VectNew(-10, 10), VectNew(10, 10), 0.0))
+	b1 := s.AddBody(BodyNew(1.0, 1.0))
+	s1 := s.AddShape(SegmentShapeNew(b1, VectNew(-10, 10), VectNew(10, 10), 0.0))
 
-  b2 := s.AddBody(BodyNew(1.0, 1.0))
-  s2 := s.AddShape(SegmentShapeNew(b2, VectNew(-10, 10), VectNew(10, 10), 0.0))
+	b2 := s.AddBody(BodyNew(1.0, 1.0))
+	s2 := s.AddShape(SegmentShapeNew(b2, VectNew(-10, 10), VectNew(10, 10), 0.0))
 
-  c := GrooveJointNew(b1, b2, VectNew(0.0, 0.0), VectNew(0.0, 0.0), Origin())
-  s.AddConstraint(c)
-  c.SetUserData(13)
-  called := false
+	c := GrooveJointNew(b1, b2, VectNew(0.0, 0.0), VectNew(0.0, 0.0), Origin())
+	s.AddConstraint(c)
+	c.SetUserData(13)
+	called := false
 
-  c.SetPreSolveFunc(func(c Constraint, s *Space) {
-    assert.Equal(t, 13, c.UserData())
-    called = true
-  })
+	c.SetPreSolveFunc(func(c Constraint, s *Space) {
+		assert.Equal(t, 13, c.UserData())
+		called = true
+	})
 
-  s.Step(0.1)
+	s.Step(0.1)
 
-  assert.Tf(t, called, "presolve func wasn't called")
+	assert.Tf(t, called, "presolve func wasn't called")
 
-  b1.Free()
-  b2.Free()
-  s1.Free()
-  s2.Free()
-  s.Free()
+	b1.Free()
+	b2.Free()
+	s1.Free()
+	s2.Free()
+	s.Free()
 }
-
-// Local Variables:
-// indent-tabs-mode: nil
-// tab-width: 2
-// End:
-// ex: set tabstop=2 shiftwidth=2 expandtab:

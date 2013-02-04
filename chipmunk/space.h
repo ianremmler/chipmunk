@@ -42,9 +42,3 @@ inline void space_segment_query(cpSpace *space,
                                 void    *f);
 
 #endif // !_GOCHIPMUNK_SPACE_H
-
-// Local Variables:
-// indent-tabs-mode: nil
-// c-basic-offset: 2
-// End:
-// ex: set tabstop=2 shiftwidth=2 expandtab:

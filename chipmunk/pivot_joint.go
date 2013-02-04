@@ -30,45 +30,39 @@ import "C"
 
 // PivotJoint holds two points on two bodies together allowing them to rotate freely around the pivot.
 type PivotJoint struct {
-  constraintBase
+	constraintBase
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
 // Anchr1 returns the anchor point on the first body.
 func (c PivotJoint) Anchr1() Vect {
-  return cpVect(C.cpPivotJointGetAnchr1(c.c()))
+	return cpVect(C.cpPivotJointGetAnchr1(c.c()))
 }
 
 // Anchr2 returns the anchor point on the second body.
 func (c PivotJoint) Anchr2() Vect {
-  return cpVect(C.cpPivotJointGetAnchr2(c.c()))
+	return cpVect(C.cpPivotJointGetAnchr2(c.c()))
 }
 
 // PivotJointNew creates a new pivot joint.
 func PivotJointNew(a, b Body, pivot Vect) PivotJoint {
-  c := C.cpPivotJointNew(a.c(), b.c(), pivot.c())
-  return PivotJoint{cpconstraint_new(c)}
+	c := C.cpPivotJointNew(a.c(), b.c(), pivot.c())
+	return PivotJoint{cpconstraint_new(c)}
 }
 
 // PivotJointNew2 creates a new pivot joint with the two anchor points.
 func PivotJointNew2(a, b Body, anchr1, anchr2 Vect) PivotJoint {
-  c := C.cpPivotJointNew2(a.c(), b.c(), anchr1.c(), anchr2.c())
-  return PivotJoint{cpconstraint_new(c)}
+	c := C.cpPivotJointNew2(a.c(), b.c(), anchr1.c(), anchr2.c())
+	return PivotJoint{cpconstraint_new(c)}
 }
 
 // SetAnchr1 sets the anchor point on the first body.
 func (c PivotJoint) SetAnchr1(v Vect) {
-  C.cpPivotJointSetAnchr1(c.c(), v.c())
+	C.cpPivotJointSetAnchr1(c.c(), v.c())
 }
 
 // SetAnchr2 sets the anchor point on the second body.
 func (c PivotJoint) SetAnchr2(v Vect) {
-  C.cpPivotJointSetAnchr2(c.c(), v.c())
+	C.cpPivotJointSetAnchr2(c.c(), v.c())
 }
-
-// Local Variables:
-// indent-tabs-mode: nil
-// tab-width: 2
-// End:
-// ex: set tabstop=2 shiftwidth=2 expandtab:

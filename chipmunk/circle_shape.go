@@ -28,60 +28,54 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 import "C"
 
 import (
-  "fmt"
-  . "unsafe"
+	"fmt"
+	. "unsafe"
 )
 
 ////////////////////////////////////////////////////////////////////////////////
 
 // CircleShape is a circle shape type.
 type CircleShape struct {
-  shapeBase
+	shapeBase
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 
 // Center returns the center of the circle shape (world coordinates).
 func (s CircleShape) Center() Vect {
-  p := (Pointer)(s.c())
-  return cpVect((*C.cpCircleShape)(p).tc)
+	p := (Pointer)(s.c())
+	return cpVect((*C.cpCircleShape)(p).tc)
 }
 
 // CircleShapeNew creates a new circle shape.
 func CircleShapeNew(body Body, radius float64, offset Vect) CircleShape {
-  s := C.cpCircleShapeNew(body.c(), C.cpFloat(radius), offset.c())
-  return CircleShape{cpshape(s)}
+	s := C.cpCircleShapeNew(body.c(), C.cpFloat(radius), offset.c())
+	return CircleShape{cpshape(s)}
 }
 
 // Offset returns the offset from the center of gravity.
 func (s CircleShape) Offset() Vect {
-  return cpVect(C.cpCircleShapeGetOffset(s.c()))
+	return cpVect(C.cpCircleShapeGetOffset(s.c()))
 }
 
 // Radius returns the radius of the circle.
 func (s CircleShape) Radius() float64 {
-  return float64(C.cpCircleShapeGetRadius(s.c()))
+	return float64(C.cpCircleShapeGetRadius(s.c()))
 }
 
 // SetOffset sets the offset from the center of gravity.
 // NOTE: this is unsafe function.
 func (s CircleShape) SetOffset(offset Vect) {
-  C.cpCircleShapeSetOffset(s.c(), offset.c())
+	C.cpCircleShapeSetOffset(s.c(), offset.c())
 }
 
 // SetRadius sets the radius of the circle.
 // NOTE: this is unsafe function.
 func (s CircleShape) SetRadius(radius float64) {
-  C.cpCircleShapeSetRadius(s.c(), C.cpFloat(radius))
+	C.cpCircleShapeSetRadius(s.c(), C.cpFloat(radius))
 }
 
 // String converts a circle shape to a human-readable string.
 func (s CircleShape) String() string {
-  return fmt.Sprintf("(CircleShape)%+v", s.c())
+	return fmt.Sprintf("(CircleShape)%+v", s.c())
 }
-
-// Local Variables:
-// indent-tabs-mode: nil
-// tab-width: 2
-// End:
-// ex: set tabstop=2 shiftwidth=2 expandtab:

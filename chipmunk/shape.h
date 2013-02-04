@@ -27,9 +27,3 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 inline cpShapeType shape_type(cpShape *s);
 
 #endif // !_GOCHIPMUNK_SHAPE_H
-
-// Local Variables:
-// indent-tabs-mode: nil
-// c-basic-offset: 2
-// End:
-// ex: set tabstop=2 shiftwidth=2 expandtab:

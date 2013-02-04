@@ -24,38 +24,32 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 import (
-  "github.com/bmizerany/assert"
-  "testing"
+	"github.com/bmizerany/assert"
+	"testing"
 )
 
 func Test_CircleShapeNew(t *testing.T) {
-  b := BodyNew(1.0, 1.0)
-  s := CircleShapeNew(b, 1.0, Origin())
+	b := BodyNew(1.0, 1.0)
+	s := CircleShapeNew(b, 1.0, Origin())
 
-  assert.NotEqual(t, nil, s.c())
+	assert.NotEqual(t, nil, s.c())
 
-  s.Free()
-  b.Free()
+	s.Free()
+	b.Free()
 }
 
 func Test_CircleShapeUnsafe(t *testing.T) {
-  b := BodyNew(1.0, 1.0)
-  s := CircleShapeNew(b, 1.0, Origin())
+	b := BodyNew(1.0, 1.0)
+	s := CircleShapeNew(b, 1.0, Origin())
 
-  offset := VectNew(1.0, 1.0)
-  s.SetOffset(offset)
-  assert.Equal(t, offset, s.Offset())
+	offset := VectNew(1.0, 1.0)
+	s.SetOffset(offset)
+	assert.Equal(t, offset, s.Offset())
 
-  radius := 2.0
-  s.SetRadius(radius)
-  assert.Equal(t, radius, s.Radius())
+	radius := 2.0
+	s.SetRadius(radius)
+	assert.Equal(t, radius, s.Radius())
 
-  s.Free()
-  b.Free()
+	s.Free()
+	b.Free()
 }
-
-// Local Variables:
-// indent-tabs-mode: nil
-// tab-width: 2
-// End:
-// ex: set tabstop=2 shiftwidth=2 expandtab:

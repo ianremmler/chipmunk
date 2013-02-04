@@ -33,9 +33,3 @@ inline void constraint_set_postsolve_func(cpConstraint *c, cpBool set) {
 inline void constraint_set_presolve_func(cpConstraint *c, cpBool set) {
   cpConstraintSetPreSolveFunc(c, set ? constraint_presolve : NULL);
 }
-
-// Local Variables:
-// indent-tabs-mode: nil
-// c-basic-offset: 2
-// End:
-// ex: set tabstop=2 shiftwidth=2 expandtab:
