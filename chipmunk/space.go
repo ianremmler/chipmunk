@@ -50,6 +50,14 @@ type SegmentQuery func(s Shape, t float64, n Vect)
 // Space is a basic unit of simulation in Chipmunk.
 type Space uintptr
 
+type spaceData struct {
+	userData     interface{}
+}
+
+var (
+	spaceDataMap = make(map[Space]*spaceData)
+)
+
 // SpaceObject is an interface every space object must implement.
 type SpaceObject interface {
 	Free()
@@ -226,6 +234,7 @@ func (s *Space) EnableContactGraph() bool {
 // Free removes a space.
 func (s *Space) Free() {
 	if nil != s {
+		delete(spaceDataMap, *s)
 		delete(postStepCallbackMap, *s)
 		delete(collisionHandlerMap, *s)
 		delete(defaultCollisionHandlerMap, *s)
@@ -375,7 +384,7 @@ func (s *Space) SetSleepTimeThreshold(t float64) {
 // Generally this points to your game's controller or game state
 // so you can access it when given a Space reference in a callback.
 func (s *Space) SetUserData(data interface{}) {
-	C.cpSpaceSetUserData(s.c(), dataToC(data))
+	spaceDataMap[*s].userData = data
 }
 
 // SleepTimeThreshold returns the time a groups of bodies must remain idle in order to "fall asleep".
@@ -386,6 +395,7 @@ func (s *Space) SleepTimeThreshold() float64 {
 // SpaceNew creates a new space.
 func SpaceNew() *Space {
 	s := Space(Pointer(C.cpSpaceNew()))
+	spaceDataMap[s] = &spaceData{}
 	postStepCallbackMap[s] = make(map[interface{}]func(*Space, interface{}))
 	collisionHandlerMap[s] = make(map[collisionTypePair]collisionHandler)
 	return &s
@@ -453,7 +463,7 @@ func (s *Space) RemoveStaticShape(sh Shape) {
 
 // UserData returns user defined data.
 func (s *Space) UserData() interface{} {
-	return cpData(C.cpSpaceGetUserData(s.c()))
+	return spaceDataMap[*s].userData
 }
 
 // UseSpatialHash switches the space to use a spatial has as it's spatial index.
