@@ -51,7 +51,7 @@ type SegmentQuery func(s Shape, t float64, n Vect)
 type Space uintptr
 
 type spaceData struct {
-	userData     interface{}
+	userData interface{}
 }
 
 var (
@@ -283,18 +283,10 @@ func (s *Space) Iterations() int {
 }
 
 // NearestPointQuery queries the space at a point and calls a callback function for each shape found.
-func (s *Space) NearestPointQuery(
-	point Vect,
-	maxDistance float64,
-	layers Layers,
-	group Group,
+func (s *Space) NearestPointQuery(point Vect, maxDistance float64, layers Layers, group Group,
 	f NearestPointQuery) {
-	C.space_nearest_point_query(
-		s.c(),
-		point.c(),
-		C.cpFloat(maxDistance),
-		layers.c(),
-		group.c(),
+
+	C.space_nearest_point_query(s.c(), point.c(), C.cpFloat(maxDistance), layers.c(), group.c(),
 		Pointer(&f))
 }
 

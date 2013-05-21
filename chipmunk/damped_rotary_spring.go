@@ -37,11 +37,7 @@ type DampedRotarySpring struct {
 
 // DampedRotarySpringNew creates a new damped rotary spring.
 func DampedRotarySpringNew(a, b Body, restAngle, stiffness, damping float64) DampedRotarySpring {
-	c := C.cpDampedRotarySpringNew(
-		a.c(),
-		b.c(),
-		C.cpFloat(restAngle),
-		C.cpFloat(stiffness),
+	c := C.cpDampedRotarySpringNew(a.c(), b.c(), C.cpFloat(restAngle), C.cpFloat(stiffness),
 		C.cpFloat(damping))
 
 	return DampedRotarySpring{cpconstraint_new(c)}

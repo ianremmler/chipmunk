@@ -48,19 +48,11 @@ func (c DampedSpring) Anchr2() Vect {
 }
 
 // DampedSprintNew creates a new damped spring.
-func DampedSpringNew(
-	a, b Body,
-	anchr1, anchr2 Vect,
+func DampedSpringNew(a, b Body, anchr1, anchr2 Vect,
 	restLength, stiffness, damping float64) DampedSpring {
 
-	c := C.cpDampedSpringNew(
-		a.c(),
-		b.c(),
-		anchr1.c(),
-		anchr2.c(),
-		C.cpFloat(restLength),
-		C.cpFloat(stiffness),
-		C.cpFloat(damping))
+	c := C.cpDampedSpringNew(a.c(), b.c(), anchr1.c(), anchr2.c(), C.cpFloat(restLength),
+		C.cpFloat(stiffness), C.cpFloat(damping))
 
 	return DampedSpring{cpconstraint_new(c)}
 }

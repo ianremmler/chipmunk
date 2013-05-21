@@ -76,7 +76,8 @@ func (b BB) Expand(v Vect) BB {
 		math.Min(b.l, v.X),
 		math.Min(b.b, v.Y),
 		math.Max(b.r, v.X),
-		math.Max(b.t, v.Y)}
+		math.Max(b.t, v.Y),
+	}
 }
 
 // Intersects returns true if two bounding boxes intersect.
@@ -96,7 +97,8 @@ func (a BB) Merge(b BB) BB {
 		math.Min(a.l, b.l),
 		math.Min(a.b, b.b),
 		math.Max(a.r, b.r),
-		math.Max(a.t, b.t)}
+		math.Max(a.t, b.t),
+	}
 }
 
 // MergedArea merges two bounding boxes and returns the area of the merged bounding box.
@@ -182,7 +184,8 @@ func (b BB) c() C.cpBB {
 		l: C.cpFloat(b.l),
 		b: C.cpFloat(b.b),
 		r: C.cpFloat(b.r),
-		t: C.cpFloat(b.t)}
+		t: C.cpFloat(b.t),
+	}
 }
 
 // cpBB converts C.cpBB to BB.

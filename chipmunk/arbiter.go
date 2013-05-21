@@ -66,7 +66,8 @@ func (a Arbiter) ContactPoints() []ContactPoint {
 		c[i] = ContactPoint{
 			cpVect(set.points[i].point),
 			cpVect(set.points[i].normal),
-			float64(set.points[i].dist)}
+			float64(set.points[i].dist),
+		}
 	}
 
 	return c
