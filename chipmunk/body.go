@@ -200,6 +200,11 @@ func (b Body) SetPosition(v Vect) {
 	C.cpBodySetPos(b.c(), v.c())
 }
 
+// SetVelocity sets the velocity of the body.
+func (b Body) SetVelocity(v Vect) {
+	C.cpBodySetVel(b.c(), v.c())
+}
+
 // SetPositionFunc sets a function that is called to integrate the body's position.
 func (b Body) SetPositionFunc(f func(b Body, dt float64)) {
 	bodyDataMap[b].positionFunc = f
