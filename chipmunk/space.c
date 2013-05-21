@@ -43,49 +43,47 @@ extern void postSolveDefault(cpArbiter *arb, cpSpace *space, cpDataPointer data)
 extern void separateDefault(cpArbiter *arb, cpSpace *space, cpDataPointer data);
 
 inline cpBool space_add_poststep(cpSpace *space, cpDataPointer key, cpDataPointer data) {
-  return cpSpaceAddPostStepCallback(space, (void *)postStep, key, data);
+	return cpSpaceAddPostStepCallback(space, (void *)postStep, key, data);
 }
 
 inline void space_add_collision_handler(cpSpace *space, cpCollisionType a, cpCollisionType b) {
-  cpSpaceAddCollisionHandler(space, a, b, (void *)begin, (void *)preSolve, (void *)postSolve,
-                             (void *)separate, NULL);
+	cpSpaceAddCollisionHandler(space, a, b, (void *)begin, (void *)preSolve, (void *)postSolve,
+		(void *)separate, NULL);
 }
 
 inline void space_set_default_collision_handler(cpSpace *space) {
-  cpSpaceSetDefaultCollisionHandler(space, (void *)beginDefault, (void *)preSolveDefault,
-                                    (void *)postSolveDefault, (void *)separateDefault, NULL);
+	cpSpaceSetDefaultCollisionHandler(space, (void *)beginDefault, (void *)preSolveDefault,
+		(void *)postSolveDefault, (void *)separateDefault, NULL);
 }
 
 inline void space_bb_query(cpSpace *space, cpBB bb, cpLayers layers, cpGroup group, void *f) {
-  cpSpaceBBQuery(space, bb, layers, group, bbQuery, f);
+	cpSpaceBBQuery(space, bb, layers, group, bbQuery, f);
 }
 
 inline void space_each_body(cpSpace *space, void *f) {
-  cpSpaceEachBody(space, eachBody_space, f);
+	cpSpaceEachBody(space, eachBody_space, f);
 }
 
 inline void space_each_constraint(cpSpace *space, void *f) {
-  cpSpaceEachConstraint(space, eachConstraint_space, f);
+	cpSpaceEachConstraint(space, eachConstraint_space, f);
 }
 
 inline void space_each_shape(cpSpace *space, void *f) {
-  cpSpaceEachShape(space, eachShape_space, f);
+	cpSpaceEachShape(space, eachShape_space, f);
 }
 
 inline void space_nearest_point_query(cpSpace *space, cpVect point, cpFloat maxDistance,
-                                      cpLayers layers, cpGroup group, void *f) {
-  cpSpaceNearestPointQuery(space, point, maxDistance, layers, group, nearestPointQuery, f);
+	cpLayers layers, cpGroup group, void *f) {
+
+	cpSpaceNearestPointQuery(space, point, maxDistance, layers, group, nearestPointQuery, f);
 }
 
 inline void space_point_query(cpSpace *s, cpVect point, cpLayers layers, cpGroup group, void *p) {
-  cpSpacePointQuery(s, point, layers, group, pointQuery, p);
+	cpSpacePointQuery(s, point, layers, group, pointQuery, p);
 }
 
-inline void space_segment_query(cpSpace *space,
-                                cpVect   start,
-                                cpVect   end,
-                                cpLayers layers,
-                                cpGroup  group,
-                                void    *f) {
-  cpSpaceSegmentQuery(space, start, end, layers, group, segmentQuery, f);
+inline void space_segment_query(cpSpace *space, cpVect start, cpVect end, cpLayers layers,
+	cpGroup group, void *f) {
+
+	cpSpaceSegmentQuery(space, start, end, layers, group, segmentQuery, f);
 }

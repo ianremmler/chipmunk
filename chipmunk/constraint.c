@@ -27,9 +27,9 @@ extern void constraint_postsolve(cpConstraint *c, cpSpace *s);
 extern void constraint_presolve(cpConstraint *c, cpSpace *s);
 
 inline void constraint_set_postsolve_func(cpConstraint *c, cpBool set) {
-  cpConstraintSetPostSolveFunc(c, set ? constraint_postsolve : NULL);
+	cpConstraintSetPostSolveFunc(c, set ? constraint_postsolve : NULL);
 }
 
 inline void constraint_set_presolve_func(cpConstraint *c, cpBool set) {
-  cpConstraintSetPreSolveFunc(c, set ? constraint_presolve : NULL);
+	cpConstraintSetPreSolveFunc(c, set ? constraint_presolve : NULL);
 }

@@ -32,13 +32,9 @@ inline void space_each_body(cpSpace *space, void *f);
 inline void space_each_constraint(cpSpace *space, void *f);
 inline void space_each_shape(cpSpace *space, void *f);
 inline void space_nearest_point_query(cpSpace *space, cpVect point, cpFloat maxDistance,
-                                      cpLayers layers, cpGroup group, void *f);
+	cpLayers layers, cpGroup group, void *f);
 inline void space_point_query(cpSpace *s, cpVect point, cpLayers layers, cpGroup group, void *p);
-inline void space_segment_query(cpSpace *space,
-                                cpVect   start,
-                                cpVect   end,
-                                cpLayers layers,
-                                cpGroup  group,
-                                void    *f);
+inline void space_segment_query(cpSpace *space, cpVect start, cpVect end, cpLayers layers,
+	cpGroup group, void *f);
 
 #endif // !_GOCHIPMUNK_SPACE_H

@@ -30,21 +30,21 @@ extern void updatePosition(cpBody *b, cpFloat dt);
 extern void updateVelocity(cpBody *b, cpVect gravity, cpFloat damping, cpFloat dt);
 
 inline void body_each_arbiter(cpBody *body, void *f) {
-  cpBodyEachArbiter(body, eachArbiter_body, f);
+	cpBodyEachArbiter(body, eachArbiter_body, f);
 }
 
 inline void body_each_constraint(cpBody *body, void *f) {
-  cpBodyEachConstraint(body, eachConstraint_body, f);
+	cpBodyEachConstraint(body, eachConstraint_body, f);
 }
 
 inline void body_each_shape(cpBody *body, void *f) {
-  cpBodyEachShape(body, eachShape_body, f);
+	cpBodyEachShape(body, eachShape_body, f);
 }
 
 inline void body_set_position_func(cpBody *body, cpBool set) {
-  body->position_func = set ? updatePosition : cpBodyUpdatePosition;
+	body->position_func = set ? updatePosition : cpBodyUpdatePosition;
 }
 
 inline void body_set_velocity_func(cpBody *body, cpBool set) {
-  body->velocity_func = set ? updateVelocity : cpBodyUpdateVelocity;
+	body->velocity_func = set ? updateVelocity : cpBodyUpdateVelocity;
 }
