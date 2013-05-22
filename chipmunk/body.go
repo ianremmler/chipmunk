@@ -69,16 +69,33 @@ func (b Body) Angle() float64 {
 	return float64(C.cpBodyGetAngle(b.c()))
 }
 
+// SetAngle sets the rotation of the body around it's center of gravity in radians.
+func (b Body) SetAngle(angle float64) {
+	C.cpBodySetAngle(b.c(), C.cpFloat(angle))
+}
+
 // AngularVelocity returns the angular velocity of the body around it's center
 // of gravity in radians/second.
 func (b Body) AngularVelocity() float64 {
 	return float64(C.cpBodyGetAngVel(b.c()))
 }
 
+// SetAngularVelocity sets the angular velocity of the body around it's center
+// of gravity in radians/second.
+func (b Body) SetAngleularVelocity(vel float64) {
+	C.cpBodySetAngVel(b.c(), C.cpFloat(vel))
+}
+
 // AngularVelocityLimit returns the maximum rotational rate (in radians/second) allowed when updating
 // the angular velocity.
 func (b Body) AngularVelocityLimit() float64 {
 	return float64(C.cpBodyGetAngVelLimit(b.c()))
+}
+
+// SetAngularVelocityLimit sets the maximum rotational rate (in radians/second) allowed when updating
+// the angular velocity.
+func (b Body) SetAngularVelocityLimit(limit float64) {
+	C.cpBodySetAngVelLimit(b.c(), C.cpFloat(limit))
 }
 
 // ApplyForce applies a force (in world coordinates) to the body at a point relative
@@ -139,6 +156,11 @@ func (b Body) Force() Vect {
 	return cpVect(C.cpBodyGetForce(b.c()))
 }
 
+// SetForce sets the force acting on the rigid body's center of gravity.
+func (b Body) SetForce(force Vect) {
+	C.cpBodySetForce(b.c(), force.c())
+}
+
 // IsRogue returns true if the body has not been added to a space.
 func (b Body) IsRogue() bool {
 	return cpBool(C.cpBodyIsRogue(b.c()))
@@ -169,14 +191,29 @@ func (b Body) Mass() float64 {
 	return float64(C.cpBodyGetMass(b.c()))
 }
 
+// SetMass sets the mass of the body.
+func (b Body) SetMass(mass float64) {
+	C.cpBodySetMass(b.c(), C.cpFloat(mass))
+}
+
 // Moment returns a moment of intertia of the body.
 func (b Body) Moment() float64 {
 	return float64(C.cpBodyGetMoment(b.c()))
 }
 
+// SetMoment sets the moment of the body.
+func (b Body) SetMoment(moment float64) {
+	C.cpBodySetMoment(b.c(), C.cpFloat(moment))
+}
+
 // Position returns the position of the rigid body's center of gravity.
 func (b Body) Position() Vect {
 	return cpVect(C.cpBodyGetPos(b.c()))
+}
+
+// SetPosition sets the position of the body.
+func (b Body) SetPosition(pos Vect) {
+	C.cpBodySetPos(b.c(), pos.c())
 }
 
 // ResetForces sets the forces and torque of a body to zero.
@@ -189,44 +226,16 @@ func (b Body) Rotation() Vect {
 	return cpVect(C.cpBodyGetRot(b.c()))
 }
 
-// SetAngularVelocityLimit sets the maximum rotational rate (in radians/second) allowed when updating
-// the angular velocity.
-func (b Body) SetAngularVelocityLimit(limit float64) {
-	C.cpBodySetAngVelLimit(b.c(), C.cpFloat(limit))
-}
-
-// SetPosition sets the position of the body.
-func (b Body) SetPosition(v Vect) {
-	C.cpBodySetPos(b.c(), v.c())
-}
-
-// SetVelocity sets the velocity of the body.
-func (b Body) SetVelocity(v Vect) {
-	C.cpBodySetVel(b.c(), v.c())
-}
-
 // SetPositionFunc sets a function that is called to integrate the body's position.
 func (b Body) SetPositionFunc(f func(b Body, dt float64)) {
 	bodyDataMap[b].positionFunc = f
 	C.body_set_position_func(b.c(), boolToC(f != nil))
 }
 
-// SetUserData sets user definable data pointer.
-// Generally this points to your the game object so you can access it
-// when given a Body reference in a callback.
-func (b Body) SetUserData(data interface{}) {
-	bodyDataMap[b].userData = data
-}
-
 // SetVelocityFunc sets a function that is called to integrate the body's velocity.
 func (b Body) SetVelocityFunc(f func(b Body, gravity Vect, damping, dt float64)) {
 	bodyDataMap[b].velocityFunc = f
 	C.body_set_velocity_func(b.c(), boolToC(f != nil))
-}
-
-// SetVelocityLimit sets the maximum velocity allowed when updating the velocity.
-func (b Body) SetVelocityLimit(limit float64) {
-	C.cpBodySetVelLimit(b.c(), C.cpFloat(limit))
 }
 
 // Sleep forces a body to fall asleep immediately.
@@ -254,6 +263,11 @@ func (b Body) Torque() float64 {
 	return float64(C.cpBodyGetTorque(b.c()))
 }
 
+// SetTorque sets the torque applied to the body around it's center of gravity.
+func (b Body) SetTorque(torq float64) {
+	C.cpBodySetTorque(b.c(), C.cpFloat(torq))
+}
+
 // UpdatePosition is a default function that is called to integrate the body's position.
 func (b Body) UpdatePosition(dt float64) {
 	C.cpBodyUpdatePosition(b.c(), C.cpFloat(dt))
@@ -269,9 +283,21 @@ func (b Body) UserData() interface{} {
 	return bodyDataMap[b].userData
 }
 
+// SetUserData sets user definable data pointer.
+// Generally this points to your the game object so you can access it
+// when given a Body reference in a callback.
+func (b Body) SetUserData(data interface{}) {
+	bodyDataMap[b].userData = data
+}
+
 // Velocity returns the velocity of the rigid body's center of gravity.
 func (b Body) Velocity() Vect {
 	return cpVect(C.cpBodyGetVel(b.c()))
+}
+
+// SetVelocity sets the velocity of the body.
+func (b Body) SetVelocity(vel Vect) {
+	C.cpBodySetVel(b.c(), vel.c())
 }
 
 // VelocityAtLocalPoint returns the velocity on a body (in world units) at a point
@@ -289,6 +315,11 @@ func (b Body) VelocityAtWorldPoint(point Vect) Vect {
 // VelocityLimit returns the maximum velocity allowed when updating the velocity.
 func (b Body) VelocityLimit() float64 {
 	return float64(C.cpBodyGetVelLimit(b.c()))
+}
+
+// SetVelocityLimit sets the maximum velocity allowed when updating the velocity.
+func (b Body) SetVelocityLimit(limit float64) {
+	C.cpBodySetVelLimit(b.c(), C.cpFloat(limit))
 }
 
 // WorldToLocal converts body absolute/world coordinates to relative/local coordinates.
