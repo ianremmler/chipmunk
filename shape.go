@@ -28,7 +28,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 import "C"
 
 import (
-	. "unsafe"
+	"unsafe"
 )
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -263,7 +263,7 @@ func (s shapeBase) addToSpace(space *Space) {
 
 // c converts Shape to C.cpShape pointer.
 func (s shapeBase) c() *C.cpShape {
-	return (*C.cpShape)(Pointer(s))
+	return (*C.cpShape)(unsafe.Pointer(s))
 }
 
 // containedInSpace returns true if the space contains the shape.
@@ -295,7 +295,7 @@ func cpShape(s *C.cpShape) Shape {
 
 // cpshape converts C.cpShape pointer to shapeBase.
 func cpshape(s *C.cpShape) shapeBase {
-	return shapeBase(Pointer(s))
+	return shapeBase(unsafe.Pointer(s))
 }
 
 // removeFromSpace removes a shape from space.

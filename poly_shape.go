@@ -30,7 +30,7 @@ import "C"
 import (
 	"fmt"
 	"reflect"
-	. "unsafe"
+	"unsafe"
 )
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -61,20 +61,20 @@ func (s PolyShape) NumVerts() int {
 
 // PolyShapeNew creates a new polygon shape.
 func PolyShapeNew(b Body, verts []Vect, offset Vect) PolyShape {
-	v := (*C.cpVect)(Pointer(&verts[0]))
+	v := (*C.cpVect)(unsafe.Pointer(&verts[0]))
 	s := C.cpPolyShapeNew(b.c(), C.int(len(verts)), v, offset.c())
 	return PolyShape{cpshape(s)}
 }
 
 // PolyValidate returns true if a set of vertexes is convex and has a clockwise winding.
 func PolyValidate(verts []Vect) bool {
-	v := (*C.cpVect)(Pointer(&verts[0]))
+	v := (*C.cpVect)(unsafe.Pointer(&verts[0]))
 	return cpBool(C.cpPolyValidate(v, C.int(len(verts))))
 }
 
 // SetVerts sets the vertexes of a poly shape.
 func (s PolyShape) SetVerts(verts []Vect, offset Vect) {
-	v := (*C.cpVect)(Pointer(&verts[0]))
+	v := (*C.cpVect)(unsafe.Pointer(&verts[0]))
 	C.cpPolyShapeSetVerts(s.c(), C.int(len(verts)), v, offset.c())
 }
 
@@ -93,10 +93,10 @@ func (s PolyShape) VertsWorld() []Vect {
 	num := s.NumVerts()
 	var verts []Vect
 
-	vertsH := (*reflect.SliceHeader)((Pointer(&verts)))
+	vertsH := (*reflect.SliceHeader)((unsafe.Pointer(&verts)))
 	vertsH.Cap = num
 	vertsH.Len = num
-	vertsH.Data = uintptr(Pointer(((*C.cpPolyShape)(Pointer(s.c())).tVerts)))
+	vertsH.Data = uintptr(unsafe.Pointer(((*C.cpPolyShape)(unsafe.Pointer(s.c())).tVerts)))
 
 	return verts
 }
@@ -106,10 +106,10 @@ func (s PolyShape) VertsWorldFloat64() []float64 {
 	num := s.NumVerts() * 2
 	var verts []float64
 
-	vertsH := (*reflect.SliceHeader)((Pointer(&verts)))
+	vertsH := (*reflect.SliceHeader)((unsafe.Pointer(&verts)))
 	vertsH.Cap = num
 	vertsH.Len = num
-	vertsH.Data = uintptr(Pointer(((*C.cpPolyShape)(Pointer(s.c())).tVerts)))
+	vertsH.Data = uintptr(unsafe.Pointer(((*C.cpPolyShape)(unsafe.Pointer(s.c())).tVerts)))
 
 	return verts
 }

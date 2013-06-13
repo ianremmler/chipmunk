@@ -28,7 +28,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 import "C"
 
 import (
-	. "unsafe"
+	"unsafe"
 )
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -183,7 +183,7 @@ func (c constraintBase) addToSpace(s *Space) {
 
 // c converts Constraint to c.cpConstraint pointer.
 func (c constraintBase) c() *C.cpConstraint {
-	return (*C.cpConstraint)(Pointer(c))
+	return (*C.cpConstraint)(unsafe.Pointer(c))
 }
 
 //export constraint_postsolve
@@ -241,7 +241,7 @@ func cpConstraint(ct *C.cpConstraint) Constraint {
 
 // cpconstraint converts C.cpConstraint pointer to constraintBase.
 func cpconstraint(ct *C.cpConstraint) constraintBase {
-	return constraintBase(Pointer(ct))
+	return constraintBase(unsafe.Pointer(ct))
 }
 
 // cpconstraint_new creates a new constraintBase out of C.cpConstraint pointer.

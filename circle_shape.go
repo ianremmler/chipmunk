@@ -29,7 +29,7 @@ import "C"
 
 import (
 	"fmt"
-	. "unsafe"
+	"unsafe"
 )
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -43,7 +43,7 @@ type CircleShape struct {
 
 // Center returns the center of the circle shape (world coordinates).
 func (s CircleShape) Center() Vect {
-	p := (Pointer)(s.c())
+	p := (unsafe.Pointer)(s.c())
 	return cpVect((*C.cpCircleShape)(p).tc)
 }
 

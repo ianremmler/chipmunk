@@ -29,7 +29,6 @@ import "C"
 
 import (
 	"fmt"
-	. "unsafe"
 	"unsafe"
 )
 
@@ -160,7 +159,7 @@ func (s *Space) AddStaticShape(sh Shape) Shape {
 // function for each shape found.
 // Only the shape's bounding boxes are checked for overlap, not their full shape.
 func (s *Space) BBQuery(bb BB, layers Layers, group Group, f BBQuery) {
-	C.space_bb_query(s.c(), bb.c(), layers.c(), group.c(), Pointer(&f))
+	C.space_bb_query(s.c(), bb.c(), layers.c(), group.c(), unsafe.Pointer(&f))
 }
 
 // CollisionBias returns the speed of how fast overlapping shapes are pushed apart.
@@ -210,19 +209,19 @@ func (s *Space) Each(iter interface{}) {
 
 // EachBody calls a callback function on each body in the space.
 func (s *Space) EachBody(iter func(Body)) {
-	p := Pointer(&iter)
+	p := unsafe.Pointer(&iter)
 	C.space_each_body(s.c(), p)
 }
 
 // EachConstraint calls a callback function on each constraint in the space.
 func (s *Space) EachConstraint(iter func(Constraint)) {
-	p := Pointer(&iter)
+	p := unsafe.Pointer(&iter)
 	C.space_each_constraint(s.c(), p)
 }
 
 // EachShape calls a callback function on each shape in the space.
 func (s *Space) EachShape(iter func(Shape)) {
-	p := Pointer(&iter)
+	p := unsafe.Pointer(&iter)
 	C.space_each_shape(s.c(), p)
 }
 
@@ -287,12 +286,12 @@ func (s *Space) NearestPointQuery(point Vect, maxDistance float64, layers Layers
 	f NearestPointQuery) {
 
 	C.space_nearest_point_query(s.c(), point.c(), C.cpFloat(maxDistance), layers.c(), group.c(),
-		Pointer(&f))
+		unsafe.Pointer(&f))
 }
 
 // PointQuery queries the space at a point and calls a callback function for each shape found.
 func (s *Space) PointQuery(point Vect, layers Layers, group Group, f PointQuery) {
-	C.space_point_query(s.c(), point.c(), layers.c(), group.c(), Pointer(&f))
+	C.space_point_query(s.c(), point.c(), layers.c(), group.c(), unsafe.Pointer(&f))
 }
 
 // PointQueryFirst queries the space at a point and returns
@@ -309,7 +308,7 @@ func (s *Space) Remove(obj SpaceObject) {
 // SegmentQuery performs a directed line segment query (like a raycast)
 // against the space calling a callback function for each shape intersected.
 func (s *Space) SegmentQuery(start, end Vect, layers Layers, group Group, f SegmentQuery) {
-	C.space_segment_query(s.c(), start.c(), end.c(), layers.c(), group.c(), Pointer(&f))
+	C.space_segment_query(s.c(), start.c(), end.c(), layers.c(), group.c(), unsafe.Pointer(&f))
 }
 
 // SetGravity sets the gravity to pass to rigid bodies when integrating velocity.
@@ -386,7 +385,7 @@ func (s *Space) SleepTimeThreshold() float64 {
 
 // SpaceNew creates a new space.
 func SpaceNew() *Space {
-	s := Space(Pointer(C.cpSpaceNew()))
+	s := Space(unsafe.Pointer(C.cpSpaceNew()))
 	spaceDataMap[s] = &spaceData{}
 	postStepCallbackMap[s] = make(map[interface{}]func(*Space, interface{}))
 	collisionHandlerMap[s] = make(map[collisionTypePair]collisionHandler)
@@ -471,13 +470,13 @@ func bbQuery(s *C.cpShape, p unsafe.Pointer) {
 
 // c converts Space to c.cpSpace pointer.
 func (s *Space) c() *C.cpSpace {
-	return (*C.cpSpace)(Pointer(*s))
+	return (*C.cpSpace)(unsafe.Pointer(*s))
 }
 
 // cpSpace converts C.cpSpace pointer to Space.
 func cpSpace(s *C.cpSpace) *Space {
 	if s != nil {
-		space := Space(Pointer(s))
+		space := Space(unsafe.Pointer(s))
 		return &space
 	}
 
@@ -527,7 +526,7 @@ func postStep(s *C.cpSpace, p, data C.cpDataPointer) {
 	// execute callback
 	f(cpSpace(s), key)
 	// remove from map
-	delete(postStepCallbackMap[Space(Pointer(s))], key)
+	delete(postStepCallbackMap[Space(unsafe.Pointer(s))], key)
 }
 
 //export begin

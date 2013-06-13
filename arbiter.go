@@ -28,7 +28,7 @@ import "C"
 
 import (
 	"fmt"
-	. "unsafe"
+	"unsafe"
 )
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -53,7 +53,7 @@ type ContactPoint struct {
 // the order set when the collision handler was registered.
 func (arb Arbiter) Bodies() (Body, Body) {
 	var a, b *C.cpBody
-	C.cpArbiterGetBodies(arb.c(), (**C.cpBody)(Pointer(&a)), (**C.cpBody)(Pointer(&b)))
+	C.cpArbiterGetBodies(arb.c(), (**C.cpBody)(unsafe.Pointer(&a)), (**C.cpBody)(unsafe.Pointer(&b)))
 	return cpBody(a), cpBody(b)
 }
 
@@ -137,7 +137,7 @@ func (a Arbiter) SetSurfaceVelocity(v Vect) {
 // handler was registered.
 func (arb Arbiter) Shapes() (Shape, Shape) {
 	var a, b *C.cpShape
-	C.cpArbiterGetShapes(arb.c(), (**C.cpShape)(Pointer(&a)), (**C.cpShape)(Pointer(&b)))
+	C.cpArbiterGetShapes(arb.c(), (**C.cpShape)(unsafe.Pointer(&a)), (**C.cpShape)(unsafe.Pointer(&b)))
 	return cpShape(a), cpShape(b)
 }
 
@@ -175,10 +175,10 @@ func (a Arbiter) TotalKE() float64 {
 
 // c converts Arbiter to c.cpArbiter pointer.
 func (a Arbiter) c() *C.cpArbiter {
-	return (*C.cpArbiter)(Pointer(a))
+	return (*C.cpArbiter)(unsafe.Pointer(a))
 }
 
 // cpArbiter converts C.cpArbiter pointer to Arbiter.
 func cpArbiter(a *C.cpArbiter) Arbiter {
-	return Arbiter(Pointer(a))
+	return Arbiter(unsafe.Pointer(a))
 }
