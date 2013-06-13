@@ -405,6 +405,20 @@ func (s *Space) StaticBody() Body {
 	return cpBody(C.cpSpaceGetStaticBody(s.c()))
 }
 
+// ConvertBodyToStatic converts a dynamic rogue body to a static one.
+// This will convert any shapes attached to the body into static shapes, but does not handle constra ints.
+// If the body is active, you must remove it from the space first.
+func (s *Space) ConvertBodyToStatic(b Body) {
+	C.cpSpaceConvertBodyToStatic(s.c(), b.c())
+}
+
+// ConvertBodyToDynamic converts a body to a dynamic rogue body.
+// This will convert any static shapes attached to the body into regular ones.
+// If you want the body to be active after the transition, you must add it to the space also.
+func (s *Space) ConvertBodyToDynamic(b Body, m, i float64) {
+	C.cpSpaceConvertBodyToDynamic(s.c(), b.c(), C.cpFloat(m), C.cpFloat(i))
+}
+
 // Step makes the space step forward in time by dt seconds.
 func (s *Space) Step(dt float64) {
 	C.cpSpaceStep(s.c(), C.cpFloat(dt))

@@ -41,7 +41,7 @@ type ContactPoint struct {
 	// Point is position normal of the contact point.
 	Point Vect
 	// Normal is the normal of the contact point.
-	Normat Vect
+	Normal Vect
 	// Dist is the depth of the contact point.
 	Dist float64
 }
@@ -71,6 +71,21 @@ func (a Arbiter) ContactPoints() []ContactPoint {
 	}
 
 	return c
+}
+
+// SetContactPoints replaces the contact point set for an arbiter.
+// This can be a very powerful feature, but use it with caution!
+func (a Arbiter) SetContactPoints(cp []ContactPoint) {
+	if len(cp) > C.CP_MAX_CONTACTS_PER_ARBITER {
+		cp = cp[:C.CP_MAX_CONTACTS_PER_ARBITER]
+	}
+	set := &C.cpContactPointSet{count: C.int(len(cp))}
+	for i := range cp {
+		set.points[i].point = cp[i].Point.c()
+		set.points[i].normal = cp[i].Normal.c()
+		set.points[i].dist = C.cpFloat(cp[i].Dist)
+	}
+	C.cpArbiterSetContactPointSet(a.c(), set)
 }
 
 // Count returns the number of contact points for this arbiter.
