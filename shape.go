@@ -237,7 +237,7 @@ func (s shapeBase) SetUserData(data interface{}) {
 }
 
 // Space returns space the body was added to or nil if the body doesn't belong to any space.
-func (s shapeBase) Space() *Space {
+func (s shapeBase) Space() Space {
 	return cpSpace(C.cpShapeGetSpace(s.c()))
 }
 
@@ -257,7 +257,7 @@ func (s shapeBase) UserData() interface{} {
 }
 
 // addToSpace adds a shape to space.
-func (s shapeBase) addToSpace(space *Space) {
+func (s shapeBase) addToSpace(space Space) {
 	space.AddShape(cpShape(s.c()))
 }
 
@@ -267,7 +267,7 @@ func (s shapeBase) c() *C.cpShape {
 }
 
 // containedInSpace returns true if the space contains the shape.
-func (s shapeBase) containedInSpace(space *Space) bool {
+func (s shapeBase) containedInSpace(space Space) bool {
 	return cpBool(C.cpSpaceContainsShape(space.c(), s.c()))
 }
 
@@ -299,6 +299,6 @@ func cpshape(s *C.cpShape) shapeBase {
 }
 
 // removeFromSpace removes a shape from space.
-func (s shapeBase) removeFromSpace(space *Space) {
+func (s shapeBase) removeFromSpace(space Space) {
 	space.RemoveShape(cpShape(s.c()))
 }
