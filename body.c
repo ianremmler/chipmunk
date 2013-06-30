@@ -23,22 +23,22 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <chipmunk/chipmunk.h>
 
-extern void eachArbiter_body(cpBody *b, cpArbiter *a, void *p);
-extern void eachConstraint_body(cpBody *b, cpConstraint *c, void *p);
-extern void eachShape_body(cpBody *b, cpShape *s, void *p);
+extern void eachArbiterBody(cpBody *b, cpArbiter *a, void *p);
+extern void eachConstraintBody(cpBody *b, cpConstraint *c, void *p);
+extern void eachShapeBody(cpBody *b, cpShape *s, void *p);
 extern void updatePosition(cpBody *b, cpFloat dt);
 extern void updateVelocity(cpBody *b, cpVect gravity, cpFloat damping, cpFloat dt);
 
 inline void body_each_arbiter(cpBody *body, void *f) {
-	cpBodyEachArbiter(body, eachArbiter_body, f);
+	cpBodyEachArbiter(body, eachArbiterBody, f);
 }
 
 inline void body_each_constraint(cpBody *body, void *f) {
-	cpBodyEachConstraint(body, eachConstraint_body, f);
+	cpBodyEachConstraint(body, eachConstraintBody, f);
 }
 
 inline void body_each_shape(cpBody *body, void *f) {
-	cpBodyEachShape(body, eachShape_body, f);
+	cpBodyEachShape(body, eachShapeBody, f);
 }
 
 inline void body_set_position_func(cpBody *body, cpBool set) {

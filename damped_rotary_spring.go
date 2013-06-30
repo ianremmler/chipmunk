@@ -40,7 +40,7 @@ func DampedRotarySpringNew(a, b Body, restAngle, stiffness, damping float64) Dam
 	c := C.cpDampedRotarySpringNew(a.c(), b.c(), C.cpFloat(restAngle), C.cpFloat(stiffness),
 		C.cpFloat(damping))
 
-	return DampedRotarySpring{cpconstraint_new(c)}
+	return DampedRotarySpring{cpConstraintBaseNew(c)}
 }
 
 // Damping returns the amount of viscous damping to apply.

@@ -54,9 +54,9 @@ func (c GrooveJoint) GrooveB() Vect {
 // GrooveJointNew creates a new groove joint.
 // Make sure you have the bodies in the right place as the joint will snap
 // into shape as soon as you start simulating the space.
-func GrooveJointNew(a, b Body, groove_a, groove_b, anchr2 Vect) GrooveJoint {
-	c := C.cpGrooveJointNew(a.c(), b.c(), groove_a.c(), groove_b.c(), anchr2.c())
-	return GrooveJoint{cpconstraint_new(c)}
+func GrooveJointNew(a, b Body, grooveA, grooveB, anchr2 Vect) GrooveJoint {
+	c := C.cpGrooveJointNew(a.c(), b.c(), grooveA.c(), grooveB.c(), anchr2.c())
+	return GrooveJoint{cpConstraintBaseNew(c)}
 }
 
 // SetAnchr2 sets the anchor point on the second body that is held to the line segment on the first.

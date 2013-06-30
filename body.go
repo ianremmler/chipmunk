@@ -82,7 +82,7 @@ func (b Body) AngularVelocity() float64 {
 
 // SetAngularVelocity sets the angular velocity of the body around it's center
 // of gravity in radians/second.
-func (b Body) SetAngleularVelocity(vel float64) {
+func (b Body) SetAngularVelocity(vel float64) {
 	C.cpBodySetAngVel(b.c(), C.cpFloat(vel))
 }
 
@@ -347,20 +347,20 @@ func cpBody(b *C.cpBody) Body {
 	return Body(unsafe.Pointer(b))
 }
 
-//export eachArbiter_body
-func eachArbiter_body(b *C.cpBody, a *C.cpArbiter, p unsafe.Pointer) {
+//export eachArbiterBody
+func eachArbiterBody(b *C.cpBody, a *C.cpArbiter, p unsafe.Pointer) {
 	f := *(*func(Body, Arbiter))(p)
 	f(cpBody(b), cpArbiter(a))
 }
 
-//export eachConstraint_body
-func eachConstraint_body(b *C.cpBody, c *C.cpConstraint, p unsafe.Pointer) {
+//export eachConstraintBody
+func eachConstraintBody(b *C.cpBody, c *C.cpConstraint, p unsafe.Pointer) {
 	f := *(*func(Body, Constraint))(p)
 	f(cpBody(b), cpConstraint(c))
 }
 
-//export eachShape_body
-func eachShape_body(b *C.cpBody, sh *C.cpShape, p unsafe.Pointer) {
+//export eachShapeBody
+func eachShapeBody(b *C.cpBody, sh *C.cpShape, p unsafe.Pointer) {
 	f := *(*func(Body, Shape))(p)
 	f(cpBody(b), cpShape(sh))
 }

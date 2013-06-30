@@ -28,7 +28,7 @@ import "C"
 
 ////////////////////////////////////////////////////////////////////////////////
 
-// DampedSprint is a spring with a damper.
+// DampedSpring is a spring with a damper.
 // While a spring is not technically a constraint, the damper is.
 // The spring forces are simply a convenience.
 type DampedSpring struct {
@@ -47,14 +47,14 @@ func (c DampedSpring) Anchr2() Vect {
 	return cpVect(C.cpDampedSpringGetAnchr2(c.c()))
 }
 
-// DampedSprintNew creates a new damped spring.
+// DampedSpringNew creates a new damped spring.
 func DampedSpringNew(a, b Body, anchr1, anchr2 Vect,
 	restLength, stiffness, damping float64) DampedSpring {
 
 	c := C.cpDampedSpringNew(a.c(), b.c(), anchr1.c(), anchr2.c(), C.cpFloat(restLength),
 		C.cpFloat(stiffness), C.cpFloat(damping))
 
-	return DampedSpring{cpconstraint_new(c)}
+	return DampedSpring{cpConstraintBaseNew(c)}
 }
 
 // Damping returns the amount of viscous damping to apply.

@@ -24,9 +24,9 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <chipmunk/chipmunk.h>
 
 extern void bbQuery(cpShape *s, void *p);
-extern void eachBody_space(cpBody *b, void *p);
-extern void eachConstraint_space(cpConstraint *c, void *p);
-extern void eachShape_space(cpShape *s, void *p);
+extern void eachBodySpace(cpBody *b, void *p);
+extern void eachConstraintSpace(cpConstraint *c, void *p);
+extern void eachShapeSpace(cpShape *s, void *p);
 extern void nearestPointQuery(cpShape *s, cpFloat distance, cpVect point, void *p);
 extern void pointQuery(cpShape *s, void *p);
 extern void postStep(cpSpace *space, cpDataPointer key, cpDataPointer data);
@@ -61,15 +61,15 @@ inline void space_bb_query(cpSpace *space, cpBB bb, cpLayers layers, cpGroup gro
 }
 
 inline void space_each_body(cpSpace *space, void *f) {
-	cpSpaceEachBody(space, eachBody_space, f);
+	cpSpaceEachBody(space, eachBodySpace, f);
 }
 
 inline void space_each_constraint(cpSpace *space, void *f) {
-	cpSpaceEachConstraint(space, eachConstraint_space, f);
+	cpSpaceEachConstraint(space, eachConstraintSpace, f);
 }
 
 inline void space_each_shape(cpSpace *space, void *f) {
-	cpSpaceEachShape(space, eachShape_space, f);
+	cpSpaceEachShape(space, eachShapeSpace, f);
 }
 
 inline void space_nearest_point_query(cpSpace *space, cpVect point, cpFloat maxDistance,

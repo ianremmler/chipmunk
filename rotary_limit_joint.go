@@ -50,7 +50,7 @@ func (c RotaryLimitJoint) Min() float64 {
 // RotaryLimitJointNew creates a new rotary limit joint.
 func RotaryLimitJointNew(a, b Body, min, max float64) RotaryLimitJoint {
 	c := C.cpRotaryLimitJointNew(a.c(), b.c(), C.cpFloat(min), C.cpFloat(max))
-	return RotaryLimitJoint{cpconstraint_new(c)}
+	return RotaryLimitJoint{cpConstraintBaseNew(c)}
 }
 
 // SetMax sets the maximum angular delta of the joint in radians.

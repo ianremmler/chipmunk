@@ -167,11 +167,11 @@ func (s shapeBase) PointQuery(p Vect) bool {
 	return cpBool(C.cpShapePointQuery(s.c(), p.c()))
 }
 
-// ResetShapeIdCounter is used to reset the shape ID counter when recreating a space.
+// ResetShapeIDCounter is used to reset the shape ID counter when recreating a space.
 // When initializing a shape, it's hash value comes from a counter.
 // Because the hash value may affect iteration order, you can reset the shape ID counter
 // when recreating a space. This will make the simulation be deterministic.
-func ResetShapeIdCounter() {
+func ResetShapeIDCounter() {
 	C.cpResetShapeIdCounter()
 }
 

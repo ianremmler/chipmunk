@@ -490,20 +490,20 @@ func cpSpace(s *C.cpSpace) Space {
 	return Space(uintptr(unsafe.Pointer(s)))
 }
 
-//export eachBody_space
-func eachBody_space(b *C.cpBody, p unsafe.Pointer) {
+//export eachBodySpace
+func eachBodySpace(b *C.cpBody, p unsafe.Pointer) {
 	f := *(*func(Body))(p)
 	f(cpBody(b))
 }
 
-//export eachConstraint_space
-func eachConstraint_space(c *C.cpConstraint, p unsafe.Pointer) {
+//export eachConstraintSpace
+func eachConstraintSpace(c *C.cpConstraint, p unsafe.Pointer) {
 	f := *(*func(Constraint))(p)
 	f(cpConstraint(c))
 }
 
-//export eachShape_space
-func eachShape_space(sh *C.cpShape, p unsafe.Pointer) {
+//export eachShapeSpace
+func eachShapeSpace(sh *C.cpShape, p unsafe.Pointer) {
 	f := *(*func(Shape))(p)
 	f(cpShape(sh))
 }

@@ -79,5 +79,5 @@ func (c SlideJoint) SetMin(m float64) {
 // SlideJointNew creates a new slide joint.
 func SlideJointNew(a, b Body, anchr1, anchr2 Vect, min, max float64) SlideJoint {
 	c := C.cpSlideJointNew(a.c(), b.c(), anchr1.c(), anchr2.c(), C.cpFloat(min), C.cpFloat(max))
-	return SlideJoint{cpconstraint_new(c)}
+	return SlideJoint{cpConstraintBaseNew(c)}
 }

@@ -23,13 +23,13 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <chipmunk/chipmunk.h>
 
-extern void constraint_postsolve(cpConstraint *c, cpSpace *s);
-extern void constraint_presolve(cpConstraint *c, cpSpace *s);
+extern void constraintPostsolve(cpConstraint *c, cpSpace *s);
+extern void constraintPresolve(cpConstraint *c, cpSpace *s);
 
 inline void constraint_set_postsolve_func(cpConstraint *c, cpBool set) {
-	cpConstraintSetPostSolveFunc(c, set ? constraint_postsolve : NULL);
+	cpConstraintSetPostSolveFunc(c, set ? constraintPostsolve : NULL);
 }
 
 inline void constraint_set_presolve_func(cpConstraint *c, cpBool set) {
-	cpConstraintSetPreSolveFunc(c, set ? constraint_presolve : NULL);
+	cpConstraintSetPreSolveFunc(c, set ? constraintPresolve : NULL);
 }

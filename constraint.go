@@ -186,17 +186,17 @@ func (c constraintBase) c() *C.cpConstraint {
 	return (*C.cpConstraint)(unsafe.Pointer(c))
 }
 
-//export constraint_postsolve
-func constraint_postsolve(c *C.cpConstraint, s *C.cpSpace) {
+//export constraintPostsolve
+func constraintPostsolve(c *C.cpConstraint, s *C.cpSpace) {
 	constraint := cpConstraint(c)
-	data := constraintDataMap[cpconstraint(c)]
+	data := constraintDataMap[cpConstraintBase(c)]
 	data.postSolveFunc(constraint, cpSpace(s))
 }
 
-//export constraint_presolve
-func constraint_presolve(c *C.cpConstraint, s *C.cpSpace) {
+//export constraintPresolve
+func constraintPresolve(c *C.cpConstraint, s *C.cpSpace) {
 	constraint := cpConstraint(c)
-	data := constraintDataMap[cpconstraint(c)]
+	data := constraintDataMap[cpConstraintBase(c)]
 	data.preSolveFunc(constraint, cpSpace(s))
 }
 
@@ -211,7 +211,7 @@ func cpConstraint(ct *C.cpConstraint) Constraint {
 		return nil
 	}
 
-	c := cpconstraint(ct)
+	c := cpConstraintBase(ct)
 
 	switch c.c().klass_private {
 	case gearJointClass:
@@ -239,14 +239,14 @@ func cpConstraint(ct *C.cpConstraint) Constraint {
 	panic("unknown constraint class in cpConstraint")
 }
 
-// cpconstraint converts C.cpConstraint pointer to constraintBase.
-func cpconstraint(ct *C.cpConstraint) constraintBase {
+// cpConstraintBase converts C.cpConstraint pointer to constraintBase.
+func cpConstraintBase(ct *C.cpConstraint) constraintBase {
 	return constraintBase(unsafe.Pointer(ct))
 }
 
-// cpconstraint_new creates a new constraintBase out of C.cpConstraint pointer.
-func cpconstraint_new(ct *C.cpConstraint) constraintBase {
-	c := cpconstraint(ct)
+// cpConstraintBaseNew creates a new constraintBase out of C.cpConstraint pointer.
+func cpConstraintBaseNew(ct *C.cpConstraint) constraintBase {
+	c := cpConstraintBase(ct)
 	constraintDataMap[c] = &constraintData{}
 	return c
 }
