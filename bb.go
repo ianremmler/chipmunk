@@ -55,6 +55,11 @@ func BBNewForCircle(p Vect, r float64) BB {
 	return BBNew(p.X-r, p.Y-r, p.X+r, p.Y+r)
 }
 
+// Center returns the center of the bounding box
+func (bb BB) Center() Vect {
+	return Vect{X: 0.5 * (bb.l + bb.r), Y: 0.5 * (bb.b + bb.t)}
+}
+
 // ClampVect clamps a vector to a bounding box.
 func (bb BB) ClampVect(v Vect) Vect {
 	return Vect{X: math.Min(math.Max(bb.l, v.X), bb.r), Y: math.Min(math.Max(bb.b, v.Y), bb.t)}

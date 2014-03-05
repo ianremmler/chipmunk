@@ -41,6 +41,8 @@ type NearestPointQueryInfo struct {
 	P Vect
 	// D is the distance to the point. Negative if the point is inside the shape.
 	D float64
+	// G is the gradient of the signed distance field for the shape.
+	G Vect
 }
 
 // SegmentQueryInfo holds the result of SegmentQuery.
@@ -159,7 +161,7 @@ func (s shapeBase) Layers() Layers {
 func (s shapeBase) NearestPointQuery(p Vect) (float64, NearestPointQueryInfo) {
 	var out C.cpNearestPointQueryInfo
 	d := float64(C.cpShapeNearestPointQuery(s.c(), p.c(), &out))
-	return d, NearestPointQueryInfo{Shape: cpShape(out.shape), P: cpVect(out.p), D: float64(out.d)}
+	return d, NearestPointQueryInfo{Shape: cpShape(out.shape), P: cpVect(out.p), D: float64(out.d), G: cpVect(out.g)}
 }
 
 // PointQuery returns true if a point lies within a shape.

@@ -54,6 +54,12 @@ func BoxShapeNew2(b Body, box BB) Shape {
 	return PolyShape{cpshape(s)}
 }
 
+// BoxShapeNew3 creates a new box shape.
+func BoxShapeNew3(b Body, box BB, radius float64) Shape {
+	s := C.cpBoxShapeNew3(b.c(), box.c(), C.cpFloat(radius))
+	return PolyShape{cpshape(s)}
+}
+
 // NumVerts returns the number of vertices in a polygon shape.
 func (s PolyShape) NumVerts() int {
 	return int(C.cpPolyShapeGetNumVerts(s.c()))
@@ -66,10 +72,27 @@ func PolyShapeNew(b Body, verts []Vect, offset Vect) PolyShape {
 	return PolyShape{cpshape(s)}
 }
 
+// PolyShapeNew2 creates a new polygon shape.
+func PolyShapeNew2(b Body, verts []Vect, offset Vect, radius float64) PolyShape {
+	v := (*C.cpVect)(unsafe.Pointer(&verts[0]))
+	s := C.cpPolyShapeNew2(b.c(), C.int(len(verts)), v, offset.c(), C.cpFloat(radius))
+	return PolyShape{cpshape(s)}
+}
+
 // PolyValidate returns true if a set of vertexes is convex and has a clockwise winding.
 func PolyValidate(verts []Vect) bool {
 	v := (*C.cpVect)(unsafe.Pointer(&verts[0]))
 	return cpBool(C.cpPolyValidate(v, C.int(len(verts))))
+}
+
+// Radius returns the vertex radius.
+func (s PolyShape) Radius() float64 {
+	return float64(C.cpPolyShapeGetRadius(s.c()))
+}
+
+// SetRadius sets the vertex radius.
+func (s PolyShape) SetRadius(radius float64) {
+	C.cpPolyShapeSetRadius(s.c(), C.cpFloat(radius))
 }
 
 // SetVerts sets the vertexes of a poly shape.
